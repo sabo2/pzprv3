@@ -1,5 +1,5 @@
 // DataBase.js v3.4.0
-/* global ui:false, createEL:false, getEL:false */
+/* global ui:false, createEL:false, getEL:false, JSON:false */
 
 //---------------------------------------------------------------------------
 // ★ProblemDataクラス データベースに保存する1つのデータを保持する

@@ -5,7 +5,8 @@
 <META NAME="robots" CONTENT="noindex,nofollow">
 <meta name="viewport" content="width=device-width" />
 <link rel="stylesheet" href="./css/sc8.css" type="text/css" />
-<script type="text/javascript" src="./js/pzprv3.js"></script>
+<script type="text/javascript" src="./js/pzpr.js"></script>
+<script type="text/javascript" src="./js/pzprv3-ui.js"></script>
 <TITLE>ぱずぷれv3</TITLE>
 </HEAD>
 
@@ -102,8 +103,9 @@
      <li class="check" data-config="redblkrb"><span>__繋がりチェック__Continuous Check__</span></li>
      <li class="check" data-config="redroad"><span>__通り道のチェック__Check Road__</span></li>
      <li class="check" data-config="bgcolor"><span>__背景色入力__Input BGcolor__</span></li>
-     <li class="check" data-config="autocmp"><span data-disp-pid="!kouchoku">__数字をグレーにする__Set Grey Color__</span
-                                            ><span data-disp-pid="kouchoku">__点をグレーにする__Set Grey Color__</span></li>
+     <li class="check" data-config="autocmp"><span data-disp-pid="bonsan,hashikake,herugolf,kurotto">__数字をグレーにする__Set Grey Color__</span
+                                            ><span data-disp-pid="kouchoku">__点をグレーにする__Set Grey Color__</span
+                                            ><span data-disp-pid="dosufuwa">__背景色をつける__Paint background__</span></li>
      <li class="check" data-config="autoerr"><span data-disp-pid="hitori">__重複した数字を表示__Show overlapped number__</span
                                             ><span data-disp-pid="gokigen,wagiri">__ループした斜線の色分け__Loop slash with color__</span></li>
      <li class="check" data-config="multierr"><span>__複数エラー検出__Check multiple errors__</span></li>
@@ -190,8 +192,9 @@
     </div>
     <div class="config" data-config="autocmp">
       <input type="checkbox">
-      <span data-disp-pid="!kouchoku">__正しい数字をグレーにする__Grey if the number is correct__</span>
+      <span data-disp-pid="bonsan,hashikake,herugolf,kurotto">__正しい数字をグレーにする__Grey if the number is correct__</span>
       <span data-disp-pid="kouchoku">__線が2本以上になったら点をグレーにする__Grey if the letter links over two segments__</span>
+      <span data-disp-pid="dosufuwa">__条件を満たした領域に背景色をつける__Paint background if blocks are saturated__</span>
     </div>
     <div class="config" data-config="autoerr">
       <input type="checkbox">

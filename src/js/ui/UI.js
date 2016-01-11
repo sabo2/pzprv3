@@ -1,5 +1,5 @@
 // UI.js v3.4.0
-/* global pzpr:false, ui:false, File:false */
+/* global pzpr:false, Candle:false, ui:false, File:false, JSON:false */
 /* exported ui, _doc, getEL, createEL */
 
 /* ui.js Locals */
@@ -249,10 +249,10 @@ window.ui = {
 	// ui.initImageSaveMethod() 画像保存関連の処理の初期化を行う
 	//----------------------------------------------------------------------
 	initImageSaveMethod : function(puzzle){
-		if(!!puzzle.imgcanvas[0] && !!_doc.createElement('canvas').toDataURL){
+		if(!!Candle.enable.canvas && !!_doc.createElement('canvas').toDataURL){
 			this.enableSaveImage = true;
 		}
-		if(!!puzzle.imgcanvas[1] && !!window.btoa){
+		if(!!Candle.enable.svg && !!window.btoa){
 			this.enableSaveSVG = true;
 		}
 		

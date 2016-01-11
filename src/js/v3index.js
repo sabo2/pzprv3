@@ -1,4 +1,4 @@
-/* global File:false */
+/* global File:false, JSON:false */
 (function(){
 
 /* variables */

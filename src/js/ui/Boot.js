@@ -11,14 +11,13 @@ window.navigator.saveBlob = window.navigator.saveBlob || window.navigator.msSave
 
 var require_accesslog = true;
 var onload_pzl = null;
-var onload_option = {imagesave:true};
+var onload_option = {};
 
 //---------------------------------------------------------------------------
 // ★boot() window.onload直後の処理
 //---------------------------------------------------------------------------
 function boot(){
-	if(location.href.match(/^(file|http:\/\/(192.168|10)\.).+\/tests\//)||!!window.v3index){}
-	else if(importData() && includeDebugFile()){ startPuzzle();}
+	if(importData() && includeDebugFile()){ startPuzzle();}
 	else{ setTimeout(boot,0);}
 }
 pzpr.addLoadListener(boot);
@@ -67,6 +66,7 @@ function includeDebugFile(){
 
 function startPuzzle(){
 	var pzl = onload_pzl, pid = pzl.pid;
+	if(ui.debugmode){ onload_option.config = {mode:pzpr.Puzzle.prototype.MODE_PLAYER};}
 	
 	/* パズルオブジェクトの作成 */
 	var element = document.getElementById('divques');
@@ -79,12 +79,7 @@ function startPuzzle(){
 	// 単体初期化処理のルーチンへ
 	var callback = null;
 	if(!ui.debugmode){ callback = accesslog;}
-	else{
-		puzzle.once('ready', function(puzzle){
-			ui.setConfig("mode", puzzle.MODE_PLAYER);
-			ui.setConfig('autocheck', true);
-		});
-	}
+	else{ puzzle.once('ready', function(puzzle){ ui.setConfig('autocheck', true);});}
 	puzzle.open((!ui.debugmode || !!pzl.qdata) ? pzl : pid+"/"+ui.debug.urls[pid], callback);
 	
 	return true;
