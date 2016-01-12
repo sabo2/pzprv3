@@ -13,14 +13,19 @@ module.exports = function(grunt){
     clean: ['dist/*', 'pzprv3-*.{zip,tar.gz,tar.bz2}'],
 
     copy: {
-      options: {
-        process: function(content, srcpath){ return grunt.template.process(content);},
-        noProcess: ['**/*.{png,gif,ico}'],
-        mode: true
+      pzpr: {
+        files : [
+          { expand: true, cwd: 'node_modules/pzpr/dist/pzpr-variety', src: ['*.js'], dest: 'dist/js/pzpr-variety' },
+          { src: 'node_modules/pzpr/dist/pzpr.js', dest: 'dist/js/pzpr.js' }
+        ]
       },
       ui: {
+        options: {
+          process: function(content, srcpath){ return grunt.template.process(content);},
+          noProcess: ['**/*.{png,gif,ico}'],
+          mode: true
+        },
         files : [
-          { expand: true, cwd: 'src/js/lib', src: ['**/*.js'], dest: 'dist/js' },
           { expand: true, cwd: 'src/css', src: ['*.css'], dest: 'dist/css' },
           { expand: true, cwd: 'src/img', src: ['*'],     dest: 'dist/img' },
           { expand: true, cwd: 'src',     src: ['*'],     dest: 'dist' },
@@ -97,6 +102,6 @@ module.exports = function(grunt){
   grunt.registerTask('lint', ['newer:jshint:all']);
   grunt.registerTask('default', ['lint:source:',          'build']);
   grunt.registerTask('release', ['lint:source:', 'clean', 'build-rel']);
-  grunt.registerTask('build',   ['newer:copy:ui', 'newer:concat:ui',     'newer:uglify:ui']);
-  grunt.registerTask('build-rel',['newer:copy:ui','newer:concat:ui-rel', 'newer:uglify:ui-rel']);
+  grunt.registerTask('build',   ['newer:copy:ui', 'newer:copy:pzpr', 'newer:concat:ui',     'newer:uglify:ui']);
+  grunt.registerTask('build-rel',['newer:copy:ui','newer:copy:pzpr', 'newer:concat:ui-rel', 'newer:uglify:ui-rel']);
 };
