@@ -1,5 +1,5 @@
 // Menu.js v3.4.0
-/* global Candle:false, ui:false, _doc:false, getEL:false */
+/* global ui:false, _doc:false, getEL:false */
 
 //---------------------------------------------------------------------------
 // ★PopupManagerクラス ポップアップメニューを管理します
@@ -387,7 +387,7 @@ ui.popupmgr.addpopup('filesave',
 		/* ファイル形式選択オプション */
 		var ispencilbox = pzpr.variety.info[ui.puzzle.pid].exists.pencilbox;
 		this.form.filetype.options[1].disabled = !ispencilbox;
-		this.form.filetype.options[2].disabled = (!ispencilbox || pzpr.env.browser.legacyIE);
+		this.form.filetype.options[2].disabled = !ispencilbox;
 		
 		this.form.filename.value = ui.puzzle.pid + '.txt';
 		this.changefilename();
@@ -587,21 +587,7 @@ ui.popupmgr.addpopup('imagesave',
 		}
 		
 		/* 出力された画像を開くルーチン */
-		if(!dataurl){ /* dataurlが存在しない */}
-		else if(!pzpr.env.browser.IE9){
-			window.open(dataurl, '', '');
-		}
-		else{
-			// IE9だとアドレスバーの長さが2KBだったり、
-			// そもそもDataURL入れても何も起こらなかったりする対策
-			var cdoc = window.open('', '', '').document;
-			cdoc.open();
-			cdoc.writeln("<!DOCTYPE html>\n<HTML LANG=\"ja\">\n<HEAD>");
-			cdoc.writeln("<META CHARSET=\"utf-8\">");
-			cdoc.writeln("<TITLE>ぱずぷれv3<\/TITLE>\n<\/HEAD>");
-			cdoc.writeln("<BODY><img src=\"", dataurl, "\"><\/BODY>\n<\/HTML>");
-			cdoc.close();
-		}
+		if(!!dataurl){ window.open(dataurl, '', '');}
 	}
 });
 
@@ -683,7 +669,7 @@ ui.popupmgr.addpopup('colors',
 			if(el.nodeName==="INPUT" && el.getAttribute("type")==="color"){
 				var target = ui.customAttr(el,"colorTarget");
 				if(!!target && (!name || name===target)){
-					el.value = Candle.parse(ui.puzzle.painter[target]);
+					el.value = pzpr.Candle.parse(ui.puzzle.painter[target]);
 				}
 			}
 		});

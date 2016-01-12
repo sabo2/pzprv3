@@ -96,21 +96,21 @@ ui.listener =
 	},
 	onMouseInput : function(puzzle){
 		var mv = puzzle.mouse, result = true;
-		if(mv.mousestart && mv.btn.Middle){ /* 中ボタン */
+		if(mv.mousestart && mv.btn==='middle'){ /* 中ボタン */
 			puzzle.modechange();
 			mv.mousereset();
 			result = false;
 		}
 		else if(ui.puzzle.pid === "goishi"){
 			if(mv.mousestart && ui.puzzle.playmode){
-				if(mv.btn.Left){
+				if(mv.btn==='left'){
 					var cell = mv.getcell();
 					if(cell.isnull || !cell.isStone() || cell.anum!==-1){
 						ui.undotimer.startAnswerRedo();
 						result = false;
 					}
 				}
-				else if(mv.btn.Right){
+				else if(mv.btn==='right'){
 					ui.undotimer.startAnswerUndo();
 					result = false;
 				}
