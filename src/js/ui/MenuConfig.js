@@ -32,6 +32,19 @@ ui.menuconfig = {
 		this.add('fullwidth', (ui.windowWidth()<600));		/* キャンバスを横幅いっぱいに広げる */
 		
 		this.add('toolarea', 1, [0,1]);						/* ツールエリアの表示 */
+
+		/* puzzle.configとpzpr.langを一括で扱うため登録 */
+		for(var name in ui.puzzle.config.list){
+			this.add(name, ui.puzzle.config.list[name].defval, ui.puzzle.config.list[name].option);
+			this.list[name].volatile = true;
+			this.list[name].puzzle = true;
+		}
+		this.add('mode', (!ui.puzzle.playmode?1:3), [1,3]);
+		this.list.mode.volatile = true;
+		this.list.mode.puzzle = true;
+		
+		this.add('language', pzpr.lang, ['en','ja']);
+		this.list.language.volatile = true;
 	},
 	add : Config.add,
 
@@ -42,7 +55,13 @@ ui.menuconfig = {
 	get : Config.get,
 	set : function(idname, newval){
 		if(!this.list[idname]){ return;}
+		if(idname==='mode'){ ui.puzzle.setMode(newval); newval = (!ui.playmode?1:3);}
+		
 		newval = this.setproper(idname, newval);
+		
+		if(idname==='language'){ pzpr.lang = newval;}
+		else if(this.list[idname].puzzle){ ui.puzzle.setConfig(idname, newval);}
+		
 		this.configevent(idname,newval);
 	},
 
@@ -50,7 +69,12 @@ ui.menuconfig = {
 	// menuconfig.getList()  現在有効な設定値のリストを返す
 	//---------------------------------------------------------------------------
 	getList : Config.getList,
-	getexec : function(name){ return true;},
+	getexec : function(name){
+		if(!this.list[name]){ return false;}
+		if(name==='mode'){ return !ui.puzzle.playeronly;}
+		else if(this.list[name].puzzle){ return ui.puzzle.validConfig(name);}
+		return true;
+	},
 
 	//---------------------------------------------------------------------------
 	// menuconfig.getAll()  全フラグの設定値を返す
@@ -68,7 +92,10 @@ ui.menuconfig = {
 	//---------------------------------------------------------------------------
 	setproper : Config.setproper,
 	valid : function(idname){
+		if(!!this.list[name]){ return false;}
 		if(idname==="keypopup"){ return (ui.keypopup.paneltype[1]!==0 || ui.keypopup.paneltype[3]!==0);}
+		else if(idname==='mode'){ return !ui.puzzle.playeronly;}
+		else if(this.list[idname].puzzle){ return ui.puzzle.validConfig(idname);}
 		return !!this.list[idname];
 	},
 
@@ -76,6 +103,7 @@ ui.menuconfig = {
 	// config.configevent()  設定変更時の動作を記述する
 	//---------------------------------------------------------------------------
 	configevent : function(idname, newval){
+		if(!ui.menuarea.menuitem){ return;}
 		ui.setdisplay(idname);
 		switch(idname){
 		case 'keypopup':
@@ -92,6 +120,17 @@ ui.menuconfig = {
 			
 		case 'autocheck':
 			this.list.autocheck_once.val = newval;
+			break;
+			
+		case 'mode':
+			ui.setdisplay('keypopup');
+			ui.setdisplay('bgcolor');
+			ui.keypopup.display();
+			ui.misc.setkeyfocus();
+			break;
+			
+		case 'language':
+			ui.displayAll();
 			break;
 		}
 	}

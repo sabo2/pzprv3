@@ -18,8 +18,6 @@ ui.listener =
 		puzzle.on('mouse',    this.onMouseInput);
 		puzzle.on('history',  this.onHistoryChange);
 		
-		puzzle.on('config',     this.onConfigSet);
-		
 		puzzle.on('adjust',     this.onAdjust);
 		puzzle.on('resize',     this.onResize);
 	},
@@ -75,8 +73,8 @@ ui.listener =
 
 			/* F2で回答モード Shift+F2で問題作成モード */
 			if(!puzzle.playeronly){
-				if     (puzzle.editmode && c==='F2'      ){ puzzle.setConfig("mode", puzzle.MODE_PLAYER); result = false;}
-				else if(puzzle.playmode && c==='shift+F2'){ puzzle.setConfig("mode", puzzle.MODE_EDITOR); result = false;}
+				if     (puzzle.editmode && c==='F2'      ){ ui.menuconfig.set("mode", puzzle.MODE_PLAYER); result = false;}
+				else if(puzzle.playmode && c==='shift+F2'){ ui.menuconfig.set("mode", puzzle.MODE_EDITOR); result = false;}
 			}
 
 			/* デバッグ用ルーチンを通す */
@@ -97,7 +95,7 @@ ui.listener =
 	onMouseInput : function(puzzle){
 		var mv = puzzle.mouse, result = true;
 		if(mv.mousestart && mv.btn==='middle'){ /* 中ボタン */
-			puzzle.setMode(puzzle.playmode ? 'edit' : 'play');
+			ui.menuconfig.set('mode', puzzle.playmode ? 'edit' : 'play');
 			mv.mousereset();
 			result = false;
 		}
@@ -127,20 +125,6 @@ ui.listener =
 		if(!!ui.currentpid){
 			ui.menuarea.setdisplay("operation");
 			ui.toolarea.setdisplay("operation");
-		}
-	},
-
-	//---------------------------------------------------------------------------
-	// listener.onConfigSet()  config設定時に呼び出される関数
-	//---------------------------------------------------------------------------
-	onConfigSet : function(puzzle, idname, newval){
-		ui.setdisplay(idname);
-		
-		if(idname==='mode'){
-			ui.setdisplay('keypopup');
-			ui.setdisplay('bgcolor');
-			ui.keypopup.display();
-			ui.misc.setkeyfocus();
 		}
 	},
 

@@ -681,11 +681,11 @@ ui.popupmgr.addpopup('colors',
 	//------------------------------------------------------------------------------
 	setcolor : function(e){
 		var name = ui.customAttr(e.target,"colorTarget");
-		ui.puzzle.setConfig("color_"+name, e.target.value);
+		ui.menuconfig.set("color_"+name, e.target.value);
 	},
 	clearcolor : function(e){
 		var name = ui.customAttr(e.target,"colorTarget");
-		ui.puzzle.setConfig("color_"+name, "");
+		ui.menuconfig.set("color_"+name, "");
 		this.refresh(name);
 	}
 });

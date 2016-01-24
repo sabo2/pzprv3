@@ -8,8 +8,8 @@ ui.debug.extend(
 	loadperf : function(){
 		ui.puzzle.open(perfstr, function(puzzle){
 			ui.menuconfig.set('autocheck',false);
-			puzzle.setMode('play');
-			puzzle.setConfig('irowake',true);
+			ui.menuconfig.set('mode', 'play');
+			ui.menuconfig.set('irowake',true);
 		});
 	},
 	
@@ -60,12 +60,12 @@ ui.debug.extend(
 				break;
 			case 'playmode':
 			case 'editmode':
-				ui.puzzle.setMode(strs[0]);
+				ui.menuconfig.set('mode', strs[0]);
 				break;
 			case 'setconfig':
-				if     (strs[2]==="true") { ui.puzzle.setConfig(strs[1], true);}
-				else if(strs[2]==="false"){ ui.puzzle.setConfig(strs[1], false);}
-				else                      { ui.puzzle.setConfig(strs[1], strs[2]);}
+				if     (strs[2]==="true") { ui.menuconfig.set(strs[1], true);}
+				else if(strs[2]==="false"){ ui.menuconfig.set(strs[1], false);}
+				else                      { ui.menuconfig.set(strs[1], strs[2]);}
 				break;
 			case 'key':
 				for(var i=1;i<strs.length;i++){

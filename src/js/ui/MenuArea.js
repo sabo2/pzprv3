@@ -198,14 +198,14 @@ ui.menuarea = {
 		}
 		else if(idname==="toolarea"){
 			var str;
-			if(ui.getConfig("toolarea")===0){ str = ui.selectStr("ツールエリアを表示","Show tool area");}
-			else                            { str = ui.selectStr("ツールエリアを隠す","Hide tool area");}
+			if(ui.menuconfig.get("toolarea")===0){ str = ui.selectStr("ツールエリアを表示","Show tool area");}
+			else                                 { str = ui.selectStr("ツールエリアを隠す","Hide tool area");}
 			getEL('menu_toolarea').childNodes[0].data = str;
 		}
 		else if(this.menuitem===null || !this.menuitem[idname]){
 			/* DO NOTHING */
 		}
-		else if(ui.validConfig(idname)){
+		else if(ui.menuconfig.valid(idname)){
 			var menuitem = this.menuitem[idname];
 			menuitem.el.style.display = "";
 			
@@ -213,13 +213,13 @@ ui.menuarea = {
 			if(!!menuitem.children){
 				var children = menuitem.children;
 				for(var i=0;i<children.length;i++){
-					var child = children[i], selected = (ui.customAttr(child,"value")===""+ui.getConfig(idname));
+					var child = children[i], selected = (ui.customAttr(child,"value")===""+ui.menuconfig.get(idname));
 					child.className = (selected ? "checked" : "");
 				}
 			}
 			/* Check部の表記の変更 */
 			else if(!!menuitem.el){
-				menuitem.el.className = (ui.getConfig(idname) ? "checked" : "check");
+				menuitem.el.className = (ui.menuconfig.get(idname) ? "checked" : "check");
 			}
 		}
 		else if(!!this.menuitem[idname]){
@@ -236,14 +236,14 @@ ui.menuarea = {
 		if(el.nodeName==="SPAN"){ el = el.parentNode;}
 		
 		var idname = ui.customAttr(el,"config");
-		ui.setConfig(idname, !ui.getConfig(idname));
+		ui.menuconfig.set(idname, !ui.menuconfig.get(idname));
 	},
 	childclick : function(e){
 		var el = e.target;
 		if(el.nodeName==="SPAN"){ el = el.parentNode;}
 		
 		var parent = el.parentNode.parentNode;
-		ui.setConfig(ui.customAttr(parent,"config"), ui.customAttr(el,"value"));
+		ui.menuconfig.set(ui.customAttr(parent,"config"), ui.customAttr(el,"value"));
 	},
 
 	//---------------------------------------------------------------------------
@@ -261,7 +261,7 @@ ui.menuarea = {
 	subclear : function(){ this.ASconfirm();},
 	duplicate: function(){ this.duplicate_board();},
 	toolarea : function(){
-		ui.setConfig("toolarea", (ui.getConfig("toolarea")===0?1:0));
+		ui.menuconfig.set("toolarea", (ui.menuconfig.get("toolarea")===0?1:0));
 		ui.displayAll();
 	},
 	repaint : function(){ ui.puzzle.redraw(true);},

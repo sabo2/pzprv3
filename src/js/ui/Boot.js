@@ -20,7 +20,7 @@ function boot(){
 	if(importData() && includeDebugFile()){ startPuzzle();}
 	else{ setTimeout(boot,0);}
 }
-pzpr.addLoadListener(boot);
+pzpr.on('load',boot);
 
 function importData(){
 	/* pzpr, uiオブジェクト生成待ち */
@@ -41,7 +41,8 @@ function importData(){
 function failOpen(){
 	var title2 = document.getElementById('title2');
 	if(!!title2){ title2.innerHTML = "Fail to import puzzle data or URL.";}
-	throw new Error("No Include Puzzle Data Exception");
+	document.getElementById('menupanel').innerHTML = '';
+	//throw new Error("No Include Puzzle Data Exception");
 }
 
 function includeDebugFile(){
@@ -68,7 +69,7 @@ function includeDebugFile(){
 
 function startPuzzle(){
 	var pzl = onload_pzl, pid = pzl.pid;
-	if(ui.debugmode){ onload_option.config = {mode:pzpr.Puzzle.prototype.MODE_PLAYER};}
+	if(ui.debugmode){ onload_option.mode = 'play';}
 	
 	/* パズルオブジェクトの作成 */
 	var element = document.getElementById('divques');
@@ -81,7 +82,7 @@ function startPuzzle(){
 	// 単体初期化処理のルーチンへ
 	var callback = null;
 	if(!ui.debugmode){ callback = accesslog;}
-	else{ puzzle.once('ready', function(puzzle){ ui.setConfig('autocheck', true);});}
+	else{ puzzle.once('ready', function(puzzle){ ui.menuconfig.set('autocheck', true);});}
 	puzzle.once('fail-open', failOpen);
 	puzzle.open((!ui.debugmode || !!pzl.qdata) ? pzl : pid+"/"+ui.debug.urls[pid], callback);
 	
@@ -123,7 +124,7 @@ function importURL(){
 	var pzl = pzpr.parser.parseURL(search);
 
 	startmode = startmode || (!pzl.bstr ? 'EDITOR' : 'PLAYER');
-	if(startmode==='PLAYER'){ onload_option.mode = 'player';}
+	if(startmode==='PLAYER'){ onload_option.type = 'player';}
 
 	return pzl;
 }
