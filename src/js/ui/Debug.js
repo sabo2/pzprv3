@@ -42,8 +42,7 @@ ui.debug =
 		if(ca==='alt+p'){ this.disppoptest();}
 		else{ return false;}
 		
-		ui.puzzle.key.stopEvent();	/* カーソルを移動させない */
-		return true;
+		ui.puzzle.key.cancelEvent = true;	/* カーソルを移動させない */
 	},
 	disppoptest : function(){
 		ui.popupmgr.popups.debug.show();

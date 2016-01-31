@@ -74,7 +74,7 @@ ui.listener =
 			if(c==='ctrl+y' || c==='meta+y'){ ut.startKeyRedo(); result = false;}
 
 			/* F2で回答モード Shift+F2で問題作成モード */
-			if(puzzle.validConfig('mode')){
+			if(!puzzle.playeronly){
 				if     (puzzle.editmode && c==='F2'      ){ puzzle.setConfig("mode", puzzle.MODE_PLAYER); result = false;}
 				else if(puzzle.playmode && c==='shift+F2'){ puzzle.setConfig("mode", puzzle.MODE_EDITOR); result = false;}
 			}
@@ -97,7 +97,7 @@ ui.listener =
 	onMouseInput : function(puzzle){
 		var mv = puzzle.mouse, result = true;
 		if(mv.mousestart && mv.btn==='middle'){ /* 中ボタン */
-			puzzle.modechange();
+			puzzle.setMode(puzzle.playmode ? 'edit' : 'play');
 			mv.mousereset();
 			result = false;
 		}

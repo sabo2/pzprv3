@@ -3,6 +3,7 @@
 ui.debug.addDebugData('goishi', {
 	url : '6/7/vsten1tvo',
 	failcheck : [
+		['brNoStone',    "pzprv3/goishi/7/6"],
 		['goishiRemains',"pzprv3/goishi/7/6/. . . . . . /. . 0 0 . . /. 5 . 4 . . /. 0 . 3 . . /. 0 0 2 1 . /. . . 0 . . /. . . . . . /"],
 		[null,           "pzprv3/goishi/7/6/. . . . . . /. . 9 10 . . /. 5 . 4 . . /. 6 . 3 . . /. 7 8 2 1 . /. . . 11 . . /. . . . . . /"]
 	],
@@ -17,10 +18,6 @@ ui.debug.addDebugData('goishi', {
 		{ input:["playmode", "mouse,left, 1,1"],
 		  result:"pzprv3/goishi/4/4/. . . . /. 0 . . /. 0 0 . /. . . . /" },
 		{ input:["mouse,left, 3,3", "mouse,left, 5,5", "mouse,left, 3,5"],
-		  result:"pzprv3/goishi/4/4/. . . . /. 1 . . /. 2 0 . /. . . . /" },
-		{ input:["mouse,right, 0,0"],
-		  result:"pzprv3/goishi/4/4/. . . . /. 1 . . /. 0 0 . /. . . . /" },
-		{ input:["mouse,left, 0,0"],
 		  result:"pzprv3/goishi/4/4/. . . . /. 1 . . /. 2 0 . /. . . . /" }
 	]
 });

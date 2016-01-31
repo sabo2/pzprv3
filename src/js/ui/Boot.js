@@ -32,14 +32,16 @@ function importData(){
 		onload_pzl = (importFileData() || importURL());
 		
 		/* 指定されたパズルがない場合はさようなら～ */
-		if(!onload_pzl || !onload_pzl.pid){
-			var title2 = document.getElementById('title2');
-			if(!!title2){ title2.innerHTML = "Fail to import puzzle data or URL.";}
-			throw new Error("No Include Puzzle Data Exception");
-		}
+		if(!onload_pzl || !onload_pzl.pid){ failOpen();}
 	}
 	
 	return true;
+}
+
+function failOpen(){
+	var title2 = document.getElementById('title2');
+	if(!!title2){ title2.innerHTML = "Fail to import puzzle data or URL.";}
+	throw new Error("No Include Puzzle Data Exception");
 }
 
 function includeDebugFile(){
@@ -70,16 +72,17 @@ function startPuzzle(){
 	
 	/* パズルオブジェクトの作成 */
 	var element = document.getElementById('divques');
-	var puzzle = ui.puzzle = pzpr.createPuzzle(element, onload_option);
+	var puzzle = ui.puzzle = new pzpr.Puzzle(element, onload_option);
 	pzpr.connectKeyEvents(puzzle);
 	
-	/* createPuzzle()後からopen()前に呼ぶ */
+	/* パズルオブジェクト作成〜open()間に呼ぶ */
 	ui.event.onload_func();
 	
 	// 単体初期化処理のルーチンへ
 	var callback = null;
 	if(!ui.debugmode){ callback = accesslog;}
 	else{ puzzle.once('ready', function(puzzle){ ui.setConfig('autocheck', true);});}
+	puzzle.once('fail-open', failOpen);
 	puzzle.open((!ui.debugmode || !!pzl.qdata) ? pzl : pid+"/"+ui.debug.urls[pid], callback);
 	
 	return true;
@@ -113,6 +116,9 @@ function importURL(){
 	else if(search.match(/^m\+/)) { startmode = 'EDITOR';}
 	else if(search.match(/_edit/)){ startmode = 'EDITOR';}
 	else if(search.match(/_play/)){ startmode = 'PLAYER';}
+
+	search=search.replace(/^m\+/,'');
+	search=search.replace(/(_test|_edit|_play)/,'');
 
 	var pzl = pzpr.parser.parseURL(search);
 
@@ -158,8 +164,8 @@ function getStorageData(key, key2){
 //---------------------------------------------------------------------------
 // ★accesslog() playerのアクセスログをとる
 //---------------------------------------------------------------------------
-function accesslog(){
-	if(pzpr.EDITOR || !onload_pzl.pid || !require_accesslog){ return;}
+function accesslog(puzzle){
+	if(!puzzle.playeronly || !onload_pzl.pid || !require_accesslog){ return;}
 
 	if(document.domain!=='indi.s58.xrea.com' &&
 	   document.domain!=='pzprv3.sakura.ne.jp' &&

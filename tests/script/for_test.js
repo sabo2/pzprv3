@@ -8,7 +8,7 @@ ui.debug.extend(
 	loadperf : function(){
 		ui.puzzle.open(perfstr, function(puzzle){
 			ui.menuconfig.set('autocheck',false);
-			puzzle.modechange(ui.puzzle.MODE_PLAYER);
+			puzzle.setMode('play');
 			puzzle.setConfig('irowake',true);
 		});
 	},
@@ -20,8 +20,7 @@ ui.debug.extend(
 		else if(ca==='shift+ctrl+F10'){ this.all_test();}
 		else{ return false;}
 		
-		ui.puzzle.key.stopEvent();	/* カーソルを移動させない */
-		return true;
+		ui.puzzle.key.cancelEvent = true;	/* カーソルを移動させない */
 	},
 	
 	accheck1 : function(){
@@ -60,10 +59,8 @@ ui.debug.extend(
 				ui.puzzle.ansclear();
 				break;
 			case 'playmode':
-				ui.puzzle.modechange(ui.puzzle.MODE_PLAYER);
-				break;
 			case 'editmode':
-				ui.puzzle.modechange(ui.puzzle.MODE_EDITOR);
+				ui.puzzle.setMode(strs[0]);
 				break;
 			case 'setconfig':
 				if     (strs[2]==="true") { ui.puzzle.setConfig(strs[1], true);}
@@ -87,16 +84,12 @@ ui.debug.extend(
 	execmouse : function(strs){
 		var matches = (strs[1].match(/(left|right)(.*)/)[2]||"").match(/x([0-9]+)/);
 		var repeat = matches ? +matches[1] : 1;
+		var args = [];
+		if     (strs[1].substr(0,4)==="left") { args.push('left');}
+		else if(strs[1].substr(0,5)==="right"){ args.push('right');}
+		for(var i=2;i<strs.length;i++){ args.push(+strs[i]);}
 		for(var t=0;t<repeat;t++){
-			var mv = ui.puzzle.mouse;
-			if     (strs[1].substr(0,4)==="left") { mv.btn='left';}
-			else if(strs[1].substr(0,5)==="right"){ mv.btn='right';}
-			
-			mv.moveTo(+strs[2], +strs[3]);
-			for(var i=4;i<strs.length-1;i+=2){ /* 奇数個の最後の一つは切り捨て */
-				mv.lineTo(+strs[i], +strs[i+1]);
-			}
-			mv.inputEnd(2);
+			ui.puzzle.mouse.inputPath.apply(ui.puzzle.mouse, args);
 		}
 	},
 	inputcheck_popup : function(){
@@ -212,7 +205,7 @@ ui.debug.extend(
 			ui.puzzle.open(acsstr[n][1]);
 			var faildata = ui.puzzle.check(true), expectcode = acsstr[n][0];
 			var iserror = (!!expectcode ? (faildata[0]!==expectcode) : (!faildata.complete));
-			var errdesc = (!!expectcode ? expectcode : 'complete')+":"+(new ui.puzzle.klass.CheckInfo(expectcode).text());
+			var errdesc = (!!expectcode ? expectcode : 'complete')+":"+(new ui.puzzle.klass.CheckInfo(expectcode).text);
 
 			var judge = (!iserror ? "pass" : "failure...");
 			if(iserror){ self.fails++;}
@@ -270,6 +263,7 @@ ui.debug.extend(
 
 			setTimeout(function(){
 				if(pzpr.variety.info[self.pid].exists.pencilbox){ self.check_file_pbox(self);}
+				else if(puzzle.pid==='tawa'){ self.check_flipX1(self);}
 				else{ self.check_turnR1(self);}
 			},0);
 		});
@@ -315,7 +309,7 @@ ui.debug.extend(
 		ui.menuconfig.set('autocheck',false);
 
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<4;i++){ bd.exec.execadjust('turnr');}
+		for(var i=0;i<4;i++){ bd.operate('turnr');}
 
 		if(!self.bd_compare(bd,bd2)){ self.addTA("TurnR test 1  = failure..."); self.fails++;}
 		else if(!self.alltimer){ self.addTA("TurnR test 1  = pass");}
@@ -334,7 +328,7 @@ ui.debug.extend(
 
 	check_turnL1 : function(self){
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<4;i++){ bd.exec.execadjust('turnl');}
+		for(var i=0;i<4;i++){ bd.operate('turnl');}
 
 		if(!self.bd_compare(bd,bd2)){ self.addTA("TurnL test 1  = failure..."); self.fails++;}
 		else if(!self.alltimer){ self.addTA("TurnL test 1  = pass");}
@@ -353,7 +347,7 @@ ui.debug.extend(
 	//Flip test--------------------------------------------------------------
 	check_flipX1 : function(self){
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<2;i++){ bd.exec.execadjust('flipx');}
+		for(var i=0;i<2;i++){ bd.operate('flipx');}
 
 		if(!self.bd_compare(bd,bd2)){ self.addTA("FlipX test 1  = failure..."); self.fails++;}
 		else if(!self.alltimer){ self.addTA("FlipX test 1  = pass");}
@@ -372,7 +366,7 @@ ui.debug.extend(
 
 	check_flipY1 : function(self){
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<2;i++){ bd.exec.execadjust('flipy');}
+		for(var i=0;i<2;i++){ bd.operate('flipy');}
 
 		if(!self.bd_compare(bd,bd2)){ self.addTA("FlipY test 1  = failure..."); self.fails++;}
 		else if(!self.alltimer){ self.addTA("FlipY test 1  = pass");}
@@ -392,7 +386,7 @@ ui.debug.extend(
 	check_adjust1 : function(self){
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
 		var names = ['expandup','expanddn','expandlt','expandrt','reduceup','reducedn','reducelt','reducert'];
-		for(var i=0;i<8;i++){ bd.exec.execadjust(names[i]);}
+		for(var i=0;i<8;i++){ bd.operate(names[i]);}
 
 		if(!self.bd_compare(bd,bd2)){ self.addTA("Adjust test 1  = failure..."); self.fails++;}
 		else if(!self.alltimer){ self.addTA("Adjust test 1  = pass");}

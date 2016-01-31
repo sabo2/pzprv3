@@ -327,7 +327,7 @@ ui.popupmgr.addpopup('urloutput',
 			case "pzprv3":     url = ui.puzzle.getURL(parser.URL_PZPRV3);  break;
 			// case "pzprapp": url = ui.puzzle.getURL(parser.URL_PZPRAPP); break;
 			case "kanpen":     url = ui.puzzle.getURL(parser.URL_KANPEN);  break;
-			case "pzprv3e":    url = ui.puzzle.getURL(parser.URL_PZPRV3E); break;
+			case "pzprv3e":    url = ui.puzzle.getURL(parser.URL_PZPRV3).replace(/\?(\w+)/,"?$1_edit"); break;
 			case "heyaapp":    url = ui.puzzle.getURL(parser.URL_HEYAAPP); break;
 		}
 		this.form.ta.value = url;
@@ -599,7 +599,7 @@ ui.popupmgr.addpopup('adjust',
 	formname : 'adjust',
 	
 	adjust : function(e){
-		ui.puzzle.board.exec.execadjust(e.target.name);
+		ui.puzzle.board.operate(e.target.name);
 	}
 });
 
@@ -616,7 +616,7 @@ ui.popupmgr.addpopup('turnflip',
 	},
 	
 	adjust : function(e){
-		ui.puzzle.board.exec.execadjust(e.target.name);
+		ui.puzzle.board.operate(e.target.name);
 	}
 });
 
