@@ -21,9 +21,7 @@ ui.misc = {
 		var titleEL = _doc.getElementById('title2');
 		titleEL.innerHTML = title;
 
-		var imageurl = this.bgimage(pid);
-		if(!imageurl){ imageurl="./bg/"+pid+".gif";}
-		_doc.body.style.backgroundImage = "url("+imageurl+")";
+		_doc.body.style.backgroundImage = "url("+this.bgimage(pid)+")";
 	},
 	bgimage : function(pid){
 		return toBGimage(pid);
