@@ -125,7 +125,7 @@
 	}
 	div#btnarea {
 		position : relative;
-		margin-top : 1.0em;
+		margin : 1.0em auto 1.0em auto;
 	}
 
 	/* OK/Cancel表示用 */
