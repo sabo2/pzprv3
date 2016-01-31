@@ -55,7 +55,7 @@ ui.menuconfig = {
 	get : Config.get,
 	set : function(idname, newval){
 		if(!this.list[idname]){ return;}
-		if(idname==='mode'){ ui.puzzle.setMode(newval); newval = (!ui.playmode?1:3);}
+		if(idname==='mode'){ ui.puzzle.setMode(+newval); newval = (!ui.puzzle.playmode?1:3);}
 		
 		newval = this.setproper(idname, newval);
 		
