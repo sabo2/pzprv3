@@ -3,8 +3,8 @@
 <HEAD>
 <META CHARSET="utf-8">
 <META NAME="robots" CONTENT="noindex,nofollow">
-<meta name="viewport" content="width=device-width" />
-<link rel="stylesheet" href="./css/sc8.css" type="text/css" />
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="./css/sc8.css" type="text/css">
 <script type="text/javascript" src="./js/pzpr.js"></script>
 <script type="text/javascript" src="./js/pzprv3-ui.js"></script>
 <TITLE>ぱずぷれv3</TITLE>
@@ -303,29 +303,29 @@
     <div class="titlebar">__盤面の新規作成__New Board__</div>
     <form name="newboard">
       <span>__盤面を新規作成します。__Create New Board.__</span>
-      <br />
+      <br>
       <div id="nb_size">
         <span id="nb_cols">__よこ__Cols__</span>
-        <input type="number" name="col" value="1" size=4 maxlength=3 min=1 max=999 />
+        <input type="number" name="col" value="1" size=4 maxlength=3 min=1 max=999>
         <span id="nb_cols_tawa">__横幅 (黄色の数)__Width (Yellows)__</span>
-        <br />
+        <br>
         <span id="nb_rows">__たて__Rows__</span>
-        <input type="number" name="row" value="1" size=4 maxlength=3 min=1 max=999 />
+        <input type="number" name="row" value="1" size=4 maxlength=3 min=1 max=999>
         <span id="nb_rows_tawa">__高さ__Height__</span>
       </div>
       <div id="nb_size_sudoku">
-        <input type="radio" name="size" id="nb_size_sudoku_0" value="0" /> 4x4<br />
-        <input type="radio" name="size" id="nb_size_sudoku_4" value="4" /> 6x6<br />
-        <input type="radio" name="size" id="nb_size_sudoku_1" value="1" checked /> 9x9<br />
-        <input type="radio" name="size" id="nb_size_sudoku_2" value="2" /> 16x16<br />
-        <input type="radio" name="size" id="nb_size_sudoku_3" value="3" /> 25x25
+        <input type="radio" name="size" id="nb_size_sudoku_0" value="0"> 4x4<br>
+        <input type="radio" name="size" id="nb_size_sudoku_4" value="4"> 6x6<br>
+        <input type="radio" name="size" id="nb_size_sudoku_1" value="1" checked> 9x9<br>
+        <input type="radio" name="size" id="nb_size_sudoku_2" value="2"> 16x16<br>
+        <input type="radio" name="size" id="nb_size_sudoku_3" value="3"> 25x25
       </div>
-      <br />
+      <br>
       <table id="nb_shape_tawa" border=0 cell-padding=0 cell-spaceing=2><tr>
-        <td><div id="nb_shape_0"><img src="" data-button-exec="clickshape" /></div></td>
-        <td><div id="nb_shape_1"><img src="" data-button-exec="clickshape" /></div></td>
-        <td><div id="nb_shape_2"><img src="" data-button-exec="clickshape" /></div></td>
-        <td><div id="nb_shape_3"><img src="" data-button-exec="clickshape" /></div></td>
+        <td><div id="nb_shape_0"><img src="" data-button-exec="clickshape"></div></td>
+        <td><div id="nb_shape_1"><img src="" data-button-exec="clickshape"></div></td>
+        <td><div id="nb_shape_2"><img src="" data-button-exec="clickshape"></div></td>
+        <td><div id="nb_shape_3"><img src="" data-button-exec="clickshape"></div></td>
       </tr></table>
       <button type="button" class="btn btn-ok" data-button-exec="execute">__新規作成__Create__</button>
       <button type="button" class="btn" data-button-exec="close">__キャンセル__Cancel__</button>
@@ -336,9 +336,9 @@
     <div class="titlebar">__URL入力__Import from URL__</div>
     <form name="urlinput">
       <span>__URLから問題を読み込みます。__Import a question from URL.__</span>
-      <br />
+      <br>
       <textarea name="ta" cols=48 rows=8 wrap="hard"></textarea>
-      <br />
+      <br>
       <button type="button" class="btn btn-ok" data-button-exec="urlinput">__読み込む__Import__</button>
       <button type="button" class="btn" data-button-exec="close">__キャンセル__Cancel__</button>
     </form>
@@ -347,14 +347,14 @@
   <div class="popup">
     <div class="titlebar">__URL出力__Export URL__</div>
     <form name="urloutput">
-      <button type="button" class="btn" data-button-exec="urloutput" name="pzprv3" >__ぱずぷれv3のURLを出力する__Output PUZ-PRE v3 URL__</button><br />
- <!-- <button type="button" class="btn" data-button-exec="urloutput" name="pzprapp">__ぱずぷれ(アプレット)のURLを出力する__Output PUZ-PRE(JavaApplet) URL__</button><br /> -->
-      <button type="button" class="btn" data-button-exec="urloutput" name="kanpen" >__カンペンのURLを出力する__Output Kanpen URL__</button><br />
-      <button type="button" class="btn" data-button-exec="urloutput" name="heyaapp">__へやわけアプレットのURLを出力する__Output Heyawake-Applet URL__</button><br />
-      <button type="button" class="btn" data-button-exec="urloutput" name="pzprv3e">__ぱずぷれv3の再編集用URLを出力する__Output PUZ-PRE v3 Re-Edit URL__</button><br />
-      <br />
+      <button type="button" class="btn" data-button-exec="urloutput" name="pzprv3" >__ぱずぷれv3のURLを出力する__Output PUZ-PRE v3 URL__</button><br>
+ <!-- <button type="button" class="btn" data-button-exec="urloutput" name="pzprapp">__ぱずぷれ(アプレット)のURLを出力する__Output PUZ-PRE(JavaApplet) URL__</button><br> -->
+      <button type="button" class="btn" data-button-exec="urloutput" name="kanpen" >__カンペンのURLを出力する__Output Kanpen URL__</button><br>
+      <button type="button" class="btn" data-button-exec="urloutput" name="heyaapp">__へやわけアプレットのURLを出力する__Output Heyawake-Applet URL__</button><br>
+      <button type="button" class="btn" data-button-exec="urloutput" name="pzprv3e">__ぱずぷれv3の再編集用URLを出力する__Output PUZ-PRE v3 Re-Edit URL__</button><br>
+      <br>
       <textarea name="ta" cols=48 rows=8 wrap="hard" readonly></textarea>
-      <br />
+      <br>
       <button type="button" class="btn btn-info" data-button-exec="openurl">__このURLを開く__Open this URL on another window/tab__</button>
       <button type="button" class="btn" data-button-exec="close">__閉じる__Close__</button>
     </form>
@@ -363,12 +363,12 @@
   <div class="popup">
     <div class="titlebar">__ファイルを開く__Open File__</div>
     <form name="fileform" action="fileio.cgi" method="post" enctype="multipart/form-data" target="fileiopanel">
-      <input type="hidden" name="operation" value="open" />
-      <input type="hidden" name="pencilbox" value="0" />
+      <input type="hidden" name="operation" value="open">
+      <input type="hidden" name="pencilbox" value="0">
       <span>__ファイル選択__Choose file__</span>
-      <br />
-      <input type="file" name="filebox" data-change-exec="fileopen" class="btn btn-info" id="filebox" value="" />
-      <br />
+      <br>
+      <input type="file" name="filebox" data-change-exec="fileopen" class="btn btn-info" id="filebox" value="">
+      <br>
       <button type="button" class="btn" data-button-exec="close">__キャンセル__Cancel__</button>
     </form>
   </div>
@@ -376,9 +376,9 @@
   <div class="popup">
     <div class="titlebar">__ファイルを保存する__Save File__</div>
     <form name="filesave" action="fileio.cgi" method="post" target="fileiopanel">
-      <input type="hidden" name="operation" value="save" />
-      <input type="hidden" name="ques" value="" />
-      <input type="hidden" name="urlstr" value="" />
+      <input type="hidden" name="operation" value="save">
+      <input type="hidden" name="ques" value="">
+      <input type="hidden" name="urlstr" value="">
       <span>__ファイル形式__File format__</span>
       <select name="filetype" data-change-exec="changefilename">
         <option value="filesave">__ぱずぷれv3形式__Puz-Pre v3 format__</option>
@@ -386,11 +386,11 @@
         <option value="filesave2">__pencilbox形式__Pencilbox Text format__</option>
         <option value="filesave4">__pencilbox XML形式__Pencilbox XML format__</option>
       </select>
-      <br />
+      <br>
       <span>__ファイル名__Filename__</span>
-      <input type="text" name="filename" value="" />
-      <br />
-      <br />
+      <input type="text" name="filename" value="">
+      <br>
+      <br>
       <button type="button" class="btn btn-ok" data-button-exec="filesave">__保存__Save__</button>
       <button type="button" class="btn" data-button-exec="close">__閉じる__Close__</button>
     </form>
@@ -408,9 +408,9 @@
         </select>
         <button type="button" class="btn" data-button-exec="database_handler" name="tableup">__▲__Up__</button>
         <button type="button" class="btn" data-button-exec="database_handler" name="tabledn">__▼__Down__</button>
-        <br />
+        <br>
         <select name="datalist" size=9 data-change-exec="database_handler"></select>
-        <br />
+        <br>
         <button type="button" class="btn btn-ok" data-button-exec="database_handler" name="open">__データ読み込み__Load__</button>
         <button type="button" class="btn" data-button-exec="close">__閉じる__Close__</button>
       </div>
@@ -432,22 +432,22 @@
   <div class="popup">
     <div class="titlebar">__画像を保存する__Save Image__</div>
     <form name="imagesave" action="fileio.cgi" method="post" target="fileiopanel">
-      <input type="hidden" name="operation" value="imagesave" />
-      <input type="hidden" name="urlstr" value="" />
+      <input type="hidden" name="operation" value="imagesave">
+      <input type="hidden" name="urlstr" value="">
       <span>__ファイル形式__File format__</span>
       <select name="filetype" data-change-exec="changefilename">
         <option value="png">__PNG形式 (png)__PNG Format (png)__</option>
         <option value="svg">__ベクター画像(SVG)__Vector Image (SVG)__</option>
       </select>
-      <br />
+      <br>
       <span>__ファイル名__Filename__</span>
-      <input type="text" name="filename" value="" />
-      <br />
+      <input type="text" name="filename" value="">
+      <br>
       <span>__画像のサイズ__Image Size__</span>
-      <input type="number" name="cellsize" value="36" size=4 maxlength=3 min=8 max=999 data-change-exec="estimatesize" />
+      <input type="number" name="cellsize" value="36" size=4 maxlength=3 min=8 max=999 data-change-exec="estimatesize">
       <span id="showsize">x</span>
-      <br />
-      <br />
+      <br>
+      <br>
       <button type="button" class="btn btn-ok"   data-button-exec="saveimage">__ダウンロード__Download__</button>
       <button type="button" class="btn btn-info" data-button-exec="openimage">__別ウィンドウで開く__Open in another window__</button>
       <button type="button" class="btn" data-button-exec="close">__閉じる__Close__</button>
@@ -458,21 +458,21 @@
     <div class="titlebar">__盤面の調整__Board Dimension Resizer__</div>
     <form name="adjust">
       <span>__盤面の調整を行います。__Adjust the board.__</span>
-      <br />
+      <br>
       <span>__拡大__Expand__</span>
       <button type="button" class="btn" data-button-exec="adjust" name="expandup">__上__Top__</button>
       <button type="button" class="btn" data-button-exec="adjust" name="expanddn">__下__Bottom__</button>
       <span> </span>
       <button type="button" class="btn" data-button-exec="adjust" name="expandlt">__左__Left__</button>
       <button type="button" class="btn" data-button-exec="adjust" name="expandrt">__右__right__</button>
-      <br />
+      <br>
       <span>__縮小__Reduce__</span>
       <button type="button" class="btn" data-button-exec="adjust" name="reduceup">__上__Top__</button>
       <button type="button" class="btn" data-button-exec="adjust" name="reducedn">__下__Bottom__</button>
       <span> </span>
       <button type="button" class="btn" data-button-exec="adjust" name="reducelt">__左__Left__</button>
       <button type="button" class="btn" data-button-exec="adjust" name="reducert">__右__right__</button>
-      <br />
+      <br>
       <button type="button" class="btn" data-button-exec="close">__閉じる__Close__</button>
     </form>
   </div>
@@ -481,14 +481,14 @@
     <div class="titlebar">__反転・回転__Flip/Turn the board__</div>
     <form name="turnflip">
       <span>__盤面の回転・反転を行います。__Flip/Turn the board.__</span>
-      <br />
+      <br>
       <button type="button" class="btn" data-button-exec="adjust" name="turnl">__左90°回転__Turn left by 90 degree__</button>
       <button type="button" class="btn" data-button-exec="adjust" name="turnr">__右90°回転__Turn right by 90 degree__</button>
-      <br />
+      <br>
       <button type="button" class="btn" data-button-exec="adjust" name="flipy">__上下反転__Flip upside down__</button>
       <button type="button" class="btn" data-button-exec="adjust" name="flipx">__左右反転__Flip leftside right__</button>
-      <br />
-      <br />
+      <br>
+      <br>
       <button type="button" class="btn" data-button-exec="close">__閉じる__Close__</button>
     </form>
   </div>
@@ -511,10 +511,10 @@
     <div class="titlebar">__表示サイズの変更__Change size__</div>
     <form name="dispsize">
       <span>__表示サイズを変更します。__Change the display size.__</span>
-      <br />
+      <br>
       <span>__表示サイズ__Display size__</span>
-      <input type="number" name="cellsize" value="" size=4 maxlength=3 min=8 max=999 />
-      <br />
+      <input type="number" name="cellsize" value="" size=4 maxlength=3 min=8 max=999>
+      <br>
       <button type="button" class="btn btn-ok" data-button-exec="changesize">__変更する__Change__</button>
       <button type="button" class="btn" data-button-exec="close">__閉じる__Close__</button>
     </form>
@@ -524,9 +524,9 @@
     <div class="titlebar">__色の変更___Change Colors__</div>
     <form name="colors">
       <span>__黒マス (回答入力)__Shaded Cell (Answer)__</span>
-      <input type="color" data-color-target="qanscolor" data-change-exec="setcolor" value="" />
+      <input type="color" data-color-target="qanscolor" data-change-exec="setcolor" value="">
       <button type="button" class="btn btn-warn" data-color-target="qanscolor" data-button-exec="clearcolor">__クリア__Reset__</button>
-      <br />
+      <br>
       <button type="button" class="btn" data-button-exec="close">__閉じる__Close__</button>
     </form>
   </div>
@@ -535,10 +535,10 @@
     <div class="titlebar">credit</div>
     <form name="credit">
       <span>__ぱずぷれv3__PUZ-PRE v3__</span> <%= pkg.version %>
-      <br />
-      <br />
+      <br>
+      <br>
       <span>__ぱずぷれv3は はっぱ/連続発破が作成しています。__PUZ-PRE v3 is made by happa.__</span>
-      <br />
+      <br>
       <button type="button" class="btn btn-ok" data-button-exec="close">OK</button>
     </form>
   </div>
@@ -546,7 +546,7 @@
   <div class="popup" id="poptest">
     <div class="titlebar">pop_test</div>
     <form name="debug">
-      <textarea name="testarea" id="testarea" cols=40 rows=16 wrap="off" style="font-size:10pt;"></textarea><br />
+      <textarea name="testarea" id="testarea" cols=40 rows=16 wrap="off" style="font-size:10pt;"></textarea><br>
         <button type="button" class="btn" data-button-exec="handler" name="starttest">__テスト__Test__</button
        ><button type="button" class="btn" data-button-exec="handler" name="all_test">__ALL__ALL-Test__</button>
         <button type="button" class="btn" data-button-exec="handler" name="perfeval">T1</button
@@ -557,7 +557,7 @@
         <button type="button" class="btn" data-button-exec="handler" name="loadperf">Perf</button>
         <button type="button" class="btn" data-button-exec="handler" name="dispdatabase">DB</button>
         <button type="button" class="btn" data-button-exec="handler" name="inputcheck_popup">INP</button>
-      <br />
+      <br>
         <button type="button" class="btn" data-button-exec="handler" name="filesave">Save</button
       /><button type="button" class="btn" data-button-exec="handler" name="filesave_pencilbox">PBSave</button
       /><button type="button" class="btn" data-button-exec="handler" name="filesave_pencilbox_xml">PBSaveX</button>
