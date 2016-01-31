@@ -7,6 +7,8 @@ module.exports = function(grunt){
   var banner_min  = fs.readFileSync('./src/js/common/banner_min.js',  'utf-8');
   var banner_full = fs.readFileSync('./src/js/common/banner_full.js', 'utf-8');
 
+  var PRODUCTION = (grunt.cli.tasks.indexOf('release') >= 0);
+
   grunt.initConfig({
     pkg: pkg,
 
@@ -40,13 +42,8 @@ module.exports = function(grunt){
       },
       ui: {
         options:{
-          sourceMap: true
+          sourceMap: !PRODUCTION
         },
-        files: [
-          { src: require('./src/js/pzprv3-ui.js').files, dest: 'dist/js/pzprv3-ui.concat.js' }
-        ]
-      },
-      'ui-rel': {
         files: [
           { src: require('./src/js/pzprv3-ui.js').files, dest: 'dist/js/pzprv3-ui.concat.js' }
         ]
@@ -59,17 +56,11 @@ module.exports = function(grunt){
         report: 'min',
       },
       ui: {
-        options: {
+        options: (PRODUCTION ? {} : {
           sourceMap : 'dist/js/pzprv3-ui.js.map',
           sourceMapIn : 'dist/js/pzprv3-ui.concat.js.map',
           sourceMapIncludeSources : true
-        },
-        files: [
-          { src: 'dist/js/pzprv3-ui.concat.js', dest: 'dist/js/pzprv3-ui.js' },
-          { src: 'src/js/v3index.js',           dest: 'dist/js/v3index.js' }
-        ]
-      },
-      'ui-rel': {
+        }),
         files: [
           { src: 'dist/js/pzprv3-ui.concat.js', dest: 'dist/js/pzprv3-ui.js' },
           { src: 'src/js/v3index.js',           dest: 'dist/js/v3index.js' }
@@ -99,8 +90,7 @@ module.exports = function(grunt){
   });
   
   grunt.registerTask('lint', ['newer:jshint:all']);
-  grunt.registerTask('default', ['lint:source:',          'build']);
-  grunt.registerTask('release', ['lint:source:', 'clean', 'build-rel']);
-  grunt.registerTask('build',   ['newer:copy:ui', 'newer:copy:pzpr', 'newer:concat:ui',     'newer:uglify:ui']);
-  grunt.registerTask('build-rel',['newer:copy:ui','newer:copy:pzpr', 'newer:concat:ui-rel', 'newer:uglify:ui-rel']);
+  grunt.registerTask('default', ['lint:source',          'build']);
+  grunt.registerTask('release', ['lint:source', 'clean', 'build']);
+  grunt.registerTask('build',   ['newer:copy:ui', 'newer:copy:pzpr', 'newer:concat:ui', 'newer:uglify:ui']);
 };
