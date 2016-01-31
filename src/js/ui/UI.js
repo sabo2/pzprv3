@@ -12,6 +12,8 @@ function createEL(tagName){ return _doc.createElement(tagName);}
 //---------------------------------------------------------------------------
 /* extern */
 window.ui = {
+	version : '<%= pkg.version %>',
+
 	/* このサイトで使用するパズルのオブジェクト */
 	puzzle    : null,
 	
