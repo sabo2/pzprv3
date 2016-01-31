@@ -719,5 +719,9 @@ ui.popupmgr.addpopup('dispsize',
 //---------------------------------------------------------------------------
 ui.popupmgr.addpopup('credit',
 {
-	formname : 'credit'
+	formname : 'credit',
+
+	setFormEvent : function(){
+		getEL('pzprversion').innerHTML = pzpr.version;
+	}
 });
