@@ -74,13 +74,12 @@ ui.event =
 	onload_func : function(){
 		ui.initFileReadMethod();
 		
-		ui.menuconfig.init();
-		ui.restoreConfig();
+		ui.menuconfig.restore();
 		
 		ui.listener.setListeners(ui.puzzle);
 	},
 	onunload_func : function(){
-		ui.saveConfig();
+		ui.menuconfig.save();
 	},
 
 	//---------------------------------------------------------------------------

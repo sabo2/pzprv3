@@ -96,7 +96,7 @@ ui.debug.extend(
 		this.inputcheck(this.getTA());
 	},
 	inputcheck : function(text){
-		ui.saveConfig();
+		ui.menuconfig.save();
 		var inparray = eval("["+text+"]");
 		for(var n=0;n<inparray.length;n++){
 			var data = inparray[n];
@@ -106,7 +106,7 @@ ui.debug.extend(
 			}
 		}
 		this.execinput("playmode");
-		ui.restoreConfig();
+		ui.menuconfig.restore();
 		ui.displayAll();
 	},
 
@@ -222,7 +222,7 @@ ui.debug.extend(
 		var inps = self.inputs[self.pid];
 		if(inps.length>0){
 			var count=0, pass=0;
-			ui.saveConfig();
+			ui.menuconfig.save();
 			for(var n=0;n<inps.length;n++){
 				var data = inps[n];
 				if(data.input!==void 0 && !!data.input){
@@ -241,7 +241,7 @@ ui.debug.extend(
 				self.addTA("Input test Pass = "+pass+"/"+count);
 			}
 			self.execinput("playmode");
-			ui.restoreConfig();
+			ui.menuconfig.restore();
 			ui.displayAll();
 		}
 

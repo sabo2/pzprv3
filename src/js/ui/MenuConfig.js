@@ -32,8 +32,10 @@ ui.menuconfig = {
 		this.add('fullwidth', (ui.windowWidth()<600));		/* キャンバスを横幅いっぱいに広げる */
 		
 		this.add('toolarea', 1, [0,1]);						/* ツールエリアの表示 */
+		
+		this.add('language', pzpr.lang, ['en','ja']);		/* 言語設定 */
 
-		/* puzzle.configとpzpr.langを一括で扱うため登録 */
+		/* puzzle.configを一括で扱うため登録 */
 		for(var name in ui.puzzle.config.list){
 			this.add(name, ui.puzzle.config.list[name].defval, ui.puzzle.config.list[name].option);
 			this.list[name].volatile = true;
@@ -42,9 +44,6 @@ ui.menuconfig = {
 		this.add('mode', (!ui.puzzle.playmode?1:3), [1,3]);
 		this.list.mode.volatile = true;
 		this.list.mode.puzzle = true;
-		
-		this.add('language', pzpr.lang, ['en','ja']);
-		this.list.language.volatile = true;
 	},
 	add : Config.add,
 
@@ -66,6 +65,27 @@ ui.menuconfig = {
 	},
 
 	//---------------------------------------------------------------------------
+	// menuconfig.restore()  保存された各種設定値を元に戻す
+	// menuconfig.save()     各種設定値を保存する
+	//---------------------------------------------------------------------------
+	restore : function(){
+		/* 設定が保存されている場合は元に戻す */
+		if(pzpr.env.storage.localST && !!window.JSON){
+			this.init();
+			var json_puzzle = localStorage['pzprv3_config:puzzle'];
+			var json_menu   = localStorage['pzprv3_config:ui'];
+			if(!!json_puzzle){ this.setAll(JSON.parse(json_puzzle));}
+			if(!!json_menu)  { this.setAll(JSON.parse(json_menu));}
+		}
+	},
+	save : function(){
+		if(pzpr.env.storage.localST && !!window.JSON){
+			localStorage['pzprv3_config:puzzle'] = JSON.stringify(ui.puzzle.saveConfig());
+			localStorage['pzprv3_config:ui']     = JSON.stringify(this.getAll());
+		}
+	},
+
+	//---------------------------------------------------------------------------
 	// menuconfig.getList()  現在有効な設定値のリストを返す
 	//---------------------------------------------------------------------------
 	getList : Config.getList,
@@ -82,7 +102,7 @@ ui.menuconfig = {
 	//---------------------------------------------------------------------------
 	getAll : Config.getAll,
 	setAll : function(setting){
-		Config.setAll.call(this, setting);
+		for(var key in setting){ this.set(key,setting[key]);}
 		this.list.autocheck_once.val = this.list.autocheck.val;
 	},
 

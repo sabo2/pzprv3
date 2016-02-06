@@ -266,7 +266,7 @@ ui.menuarea = {
 	},
 	repaint : function(){ ui.puzzle.redraw(true);},
 	jumpexp : function(){
-		ui.saveConfig();	/* faq.htmlで言語設定を使用するので、一旦Config値を保存 */
+		ui.menuconfig.save();	/* faq.htmlで言語設定を使用するので、一旦Config値を保存 */
 		window.open('./faq.html?'+ui.puzzle.pid+(!ui.puzzle.playeronly?"_edit":""), '');
 	},
 	disppopup : function(e){

@@ -167,28 +167,6 @@ window.ui = {
 		return ui.menuconfig.getList();
 	},
 
-	//---------------------------------------------------------------------------
-	// ui.restoreConfig()  保存された各種設定値を元に戻す
-	// ui.saveConfig()     各種設定値を保存する
-	//---------------------------------------------------------------------------
-	restoreConfig : function(){
-		/* 設定が保存されている場合は元に戻す */
-		if(pzpr.env.storage.localST && !!window.JSON){
-			var json_puzzle = localStorage['pzprv3_config:puzzle'];
-			var json_menu   = localStorage['pzprv3_config:ui'];
-			if(!!json_puzzle){ ui.puzzle.restoreConfig(JSON.parse(json_puzzle));}
-			if(!!json_menu)  { ui.menuconfig.setAll(JSON.parse(json_menu));}
-			ui.menuconfig.set('language', localStorage['pzprv3_config:language'] || pzpr.lang);
-		}
-	},
-	saveConfig : function(){
-		if(pzpr.env.storage.localST && !!window.JSON){
-			localStorage['pzprv3_config:puzzle'] = JSON.stringify(ui.puzzle.saveConfig());
-			localStorage['pzprv3_config:ui']     = JSON.stringify(ui.menuconfig.getAll());
-			localStorage['pzprv3_config:language'] = pzpr.lang;
-		}
-	},
-
 	//----------------------------------------------------------------------
 	// ui.initFileReadMethod() ファイルアクセス関連の処理の初期化を行う
 	//----------------------------------------------------------------------
