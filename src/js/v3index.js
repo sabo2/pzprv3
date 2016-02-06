@@ -268,6 +268,11 @@ var self = v3index.dbif;
 var DBlist = self.list;
 var pheader = '';
 
+pzpr.MetaData.prototype.update = function(metadata){
+	if(!metadata){ return;}
+	for(var i in this.items){ if(typeof metadata[i]==='string'){ this[i] = metadata[i];}}
+};
+
 v3index.dbif.extend({
 	init : function(){
 		_form = _doc.database;

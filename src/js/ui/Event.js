@@ -81,6 +81,11 @@ ui.event =
 		if(pzpr.env.OS.Android){
 			ui.misc.modifyCSS({'body, .btn':{fontFamily:'Verdana, Arial, sans-serif'}});
 		}
+		
+		pzpr.MetaData.prototype.update = function(metadata){
+			if(!metadata){ return;}
+			for(var i in this.items){ if(typeof metadata[i]==='string'){ this[i] = metadata[i];}}
+		};
 	},
 	onunload_func : function(){
 		ui.menuconfig.save();
