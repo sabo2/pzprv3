@@ -5,7 +5,7 @@
 var v3index = {
 	typelist : [],
 	current  : '',
-	doclang  : (!location.href.match("index_en.html")?"ja":"en"),
+	doclang  : pzpr.lang,
 	complete : false,
 	LS       : false,
 	captions : [],
@@ -16,7 +16,24 @@ var _doc = document;
 var self = v3index;
 var typelist = self.typelist;
 
+if(location.search==='?en'||location.search==='?ja'){
+	self.doclang = location.search.substr(1,2);
+}
+
 function getEL(id){ return _doc.getElementById(id);}
+
+function walker(parent, func){
+	var els = [parent.firstChild];
+	while(els.length>0){
+		var el = els.pop();
+		func(el);
+		if(!!el.nextSibling){ els.push(el.nextSibling);}
+		if(el.childNodes.length>0){ els.push(el.firstChild);}
+	}
+}
+function elementWalker(parent, func){
+	walker(parent, function(el){ if(el.nodeType===1){ func(el);}});
+}
 
 v3index.extend({
 	/* onload function */
@@ -33,7 +50,7 @@ v3index.extend({
 				!!el.id      && el.id.match(/puzmenu_(.+)$/)){
 				var typename = RegExp.$1;
 				typelist.push(typename);
-				el.addEventListener("click",self.click_tab,false);
+				el.addEventListener("click",(function(typename){ return function(e){self.click_tab(typename);};})(typename),false);
 				if(el.className==="puzmenusel"){ self.current = typename;}
 			}
 			el = el.nextSibling;
@@ -41,7 +58,7 @@ v3index.extend({
 		if(!self.current && typelist.length>0){ self.current = typelist[0];}
 		getEL("puztypes").style.display = "block";
 
-		// self.setTranslation();
+		self.setTranslation();
 
 		self.disp();
 	},
@@ -64,9 +81,9 @@ v3index.extend({
 	},
 
 	/* tab-click function */
-	click_tab : function(e){
-		var el = (e.target || e.srcElement);
-		if(!!el){ self.current = el.id.substr(8); self.disp();}
+	click_tab : function(typename){
+		self.current = typename;
+		self.disp();
 		if(self.current==="input"){ self.dbif.display();} /* iPhone用 */
 	},
 
@@ -84,34 +101,46 @@ v3index.extend({
 				table.style.display = 'none';
 			}
 		}
-		// self.translate();
-	}
+		self.translate();
+	},
 
-//	もし各パズルへのリンクのキャプションんを自動生成したくなったら以下を有効にする
-//	setTranslation : function(){
-//		var tables = [_doc.getElementById("table_all"),
-//					  _doc.getElementById("table_lunch"),
-//					  _doc.getElementById("table_nigun"),
-//					  _doc.getElementById("table_omopa"),
-//					  _doc.getElementById("table_other")];
-//		for(var i=0;i<tables.length;i++){
-//			if(!tables[i]){ continue;}
-//			ui.misc.walker(tables[i], function(el){
-//				if(el.nodeType===1 && el.nodeName==="LI"){
-//					var href = el.firstChild.href;
-//					var pid  = pzpr.variety.toPID(href.substr(href.indexOf("?")+1));
-//					self.captions.push({textnode:el.firstChild.firstChild, str_jp:pzpr.variety.info[pid].ja, str_en:pzpr.variety.info[pid].en});
-//				}
-//			});
-//		}
-//	},
-//	translate : function(){
-//		/* キャプションの設定 */
-//		for(var i=0;i<this.captions.length;i++){
-//			var obj = this.captions[i];
-//			if(!!obj.textnode) { obj.textnode.data = (self.doclang==="ja" ? obj.str_jp : obj.str_en);}
-//		}
-//	}
+	setlang : function(lang){
+		self.doclang = lang;
+		self.disp();
+	},
+	setTranslation : function(){
+		var tables = [_doc.getElementById("table_all"),
+					  _doc.getElementById("table_lunch"),
+					  _doc.getElementById("table_nigun"),
+					  _doc.getElementById("table_omopa"),
+					  _doc.getElementById("table_other")];
+		for(var i=0;i<tables.length;i++){
+			if(!tables[i]){ continue;}
+			elementWalker(tables[i], function(el){
+				if(el.nodeName==="LI"){
+					var href = el.firstChild.href;
+					var pid  = pzpr.variety.toPID(href.substr(href.indexOf("?")+1));
+					self.captions.push({anode:el.firstChild, str_jp:pzpr.variety.info[pid].ja, str_en:pzpr.variety.info[pid].en});
+				}
+			});
+		}
+	},
+	translate : function(){
+		/* キャプションの設定 */
+		for(var i=0;i<this.captions.length;i++){
+			var obj = this.captions[i];
+			if(!!obj.anode){
+				var text = (self.doclang==="ja" ? obj.str_jp : obj.str_en);
+				obj.anode.innerHTML = text.replace(/(\(.+\))/g, "<small>$1</small>");
+			}
+		}
+		Array.prototype.slice.call(_doc.body.querySelectorAll('[lang="ja"]')).forEach(function(el){
+			el.style.display = (self.doclang==='ja' ? '' : 'none');
+		});
+		Array.prototype.slice.call(_doc.body.querySelectorAll('[lang="en"]')).forEach(function(el){
+			el.style.display = (self.doclang==='en' ? '' : 'none');
+		});
+	}
 });
 
 /* addEventListener */
@@ -262,9 +291,11 @@ v3index.dbif.extend({
 		_form = _doc.database;
 		if(!!_form){
 			if(v3index.LS){
-				_form.sorts.addEventListener(   "change", self.display, false);
+				_form.sorts_ja.addEventListener("change", self.display, false);
+				_form.sorts_en.addEventListener("change", self.display, false);
 				_form.datalist.addEventListener("change", self.select,  false);
-				_form.open.addEventListener(    "click",  self.open,    false);
+				_form.open_ja.addEventListener( "click",  self.open,    false);
+				_form.open_en.addEventListener( "click",  self.open,    false);
 				
 				pheader = 'pzprv3_storage:data:';
 				self.importlist(self.display);
@@ -294,12 +325,14 @@ v3index.dbif.extend({
 		if(!!callback){ callback();}
 	},
 	display : function(){
-		switch(_form.sorts.value){
+		var order = (v3index.doclang==='ja'?_form.sorts_ja:_form.sorts_en).value;
+		switch(order){
 			case 'idlist' : DBlist = DBlist.sort(function(a,b){ return (a.id-b.id);}); break;
 			case 'newsave': DBlist = DBlist.sort(function(a,b){ return (b.time-a.time || a.id-b.id);}); break;
 			case 'oldsave': DBlist = DBlist.sort(function(a,b){ return (a.time-b.time || a.id-b.id);}); break;
 			case 'size'   : DBlist = DBlist.sort(function(a,b){ return (a.col-b.col || a.row-b.row || a.id-b.id);}); break;
 		}
+		(v3index.doclang==='ja'?_form.sorts_en:_form.sorts_ja).value = order;
 
 		_form.datalist.innerHTML = "";
 		for(var i=0;i<DBlist.length;i++){
