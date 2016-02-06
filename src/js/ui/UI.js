@@ -1,5 +1,5 @@
 // UI.js v3.4.0
-/* global pzpr:false, ui:false, File:false, JSON:false */
+/* global pzpr:false, ui:false, File:false */
 /* exported ui, _doc, getEL, createEL */
 
 /* ui.js Locals */

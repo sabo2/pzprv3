@@ -1,5 +1,5 @@
 // MenuConfig.js v3.4.1
-/* global pzpr:false, ui:false */
+/* global pzpr:false, ui:false, JSON:false */
 
 (function(){
 //---------------------------------------------------------------------------
@@ -70,7 +70,7 @@ ui.menuconfig = {
 	//---------------------------------------------------------------------------
 	restore : function(){
 		/* 設定が保存されている場合は元に戻す */
-		if(pzpr.env.storage.localST && !!window.JSON){
+		if(pzpr.env.storage.localST && typeof JSON!=='undefined'){
 			this.init();
 			var json_puzzle = localStorage['pzprv3_config:puzzle'];
 			var json_menu   = localStorage['pzprv3_config:ui'];
@@ -79,7 +79,7 @@ ui.menuconfig = {
 		}
 	},
 	save : function(){
-		if(pzpr.env.storage.localST && !!window.JSON){
+		if(pzpr.env.storage.localST && typeof JSON!=='undefined'){
 			localStorage['pzprv3_config:puzzle'] = JSON.stringify(ui.puzzle.saveConfig());
 			localStorage['pzprv3_config:ui']     = JSON.stringify(this.getAll());
 		}
