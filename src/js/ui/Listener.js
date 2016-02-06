@@ -54,7 +54,6 @@ ui.listener =
 		
 		ui.adjustcellsize();
 		ui.keypopup.display();
-		ui.misc.setkeyfocus();
 		
 		ui.timer.reset();					/* タイマーリセット(最後) */
 	},

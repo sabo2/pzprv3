@@ -25,7 +25,6 @@ ui.menuconfig = {
 		this.list.autocheck_once.volatile = true;
 		
 		this.add('keypopup', false);						/* キーポップアップ (数字などのパネル入力) */
-		this.add('keyboard', false);						/* 盤面をキー入力のターゲットにする */
 
 		this.add('adjsize', true);							/* 自動横幅調節 */
 		this.add('cellsizeval', 36);						/* セルのサイズ設定用 */
@@ -130,10 +129,6 @@ ui.menuconfig = {
 			ui.keypopup.display();
 			break;
 			
-		case 'keyboard':
-			ui.misc.setkeyfocus();
-			break;
-			
 		case 'adjsize': case 'cellsizeval': case 'fullwidth':
 			ui.adjustcellsize();
 			break;
@@ -146,7 +141,6 @@ ui.menuconfig = {
 			ui.setdisplay('keypopup');
 			ui.setdisplay('bgcolor');
 			ui.keypopup.display();
-			ui.misc.setkeyfocus();
 			break;
 			
 		case 'language':
