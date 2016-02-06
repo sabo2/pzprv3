@@ -5,8 +5,6 @@
 /********************************/
 /* 初期化時のみ使用するルーチン */
 /********************************/
-if(!window.pzpr){ setTimeout(arguments.callee,0); return;}
-
 window.navigator.saveBlob = window.navigator.saveBlob || window.navigator.msSaveBlob;
 
 var require_accesslog = true;
@@ -16,16 +14,12 @@ var onload_option = {};
 //---------------------------------------------------------------------------
 // ★boot() window.onload直後の処理
 //---------------------------------------------------------------------------
-function boot(){
+pzpr.on('load', function boot(){
 	if(importData() && includeDebugFile()){ startPuzzle();}
 	else{ setTimeout(boot,0);}
-}
-pzpr.on('load',boot);
+});
 
 function importData(){
-	/* pzpr, uiオブジェクト生成待ち */
-	if(!window.pzpr || !window.ui){ return false;}
-	
 	if(!onload_pzl){
 		/* 1) 盤面複製・index.htmlからのファイル入力/Database入力か */
 		/* 2) URL(?以降)をチェック */

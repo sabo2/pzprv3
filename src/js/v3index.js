@@ -19,45 +19,30 @@ var typelist = self.typelist;
 function getEL(id){ return _doc.getElementById(id);}
 
 v3index.extend({
-	/* common function */
-	addEvent : function(element,type,func){
-		if(!!element.addEventListener){ element.addEventListener(type,func,false);}
-		else if(!!element.attachEvent){ element.attachEvent("on"+type,func);}
-		else                          { element["on"+type] = func;}
-	},
-
 	/* onload function */
-	onload_include : function(){
-		setTimeout(function(){
-			if(!window.pzpr){ setTimeout(arguments.callee,50); return;}
-			self.onload_func();
-			self.complete = true;
-		},10);
-	},
 	onload_func : function(){
-		if(!self.current){
-			if(!window.pzprfaq && !self.input_init()){
-				var el = getEL("puzmenu_input");
-				el.parentNode.removeChild(el);
-				getEL("table_input").style.display = 'none';
-			}
-
-			var el = getEL("puztypes").firstChild;
-			while(!!el){
-				if(!!el.tagName && el.tagName.toLowerCase()==='li' &&
-				   !!el.id      && el.id.match(/puzmenu_(.+)$/)){
-					var typename = RegExp.$1;
-					typelist.push(typename);
-					self.addEvent(el,"click",self.click_tab);
-					if(el.className==="puzmenusel"){ self.current = typename;}
-				}
-				el = el.nextSibling;
-			}
-			if(!self.current && typelist.length>0){ self.current = typelist[0];}
-			getEL("puztypes").style.display = "block";
-
-			// self.setTranslation();
+		if(!window.pzprfaq && !self.input_init()){
+			var el = getEL("puzmenu_input");
+			el.parentNode.removeChild(el);
+			getEL("table_input").style.display = 'none';
 		}
+
+		var el = getEL("puztypes").firstChild;
+		while(!!el){
+			if(!!el.tagName && el.tagName.toLowerCase()==='li' &&
+				!!el.id      && el.id.match(/puzmenu_(.+)$/)){
+				var typename = RegExp.$1;
+				typelist.push(typename);
+				el.addEventListener("click",self.click_tab,false);
+				if(el.className==="puzmenusel"){ self.current = typename;}
+			}
+			el = el.nextSibling;
+		}
+		if(!self.current && typelist.length>0){ self.current = typelist[0];}
+		getEL("puztypes").style.display = "block";
+
+		// self.setTranslation();
+
 		self.disp();
 	},
 	input_init : function(){
@@ -92,8 +77,7 @@ v3index.extend({
 			var table = getEL("table_"+typelist[i]);
 			if(typelist[i]===self.current){
 				el.className = "puzmenusel";
-				try     { table.style.display = 'table';}
-				catch(e){ table.style.display = 'block';} //IE raises error
+				table.style.display = 'table';
 			}
 			else{
 				el.className = "puzmenu";
@@ -131,7 +115,7 @@ v3index.extend({
 });
 
 /* addEventListener */
-self.addEvent(window, 'load', self.onload_include);
+window.addEventListener('load', self.onload_func, false);
 
 /* extern */
 window.v3index = v3index;
@@ -160,7 +144,7 @@ v3index.urlif.extend({
 		_form = _doc.urlinput;
 		if(!!_form){
 			if(v3index.LS){
-				v3index.addEvent(getEL("urlinput_btn"), "click", self.urlinput);
+				getEL("urlinput_btn").addEventListener("click", self.urlinput, false);
 				return true;
 			}
 			else{
@@ -200,7 +184,7 @@ v3index.fileif.extend({
 		_form = _doc.fileform;
 		if(!!_form){
 			if(v3index.LS){
-				v3index.addEvent(_form.filebox, "change", self.fileinput);
+				_form.filebox.addEventListener("change", self.fileinput, false);
 				return true;
 			}
 			else{
@@ -278,9 +262,9 @@ v3index.dbif.extend({
 		_form = _doc.database;
 		if(!!_form){
 			if(v3index.LS){
-				v3index.addEvent(_form.sorts,    "change", self.display);
-				v3index.addEvent(_form.datalist, "change", self.select);
-				v3index.addEvent(_form.open,     "click",  self.open);
+				_form.sorts.addEventListener(   "change", self.display, false);
+				_form.datalist.addEventListener("change", self.select,  false);
+				_form.open.addEventListener(    "click",  self.open,    false);
 				
 				pheader = 'pzprv3_storage:data:';
 				self.importlist(self.display);
