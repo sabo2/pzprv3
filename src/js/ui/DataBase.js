@@ -95,9 +95,7 @@ ui.database = {
 	//---------------------------------------------------------------------------
 	openDialog : function(){
 		// データベースを開く
-		if(pzpr.env.storage.localST){ this.dbh = new ui.DataBaseHandler_LS(this);}
-		else{ return;}
-
+		this.dbh = new ui.DataBaseHandler_LS(this);
 		this.sync = false;
 		this.dbh.convert();
 		this.dbh.importDBlist();

@@ -7,7 +7,6 @@ var v3index = {
 	current  : '',
 	doclang  : pzpr.lang,
 	complete : false,
-	LS       : false,
 	testdoc  : false,
 	captions : [],
 	extend : function(obj){ for(var n in obj){ this[n] = obj[n];}}
@@ -75,9 +74,6 @@ v3index.extend({
 		self.disp();
 	},
 	input_init : function(){
-		// HTML5 - Web localStorage判定用(localStorage)
-		if(pzpr.env.storage.localST){ self.LS = true;}
-
 		var cnt=0;
 		if(self.urlif.init()) { cnt++;}
 		if(self.fileif.init()){ cnt++;}
@@ -199,14 +195,8 @@ v3index.urlif.extend({
 	init : function(){
 		_form = _doc.urlinput;
 		if(!!_form){
-			if(v3index.LS){
-				getEL("urlinput_btn").addEventListener("click", self.urlinput, false);
-				return true;
-			}
-			else{
-				_form.style.display = 'none';
-				return false;
-			}
+			getEL("urlinput_btn").addEventListener("click", self.urlinput, false);
+			return true;
 		}
 	},
 	urlinput : function(e){
@@ -239,14 +229,8 @@ v3index.fileif.extend({
 	init : function(){
 		_form = _doc.fileform;
 		if(!!_form){
-			if(v3index.LS){
-				_form.filebox.addEventListener("change", self.fileinput, false);
-				return true;
-			}
-			else{
-				_form.style.display = 'none';
-				return false;
-			}
+			_form.filebox.addEventListener("change", self.fileinput, false);
+			return true;
 		}
 	},
 
@@ -317,21 +301,15 @@ v3index.dbif.extend({
 	init : function(){
 		_form = _doc.database;
 		if(!!_form){
-			if(v3index.LS){
-				_form.sorts_ja.addEventListener("change", self.display, false);
-				_form.sorts_en.addEventListener("change", self.display, false);
-				_form.datalist.addEventListener("change", self.select,  false);
-				_form.open_ja.addEventListener( "click",  self.open,    false);
-				_form.open_en.addEventListener( "click",  self.open,    false);
-				
-				pheader = 'pzprv3_storage:data:';
-				self.importlist(self.display);
-				return true;
-			}
-			else{
-				_form.style.display = 'none';
-				return false;
-			}
+			_form.sorts_ja.addEventListener("change", self.display, false);
+			_form.sorts_en.addEventListener("change", self.display, false);
+			_form.datalist.addEventListener("change", self.select,  false);
+			_form.open_ja.addEventListener( "click",  self.open,    false);
+			_form.open_en.addEventListener( "click",  self.open,    false);
+			
+			pheader = 'pzprv3_storage:data:';
+			self.importlist(self.display);
+			return true;
 		}
 	},
 	importlist : function(callback){

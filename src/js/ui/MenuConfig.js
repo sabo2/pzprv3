@@ -69,19 +69,15 @@ ui.menuconfig = {
 	//---------------------------------------------------------------------------
 	restore : function(){
 		/* 設定が保存されている場合は元に戻す */
-		if(pzpr.env.storage.localST && typeof JSON!=='undefined'){
-			this.init();
-			var json_puzzle = localStorage['pzprv3_config:puzzle'];
-			var json_menu   = localStorage['pzprv3_config:ui'];
-			if(!!json_puzzle){ this.setAll(JSON.parse(json_puzzle));}
-			if(!!json_menu)  { this.setAll(JSON.parse(json_menu));}
-		}
+		this.init();
+		var json_puzzle = localStorage['pzprv3_config:puzzle'];
+		var json_menu   = localStorage['pzprv3_config:ui'];
+		if(!!json_puzzle){ this.setAll(JSON.parse(json_puzzle));}
+		if(!!json_menu)  { this.setAll(JSON.parse(json_menu));}
 	},
 	save : function(){
-		if(pzpr.env.storage.localST && typeof JSON!=='undefined'){
-			localStorage['pzprv3_config:puzzle'] = JSON.stringify(ui.puzzle.saveConfig());
-			localStorage['pzprv3_config:ui']     = JSON.stringify(this.getAll());
-		}
+		localStorage['pzprv3_config:puzzle'] = JSON.stringify(ui.puzzle.saveConfig());
+		localStorage['pzprv3_config:ui']     = JSON.stringify(this.getAll());
 	},
 
 	//---------------------------------------------------------------------------

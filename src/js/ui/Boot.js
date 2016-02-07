@@ -143,8 +143,6 @@ function importFileData(){
 // ★getStorageData() localStorageやsesseionStorageのデータを読み込む
 //---------------------------------------------------------------------------
 function getStorageData(key, key2){
-	if(!pzpr.env.storage.localST || !pzpr.env.storage.session){ return null;}
-
 	// 移し変える処理
 	var str = localStorage[key];
 	if(typeof str==="string"){
