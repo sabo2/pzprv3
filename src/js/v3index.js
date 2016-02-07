@@ -16,7 +16,7 @@ var _doc = document;
 var self = v3index;
 var typelist = self.typelist;
 
-self.doclang = JSON.parse(localStorage['pzprv3_config:ui']).language || pzpr.lang;
+self.doclang = JSON.parse(localStorage['pzprv3_config:ui']||'{}').language || pzpr.lang;
 
 if(location.search==='?en'||location.search==='?ja'){
 	self.doclang = location.search.substr(1,2);
