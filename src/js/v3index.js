@@ -8,6 +8,7 @@ var v3index = {
 	doclang  : pzpr.lang,
 	complete : false,
 	LS       : false,
+	testdoc  : false,
 	captions : [],
 	extend : function(obj){ for(var n in obj){ this[n] = obj[n];}}
 };
@@ -19,20 +20,25 @@ var typelist = self.typelist;
 if(location.search==='?en'||location.search==='?ja'){
 	self.doclang = location.search.substr(1,2);
 }
+if(location.href.match(/\/tests\/index/)){
+	self.doclang = 'ja';
+	self.testdoc = true;
+}
 
 function getEL(id){ return _doc.getElementById(id);}
-
-function walker(parent, func){
-	var els = [parent.firstChild];
-	while(els.length>0){
-		var el = els.pop();
-		func(el);
-		if(!!el.nextSibling){ els.push(el.nextSibling);}
-		if(el.childNodes.length>0){ els.push(el.firstChild);}
+function customAttr(el, name){
+	var value = "";
+	if(el.dataset!==void 0){ value = el.dataset[name];}
+	/* IE10, Firefox5, Chrome7, Safari5.1以下のフォールバック */
+	else{
+		var lowername = "data-";
+		for(var i=0;i<name.length;i++){
+			var ch = name[i] || name.charAt(i);
+			lowername += ((ch>="A" && ch<="Z") ? ("-" + ch.toLowerCase()) : ch);
+		}
+		value = el[lowername] || el.getAttribute(lowername) || "";
 	}
-}
-function elementWalker(parent, func){
-	walker(parent, function(el){ if(el.nodeType===1){ func(el);}});
+	return value;
 }
 
 v3index.extend({
@@ -40,23 +46,22 @@ v3index.extend({
 	onload_func : function(){
 		if(!window.pzprfaq && !self.input_init()){
 			var el = getEL("puzmenu_input");
-			el.parentNode.removeChild(el);
-			getEL("table_input").style.display = 'none';
+			if(!!el){
+				el.parentNode.removeChild(el);
+				getEL("table_input").style.display = 'none';
+			}
 		}
 
-		var el = getEL("puztypes").firstChild;
-		while(!!el){
-			if(!!el.tagName && el.tagName.toLowerCase()==='li' &&
-				!!el.id      && el.id.match(/puzmenu_(.+)$/)){
+		Array.prototype.slice.call(_doc.querySelectorAll('#puztypes > li')).forEach(function(el){
+			if((el.id||'').match(/puzmenu_(.+)$/)){
 				var typename = RegExp.$1;
 				typelist.push(typename);
 				el.addEventListener("click",(function(typename){ return function(e){self.click_tab(typename);};})(typename),false);
 				if(el.className==="puzmenusel"){ self.current = typename;}
 			}
-			el = el.nextSibling;
-		}
+		});
 		if(!self.current && typelist.length>0){ self.current = typelist[0];}
-		getEL("puztypes").style.display = "block";
+		if(!!getEL('puztypes')){ getEL('puztypes').style.display = "block";}
 
 		self.setTranslation();
 
@@ -109,19 +114,16 @@ v3index.extend({
 		self.disp();
 	},
 	setTranslation : function(){
-		var tables = [_doc.getElementById("table_all"),
-					  _doc.getElementById("table_lunch"),
-					  _doc.getElementById("table_nigun"),
-					  _doc.getElementById("table_omopa"),
-					  _doc.getElementById("table_other")];
+		var tables = ["all","lunch","nigun","omopa","other"].map(function(id){ return getEL('table_'+id);});
 		for(var i=0;i<tables.length;i++){
 			if(!tables[i]){ continue;}
-			elementWalker(tables[i], function(el){
-				if(el.nodeName==="LI"){
-					var href = el.firstChild.href;
-					var pid  = pzpr.variety.toPID(href.substr(href.indexOf("?")+1));
-					self.captions.push({anode:el.firstChild, str_jp:pzpr.variety.info[pid].ja, str_en:pzpr.variety.info[pid].en});
+			Array.prototype.slice.call(tables[i].querySelectorAll('li')).forEach(function(el){
+				var pid = pzpr.variety.toPID(customAttr(el, 'pid'));
+				if(el.childNodes.length===0){
+					el.className = self.variety[pid].state;
+					el.innerHTML = '<a href="p.html?'+pid+(!self.testdoc?'':'_test')+'"></a>';
 				}
+				self.captions.push({anode:el.firstChild, str_jp:pzpr.variety.info[pid].ja, str_en:pzpr.variety.info[pid].en});
 			});
 		}
 	},
@@ -403,5 +405,41 @@ v3index.dbif.extend({
 		return -1;
 	}
 });
+
+})();
+
+/*********************/
+/* Database function */
+/*********************/
+(function(){
+
+var v3index = window.v3index;
+
+var pstate = {
+	lunch :['nurikabe','tilepaint','norinori','nurimaze','heyawake','hitori','slither','mashu','yajilin',
+			'slalom','numlin','hashikake','herugolf','shikaku','tentaisho','kakuro','sudoku','fillomino','ripple',
+			'akari','shakashaka'],
+	testa :['nagare','makaro','juosan','dosufuwa'],
+	trial :[],
+	lunch2:['box','lits','kurodoko','minarism','factors','goishi'],
+	nigun :['creek','mochikoro','tasquare','kurotto','shimaguni','yajikazu','bag','country','reflect','icebarn',
+			'firefly','kaero','yosenabe','bdblock','fivecells','sashigane','tatamibari','sukoro',
+			'gokigen','tateyoko','kinkonkan','snakes'],
+	omopa :['nuribou','tawa','lookair','paintarea','chocona','kurochute','mejilink',
+			'pipelink','loopsp','nagenawa','kouchoku','ringring','pipelinkr','barns','icelom','icelom2',
+			'wblink','kusabi','ichimaga','ichimagam','ichimagax','amibo','bonsan','heyabon','rectslider',
+			'nawabari','triplace','fourcells','kramma','kramman','shwolf','loute','fillmat','usotatami','yajitatami',
+			'kakuru','view','bosanowa','nanro','cojun','renban','sukororoom','hanare','kazunori',
+			'wagiri','shugaku','hakoiri','roma','toichika','cbblock'],
+	orig  :['mochinyoro','ayeheya','aho'],
+	genre :['tapa']
+};
+var genres = {};
+
+for(var state in pstate){
+	pstate[state].forEach(function(pid){ genres[pzpr.variety.toPID(pid)] = {state:state};})
+}
+
+v3index.extend({variety:genres});
 
 })();
