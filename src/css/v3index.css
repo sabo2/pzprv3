@@ -77,6 +77,13 @@
 		padding : 12pt;
 		background-color : #f8f8f8;
 	}
+	div.puztable div.ranking {
+		padding:12px 0pt 8px 6px;
+		background-color : #f8f8f8;
+	}
+	div.ranking ol li {
+		margin-bottom:2px;
+	}
 	div.puztable div.filter {
 		padding : 8px 16px;
 		background-color : #f8f8f8;
@@ -103,7 +110,7 @@
 	li.orig  { color:#afafaf; }
 	li.genre { color:red; }
 	div.lists {
-		padding:4pt 0pt 12pt 4pt;
+		padding:6px 0pt 8px 6px;
 		margin:1px;
 		vertical-align:top;
 		width:32%;

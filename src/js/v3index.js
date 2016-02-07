@@ -68,6 +68,7 @@ v3index.extend({
 		});
 		if(!self.current && typelist.length>0){ self.current = typelist[0];}
 		if(!!getEL('puztypes')){ getEL('puztypes').style.display = "block";}
+		self.setRecentPuzzle();
 
 		self.setTranslation();
 
@@ -131,6 +132,27 @@ v3index.extend({
 		self.translate();
 	},
 
+	setRecentPuzzle : function(){
+		var listparent;
+		function addPuzzle(pid){
+			var el = _doc.createElement('li');
+			el.innerHTML = '<a href="p.html?'+pid+'"></a>';
+			listparent.appendChild(el);
+			self.captions.push({anode:el.firstChild, str_jp:pzpr.variety.info[pid].ja, str_en:pzpr.variety.info[pid].en});
+		}
+
+		listparent = getEL('recentpuzzle');
+		if(!listparent){ return;}
+		listparent.innerHTML = '';
+		(JSON.parse(localStorage['pzprv3_index:ranking']).recent || []).forEach(addPuzzle);
+
+		listparent = getEL('frequentpuzzle');
+		listparent.innerHTML = '';
+		var count = JSON.parse(localStorage['pzprv3_index:ranking']).count || {}, counts = [];
+		for(var i in count){ counts.push({pid:i, count:count[i]});}
+		counts.sort(function(a,b){ return b.count-a.count;}).slice(0,10).forEach(function(item){ addPuzzle(item.pid);});
+	},
+
 	setlang : function(lang){
 		self.doclang = lang;
 		self.disp();
@@ -141,6 +163,7 @@ v3index.extend({
 	setTranslation : function(){
 		Array.prototype.slice.call(_doc.querySelectorAll('.lists li')).forEach(function(el){
 			var pid = pzpr.variety.toPID(customAttr(el, 'pid'));
+			if(!pid){ return;}
 			if(el.childNodes.length===0){
 				el.className = self.variety[pid].state;
 				el.innerHTML = '<a href="p.html?'+pid+(!self.testdoc?'':'_test')+'"></a>';
