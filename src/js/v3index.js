@@ -144,11 +144,11 @@ v3index.extend({
 		listparent = getEL('recentpuzzle');
 		if(!listparent){ return;}
 		listparent.innerHTML = '';
-		(JSON.parse(localStorage['pzprv3_index:ranking']).recent || []).forEach(addPuzzle);
+		(JSON.parse(localStorage['pzprv3_index:ranking']||'{}').recent || []).forEach(addPuzzle);
 
 		listparent = getEL('frequentpuzzle');
 		listparent.innerHTML = '';
-		var count = JSON.parse(localStorage['pzprv3_index:ranking']).count || {}, counts = [];
+		var count = JSON.parse(localStorage['pzprv3_index:ranking']||'{}').count || {}, counts = [];
 		for(var i in count){ counts.push({pid:i, count:count[i]});}
 		counts.sort(function(a,b){ return b.count-a.count;}).slice(0,10).forEach(function(item){ addPuzzle(item.pid);});
 	},
@@ -156,7 +156,7 @@ v3index.extend({
 	setlang : function(lang){
 		self.doclang = lang;
 		self.disp();
-		var setting = JSON.parse(localStorage['pzprv3_config:ui']);
+		var setting = JSON.parse(localStorage['pzprv3_config:ui']||'{}');
 		setting.language = lang;
 		localStorage['pzprv3_config:ui'] = JSON.stringify(setting);
 	},
