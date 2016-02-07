@@ -60,6 +60,11 @@ v3index.extend({
 				if(el.className==="puzmenusel"){ self.current = typename;}
 			}
 		});
+		Array.prototype.slice.call(_doc.querySelectorAll('#statefilter input')).forEach(function(el){
+			if((el.id||'').match(/filter_(.+)$/)){
+				el.addEventListener("change",self.click_filter,false);
+			}
+		});
 		if(!self.current && typelist.length>0){ self.current = typelist[0];}
 		if(!!getEL('puztypes')){ getEL('puztypes').style.display = "block";}
 
@@ -92,6 +97,25 @@ v3index.extend({
 		if(self.current==="input"){ self.dbif.display();} /* iPhone用 */
 	},
 
+	/* filter-click function */
+	click_filter : function(){
+		var state = {}, alldisp = getEL('filter_all').checked;;
+		['lunch','nigun','omopa','extra'].forEach(function(id){ state[id] = getEL('filter_'+id).checked;});
+		Array.prototype.slice.call(_doc.querySelectorAll('.lists ul > li')).forEach(function(el){
+			var pid = pzpr.variety.toPID(customAttr(el, 'pid'));
+			if(!!pid && self.variety[pid]){
+				el.style.display = (alldisp||state[self.variety[pid].tab] ? '' : 'none');
+			}
+		});
+		Array.prototype.slice.call(_doc.querySelectorAll('.lists ul')).forEach(function(el){
+			var count = 0;
+			Array.prototype.slice.call(el.querySelectorAll('li')).forEach(function(el){
+				if(el.style.display!=='none'){ count++;}
+			});
+			el.parentNode.style.display = (count>0 ? '' : 'none');
+		});
+	},
+
 	/* display tabs and tables function */
 	disp : function(){
 		for(var i=0;i<typelist.length;i++){
@@ -99,7 +123,7 @@ v3index.extend({
 			var table = getEL("table_"+typelist[i]);
 			if(typelist[i]===self.current){
 				el.className = "puzmenusel";
-				table.style.display = 'table';
+				table.style.display = 'block';
 			}
 			else{
 				el.className = "puzmenu";
@@ -114,18 +138,14 @@ v3index.extend({
 		self.disp();
 	},
 	setTranslation : function(){
-		var tables = ["all","lunch","nigun","omopa","other"].map(function(id){ return getEL('table_'+id);});
-		for(var i=0;i<tables.length;i++){
-			if(!tables[i]){ continue;}
-			Array.prototype.slice.call(tables[i].querySelectorAll('li')).forEach(function(el){
-				var pid = pzpr.variety.toPID(customAttr(el, 'pid'));
-				if(el.childNodes.length===0){
-					el.className = self.variety[pid].state;
-					el.innerHTML = '<a href="p.html?'+pid+(!self.testdoc?'':'_test')+'"></a>';
-				}
-				self.captions.push({anode:el.firstChild, str_jp:pzpr.variety.info[pid].ja, str_en:pzpr.variety.info[pid].en});
-			});
-		}
+		Array.prototype.slice.call(_doc.querySelectorAll('.lists li')).forEach(function(el){
+			var pid = pzpr.variety.toPID(customAttr(el, 'pid'));
+			if(el.childNodes.length===0){
+				el.className = self.variety[pid].state;
+				el.innerHTML = '<a href="p.html?'+pid+(!self.testdoc?'':'_test')+'"></a>';
+			}
+			self.captions.push({anode:el.firstChild, str_jp:pzpr.variety.info[pid].ja, str_en:pzpr.variety.info[pid].en});
+		});
 	},
 	translate : function(){
 		/* キャプションの設定 */
@@ -421,7 +441,8 @@ var pstate = {
 			'akari','shakashaka'],
 	testa :['nagare','makaro','juosan','dosufuwa'],
 	trial :[],
-	lunch2:['box','lits','kurodoko','minarism','factors','goishi'],
+	lunch2:['box','lits','kurodoko','goishi'],
+	lunch3:['minarism','factors'],
 	nigun :['creek','mochikoro','tasquare','kurotto','shimaguni','yajikazu','bag','country','reflect','icebarn',
 			'firefly','kaero','yosenabe','bdblock','fivecells','sashigane','tatamibari','sukoro',
 			'gokigen','tateyoko','kinkonkan','snakes'],
@@ -434,10 +455,18 @@ var pstate = {
 	orig  :['mochinyoro','ayeheya','aho'],
 	genre :['tapa']
 };
-var genres = {};
+var tabstate = {
+	lunch:'lunch', lunch2:'lunch', lunch3:'nigun',
+	testa:'nigun', nigun:'nigun',
+	trial:'omopa', omopa:'omopa',
+	orig :'extra', genre:'extra'
+};
 
+var genres = {};
 for(var state in pstate){
-	pstate[state].forEach(function(pid){ genres[pzpr.variety.toPID(pid)] = {state:state};})
+	pstate[state].forEach(function(pid){
+		genres[pzpr.variety.toPID(pid)] = {state:state, tab:tabstate[state]};
+	});
 }
 
 v3index.extend({variety:genres});

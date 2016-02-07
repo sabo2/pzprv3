@@ -58,8 +58,7 @@
 		cursor : default;
 	}
 
-	table.puztable {
-		display  : none;
+	div.puztable {
 		position : relative;
 		z-index  : 1;
 		width    : 100%;
@@ -68,8 +67,18 @@
 		/* box-shadow : 4px 4px 2px rgba(127,127,127,.5); */
 		text-align : left;
 	}
-	table.puztable td.sentence {
+	div.puztable div.container {
+		display  : -webkit-flex;
+		display  : flex;
+		-webkit-flex-wrap: wrap;
+		flex-wrap: wrap;
+	}
+	div.puztable div.sentence {
 		padding : 12pt;
+		background-color : #f8f8f8;
+	}
+	div.puztable div.filter {
+		padding : 8px 16px;
 		background-color : #f8f8f8;
 	}
 	h4.notice_item {
@@ -79,27 +88,36 @@
 	p.expression {
 		margin-bottom : 0pt;
 	}
-	table#table_notice ul {
+	div#table_notice ul {
 		margin : 0pt;
 	}
 
 	/* for index.html, index_en.html, index_test.html */
 	li.lunch { color:black;}
 	li.lunch2{ color:#666666;}
+	li.lunch3{ color:#666666;}
 	li.testa { color:navy; }
 	li.nigun { color:blue; }
 	li.trial { color:green;}
 	li.omopa { color:gray; }
 	li.orig  { color:#afafaf; }
 	li.genre { color:red; }
-	td.lists { padding:4pt 0pt 12pt 4pt; vertical-align:top; width:34%;}
-	td.blocks  { background-color:#ffdfdf;}
-	td.loops   { background-color:#dfdfff;}
-	td.lines   { background-color:#efefff;}
-	td.devides { background-color:#ccffcc;}
-	td.numbers { background-color:#dfdfdf;}
-	td.pics    { background-color:#efefef;}
-	td.others  { background-color:#ffffcc;}
+	div.lists {
+		padding:4pt 0pt 12pt 4pt;
+		margin:1px;
+		vertical-align:top;
+		width:32%;
+		flex-grow:1;
+		-webkit-flex-grow:1;
+		float:left;
+	}
+	div.blocks  { background-color:#ffdfdf;}
+	div.loops   { background-color:#dfdfff;}
+	div.lines   { background-color:#efefff;}
+	div.devides { background-color:#ccffcc;}
+	div.numbers { background-color:#dfdfdf;}
+	div.pics    { background-color:#efefef;}
+	div.others  { background-color:#ffffcc;}
 
 	input, button, textarea, select{
 		font-size : 0.9em;
@@ -144,13 +162,13 @@
 	}
 
 	/* for index_test.html */
-	table.exp {
+	div.exp {
 		width  : 80%;
 		margin : auto;
 		margin-bottom : 8pt;
 		border : 1px red solid;
-	}
-	td.exp {
+		display: flex;
+		flex-wrap: wrap;
 		text-align:left;
 		padding:6pt;
 	}
