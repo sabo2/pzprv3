@@ -17,6 +17,8 @@ var _doc = document;
 var self = v3index;
 var typelist = self.typelist;
 
+self.doclang = JSON.parse(localStorage['pzprv3_config:ui']).language || pzpr.lang;
+
 if(location.search==='?en'||location.search==='?ja'){
 	self.doclang = location.search.substr(1,2);
 }
@@ -99,7 +101,7 @@ v3index.extend({
 
 	/* filter-click function */
 	click_filter : function(){
-		var state = {}, alldisp = getEL('filter_all').checked;;
+		var state = {}, alldisp = getEL('filter_all').checked;
 		['lunch','nigun','omopa','extra'].forEach(function(id){ state[id] = getEL('filter_'+id).checked;});
 		Array.prototype.slice.call(_doc.querySelectorAll('.lists ul > li')).forEach(function(el){
 			var pid = pzpr.variety.toPID(customAttr(el, 'pid'));
@@ -136,6 +138,9 @@ v3index.extend({
 	setlang : function(lang){
 		self.doclang = lang;
 		self.disp();
+		var setting = JSON.parse(localStorage['pzprv3_config:ui']);
+		setting.language = lang;
+		localStorage['pzprv3_config:ui'] = JSON.stringify(setting);
 	},
 	setTranslation : function(){
 		Array.prototype.slice.call(_doc.querySelectorAll('.lists li')).forEach(function(el){
