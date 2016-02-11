@@ -12,7 +12,7 @@ ui.misc = {
 	//---------------------------------------------------------------------------
 	displayDesign : function(){
 		var pid = ui.puzzle.pid;
-		var pinfo = pzpr.variety.info[pid];
+		var pinfo = pzpr.variety(pid);
 		var title = ui.selectStr(pinfo.ja, pinfo.en);
 		title += (ui.puzzle.playeronly ? " player" : ui.selectStr(" エディタ"," editor"));
 		title += ui.selectStr(" - ぱずぷれv3"," - PUZ-PRE v3");

@@ -38,6 +38,6 @@
     "grunt-newer": "^0.7.0"
   },
   "dependencies": {
-    "pzpr": "0.0.2"
+    "pzpr": "^0.1.0"
   }
 }

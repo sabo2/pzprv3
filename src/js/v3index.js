@@ -138,7 +138,8 @@ v3index.extend({
 			var el = _doc.createElement('li');
 			el.innerHTML = '<a href="p.html?'+pid+'"></a>';
 			listparent.appendChild(el);
-			self.captions.push({anode:el.firstChild, str_jp:pzpr.variety.info[pid].ja, str_en:pzpr.variety.info[pid].en});
+			var pinfo = pzpr.variety(pid);
+			self.captions.push({anode:el.firstChild, str_jp:pinfo.ja, str_en:pinfo.en});
 		}
 
 		listparent = getEL('recentpuzzle');
@@ -162,13 +163,14 @@ v3index.extend({
 	},
 	setTranslation : function(){
 		Array.prototype.slice.call(_doc.querySelectorAll('.lists li')).forEach(function(el){
-			var pid = pzpr.variety.toPID(customAttr(el, 'pid'));
-			if(!pid){ return;}
+			var pinfo = pzpr.variety(customAttr(el, 'pid'));
+			var pid = pinfo.pid;
+			if(!pinfo.valid){ return;}
 			if(el.childNodes.length===0){
 				el.className = self.variety[pid].state;
 				el.innerHTML = '<a href="p.html?'+pid+(!self.testdoc?'':'_test')+'"></a>';
 			}
-			self.captions.push({anode:el.firstChild, str_jp:pzpr.variety.info[pid].ja, str_en:pzpr.variety.info[pid].en});
+			self.captions.push({anode:el.firstChild, str_jp:pinfo.ja, str_en:pinfo.en});
 		});
 	},
 	translate : function(){
@@ -315,11 +317,6 @@ var self = v3index.dbif;
 var DBlist = self.list;
 var pheader = '';
 
-pzpr.MetaData.prototype.update = function(metadata){
-	if(!metadata){ return;}
-	for(var i in this.items){ if(typeof metadata[i]==='string'){ this[i] = metadata[i];}}
-};
-
 v3index.dbif.extend({
 	init : function(){
 		_form = _doc.database;
@@ -396,7 +393,7 @@ v3index.dbif.extend({
 
 		var str = "";
 		str += ((row.id<10?"&nbsp;":"")+row.id+" :&nbsp;");
-		str += (pzpr.variety.info[row.pid][v3index.doclang]+"&nbsp;");
+		str += (pzpr.variety(row.pid)[v3index.doclang]+"&nbsp;");
 		str += (""+row.col+"×"+row.row+" &nbsp;");
 		str += (pzpr.parser.parse(row.pdata).metadata.hard+"&nbsp;");
 		str += ("("+datestr+")");

@@ -118,8 +118,7 @@ ui.debug.extend(
 		var pnum=0, term, idlist=[], self = this, starttime = pzpr.util.currentTime();
 		self.phase = 99;
 
-		for(var id in pzpr.variety.info){ idlist.push(id);}
-		idlist.sort();
+		idlist = pzpr.variety.getList().sort();
 		term = idlist.length;
 
 		self.alltimer = setInterval(function(){
@@ -174,7 +173,7 @@ ui.debug.extend(
 		setTimeout(function(){ self.check_encode_kanpen(self);},0);
 	},
 	check_encode_kanpen : function(self){
-		if(pzpr.variety.info[self.pid].exists.kanpen){
+		if(pzpr.variety(self.pid).exists.kanpen){
 			var puzzle = ui.puzzle, bd = puzzle.board, bd2 = self.bd_freezecopy(bd);
 			var kanpen_url = puzzle.getURL(pzpr.parser.URL_KANPEN);
 			var fails_org = self.fails;
@@ -262,7 +261,7 @@ ui.debug.extend(
 			else if(!self.alltimer){ self.addTA("FileIO test   = pass");}
 
 			setTimeout(function(){
-				if(pzpr.variety.info[self.pid].exists.pencilbox){ self.check_file_pbox(self);}
+				if(pzpr.variety(self.pid).exists.pencilbox){ self.check_file_pbox(self);}
 				else if(puzzle.pid==='tawa'){ self.check_flipX1(self);}
 				else{ self.check_turnR1(self);}
 			},0);

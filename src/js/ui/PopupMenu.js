@@ -311,7 +311,7 @@ ui.popupmgr.addpopup('urloutput',
 	formname : 'urloutput',
 	
 	setFormEvent : function(){
-		var form = this.form, pid = ui.puzzle.pid, exists = pzpr.variety.info[pid].exists;
+		var form = this.form, pid = ui.puzzle.pid, exists = pzpr.variety(pid).exists;
 		// form.pzprapp.style.display = form.pzprapp.nextSibling.style.display = (exists.pzprapp ? "" : "none");
 		form.kanpen.style.display  = form.kanpen.nextSibling.style.display  = (exists.kanpen ? "" : "none");
 		form.heyaapp.style.display = form.heyaapp.nextSibling.style.display = ((pid==="heyawake") ? "" : "none");
@@ -385,7 +385,7 @@ ui.popupmgr.addpopup('filesave',
 		this.form.action = ui.fileio;
 		
 		/* ファイル形式選択オプション */
-		var ispencilbox = pzpr.variety.info[ui.puzzle.pid].exists.pencilbox;
+		var ispencilbox = pzpr.variety(ui.puzzle.pid).exists.pencilbox;
 		this.form.filetype.options[1].disabled = !ispencilbox;
 		this.form.filetype.options[2].disabled = !ispencilbox;
 		
@@ -407,12 +407,13 @@ ui.popupmgr.addpopup('filesave',
 		var filetype = this.form.filetype.value;
 		var filename = this.form.filename.value.replace('.xml','').replace('.txt','');
 		var ext = (filetype!=='filesave4'?'.txt':'.xml');
-		if(pzpr.variety.toPID(filename)===ui.puzzle.pid){
+		var pinfo = pzpr.variety(filename);
+		if(pinfo.pid===ui.puzzle.pid){
 			if(filetype==='filesave'||filetype==='filesave3'){
-				filename = pzpr.variety.toURLID(ui.puzzle.pid);
+				filename = pinfo.urlid;
 			}
 			else{
-				filename = pzpr.variety.toKanpen(ui.puzzle.pid);
+				filename = pinfo.kanpenid;
 			}
 		}
 		this.form.filename.value = filename + ext;
@@ -487,7 +488,7 @@ ui.popupmgr.addpopup('imagesave',
 			if(option.value==="png" && !ui.enableSaveImage){ filetype.removeChild(option);}
 		}
 		
-		this.form.filename.value = pzpr.variety.toURLID(ui.puzzle.pid)+".png";
+		this.form.filename.value = pzpr.variety(ui.puzzle.pid).urlid+".png";
 		this.form.cellsize.value = ui.menuconfig.get('cellsizeval');
 		
 		this.changefilename();
@@ -632,7 +633,7 @@ ui.popupmgr.addpopup('metadata',
 		
 		var form = this.form;
 		var puzzle = ui.puzzle, bd = puzzle.board, meta = puzzle.metadata;
-		getEL("metadata_variety").innerHTML = pzpr.variety.info[puzzle.pid][pzpr.lang] + "&nbsp;" + bd.cols+"×"+bd.rows;
+		getEL("metadata_variety").innerHTML = pzpr.variety(puzzle.pid)[pzpr.lang] + "&nbsp;" + bd.cols+"×"+bd.rows;
 		form.author.value  = meta.author;
 		form.source.value  = meta.source;
 		form.hard.value    = meta.hard;

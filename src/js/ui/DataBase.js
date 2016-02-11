@@ -177,7 +177,7 @@ ui.database = {
 	getRowString : function(row){
 		var str = "";
 		str += ((row.id<10?"&nbsp;":"")+row.id+" :&nbsp;");
-		str += (pzpr.variety.info[row.pid][pzpr.lang]+"&nbsp;");
+		str += (pzpr.variety(row.pid)[pzpr.lang]+"&nbsp;");
 		str += (""+row.col+"×"+row.row+" &nbsp;");
 		str += (pzpr.parser.parse(row.pdata).metadata.hard+"&nbsp;");
 		str += ("("+this.dateString(row.time*1000)+")");
@@ -211,7 +211,7 @@ ui.database = {
 		form.hard.value    = ""+metadata.hard;
 		form.author.value  = ""+metadata.author;
 		form.source.value  = ""+metadata.source;
-		getEL("database_info").innerHTML = pzpr.variety.info[item.pid][pzpr.lang] + "&nbsp;" + item.col+"×"+item.row +
+		getEL("database_info").innerHTML = pzpr.variety(item.pid)[pzpr.lang] + "&nbsp;" + item.col+"×"+item.row +
 										   "&nbsp;&nbsp;&nbsp;(" + this.dateString(item.time*1000) + ")";
 
 		var sid = this.DBsid = +item.id; /* selected id */

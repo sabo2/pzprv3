@@ -13,7 +13,7 @@
 function bglist(){
   if(!window.ui){ setTimeout(bglist,16); return;}
   var main = document.getElementById("main"), counter = 0;
-  for(var pid in pzpr.variety.info){
+  pzpr.variety.each(function(pid){
     counter++;
 
     var el = document.createElement('span');
@@ -27,7 +27,7 @@ function bglist(){
     main.appendChild(el);
 
     main.appendChild(document.createElement('br'));
-  }
+  });
 }
 window.addEventListener('load', bglist, false);
 
