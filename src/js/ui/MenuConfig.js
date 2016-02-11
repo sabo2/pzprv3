@@ -40,7 +40,7 @@ ui.menuconfig = {
 			this.list[name].volatile = true;
 			this.list[name].puzzle = true;
 		}
-		this.add('mode', (!ui.puzzle.playmode?1:3), [1,3]);
+		this.add('mode', (!ui.puzzle.playmode?'edit':'play'), ['edit','play']);
 		this.list.mode.volatile = true;
 		this.list.mode.puzzle = true;
 	},
@@ -53,7 +53,7 @@ ui.menuconfig = {
 	get : Config.get,
 	set : function(idname, newval){
 		if(!this.list[idname]){ return;}
-		if(idname==='mode'){ ui.puzzle.setMode(+newval); newval = (!ui.puzzle.playmode?1:3);}
+		if(idname==='mode'){ ui.puzzle.setMode(newval); newval = (!ui.puzzle.playmode?'edit':'play');}
 		
 		newval = this.setproper(idname, newval);
 		

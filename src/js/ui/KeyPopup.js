@@ -100,7 +100,7 @@ ui.keypopup =
 	// kp.display()     キーポップアップを表示する
 	//---------------------------------------------------------------------------
 	display : function(){
-		var mode = ui.menuconfig.get('mode');
+		var mode = ui.puzzle.editmode?1:3;
 		if(this.element && !!this.paneltype[mode] && ui.menuconfig.get('keypopup')){
 
 			this.element.style.display = 'block';
