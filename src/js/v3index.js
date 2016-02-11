@@ -3,8 +3,6 @@
 
 /* variables */
 var v3index = {
-	typelist : [],
-	current  : '',
 	doclang  : pzpr.lang,
 	complete : false,
 	testdoc  : false,
@@ -14,7 +12,6 @@ var v3index = {
 
 var _doc = document;
 var self = v3index;
-var typelist = self.typelist;
 
 self.doclang = JSON.parse(localStorage['pzprv3_config:ui']||'{}').language || pzpr.lang;
 
@@ -54,25 +51,18 @@ v3index.extend({
 		}
 
 		Array.prototype.slice.call(_doc.querySelectorAll('#puztypes > li')).forEach(function(el){
-			if((el.id||'').match(/puzmenu_(.+)$/)){
+			if(el.id.match(/puzmenu_(.+)$/)){
 				var typename = RegExp.$1;
-				typelist.push(typename);
 				el.addEventListener("click",(function(typename){ return function(e){self.click_tab(typename);};})(typename),false);
-				if(el.className==="puzmenusel"){ self.current = typename;}
 			}
 		});
-		Array.prototype.slice.call(_doc.querySelectorAll('#statefilter input')).forEach(function(el){
-			if((el.id||'').match(/filter_(.+)$/)){
-				el.addEventListener("change",self.click_filter,false);
-			}
-		});
-		if(!self.current && typelist.length>0){ self.current = typelist[0];}
 		if(!!getEL('puztypes')){ getEL('puztypes').style.display = "block";}
 		self.setRecentPuzzle();
 
-		self.setTranslation();
+		self.disp_tab();
 
-		self.disp();
+		self.setTranslation();
+		self.translate();
 	},
 	input_init : function(){
 		var cnt=0;
@@ -83,29 +73,39 @@ v3index.extend({
 		return (cnt>0);
 	},
 
-	reset_func : function(){
-		typelist = [];
-		self.current  = '';
-		self.onload_func();
-	},
-
 	/* tab-click function */
 	click_tab : function(typename){
-		self.current = typename;
-		self.disp();
-		if(self.current==="input"){ self.dbif.display();} /* iPhone用 */
+		Array.prototype.slice.call(_doc.querySelectorAll('#puztypes > li')).forEach(function(el){
+			el.className = (el.id==='puzmenu_'+typename ? "puzmenusel" : "puzmenu");
+		});
+		self.disp_tab();
+		if(customAttr(_doc.querySelector('li.puzmenusel'),'table')==='all'){ self.set_puzzle_filter(typename);}
+		if(typename==="input"){ self.dbif.display();} /* iPhone用 */
+	},
+	/* display contents and tables in tabs function */
+	disp_tab : function(){
+		var isdisp = {};
+		Array.prototype.slice.call(_doc.querySelectorAll('#puztypes > li')).forEach(function(el){
+			if(!el.id.match(/puzmenu_(.+)$/)){ return;}
+			var tablename = 'table_'+customAttr(el, 'table');
+			if(isdisp[tablename]===void 0){ isdisp[tablename] = false;}
+			if(isdisp[tablename]===false && el.className==='puzmenusel'){ isdisp[tablename] = true;}
+		});
+		Array.prototype.slice.call(_doc.querySelectorAll('div.puztable')).forEach(function(el){
+			el.style.display = (!!isdisp[el.id||'1'] ? 'block' : 'none');
+		});
 	},
 
 	/* filter-click function */
-	click_filter : function(){
-		var state = {}, alldisp = getEL('filter_all').checked;
-		['lunch','nigun','omopa','extra'].forEach(function(id){ state[id] = getEL('filter_'+id).checked;});
+	set_puzzle_filter : function(filtername){
+		/* Set visibility of each puzzle */
 		Array.prototype.slice.call(_doc.querySelectorAll('.lists ul > li')).forEach(function(el){
 			var pid = pzpr.variety.toPID(customAttr(el, 'pid'));
 			if(!!pid && self.variety[pid]){
-				el.style.display = (alldisp||state[self.variety[pid].tab] ? '' : 'none');
+				el.style.display = ((filtername==='all'||filtername===self.variety[pid].tab) ? '' : 'none');
 			}
 		});
+		/* Set visibility of each flexbox */
 		Array.prototype.slice.call(_doc.querySelectorAll('.lists ul')).forEach(function(el){
 			var count = 0;
 			Array.prototype.slice.call(el.querySelectorAll('li')).forEach(function(el){
@@ -115,23 +115,7 @@ v3index.extend({
 		});
 	},
 
-	/* display tabs and tables function */
-	disp : function(){
-		for(var i=0;i<typelist.length;i++){
-			var el = getEL("puzmenu_"+typelist[i]);
-			var table = getEL("table_"+typelist[i]);
-			if(typelist[i]===self.current){
-				el.className = "puzmenusel";
-				table.style.display = 'block';
-			}
-			else{
-				el.className = "puzmenu";
-				table.style.display = 'none';
-			}
-		}
-		self.translate();
-	},
-
+	/* Generate the contents of recent accessed puzzles tab */
 	setRecentPuzzle : function(){
 		var listparent;
 		function addPuzzle(pid){
@@ -154,9 +138,11 @@ v3index.extend({
 		counts.sort(function(a,b){ return b.count-a.count;}).slice(0,10).forEach(function(item){ addPuzzle(item.pid);});
 	},
 
+	/* Language display functions */
 	setlang : function(lang){
 		self.doclang = lang;
-		self.disp();
+		self.translate();
+		
 		var setting = JSON.parse(localStorage['pzprv3_config:ui']||'{}');
 		setting.language = lang;
 		localStorage['pzprv3_config:ui'] = JSON.stringify(setting);
