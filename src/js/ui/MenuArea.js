@@ -195,8 +195,8 @@ ui.menuarea = {
 		}
 		else if(idname==="toolarea"){
 			var str;
-			if(ui.menuconfig.get("toolarea")===0){ str = ui.selectStr("ツールエリアを表示","Show tool area");}
-			else                                 { str = ui.selectStr("ツールエリアを隠す","Hide tool area");}
+			if(!ui.menuconfig.get("toolarea")){ str = ui.selectStr("ツールエリアを表示","Show tool area");}
+			else                              { str = ui.selectStr("ツールエリアを隠す","Hide tool area");}
 			getEL('menu_toolarea').childNodes[0].data = str;
 		}
 		else if(this.menuitem===null || !this.menuitem[idname]){
@@ -258,7 +258,7 @@ ui.menuarea = {
 	subclear : function(){ this.ASconfirm();},
 	duplicate: function(){ this.duplicate_board();},
 	toolarea : function(){
-		ui.menuconfig.set("toolarea", (ui.menuconfig.get("toolarea")===0?1:0));
+		ui.menuconfig.set("toolarea", !ui.menuconfig.get("toolarea"));
 		ui.displayAll();
 	},
 	repaint : function(){ ui.puzzle.redraw(true);},

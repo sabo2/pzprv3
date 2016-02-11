@@ -86,7 +86,7 @@ ui.toolarea = {
 	display : function(){
 		/* ツールパネル領域 */
 		/* -------------- */
-		var mandisp  = (ui.menuconfig.get("toolarea")!==0 ? 'block' : 'none');
+		var mandisp  = (ui.menuconfig.get("toolarea") ? 'block' : 'none');
 		getEL('usepanel').style.display = mandisp;
 		getEL('checkpanel').style.display = mandisp;
 		/* 経過時間の表示/非表示設定 */
@@ -105,7 +105,7 @@ ui.toolarea = {
 		getEL('btncircle').style.display  = (ui.puzzle.pid==='pipelinkr' ? "" : "none");
 		getEL('btncolor').style.display   = (ui.puzzle.pid==='tentaisho' ? "" : "none");
 		/* ボタンエリアの色分けボタンは、ツールパネル領域が消えている時に表示 */
-		getEL('btnirowake').style.display = (((ui.puzzle.painter.irowake || ui.puzzle.painter.irowakeblk) && (ui.menuconfig.get("toolarea")===0)) ? "" : "none");
+		getEL('btnirowake').style.display = (((ui.puzzle.painter.irowake || ui.puzzle.painter.irowakeblk) && !ui.menuconfig.get("toolarea")) ? "" : "none");
 		
 		/* 共通：キャプションの設定 */
 		/* --------------------- */
