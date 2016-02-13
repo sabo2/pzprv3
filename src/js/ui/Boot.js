@@ -77,7 +77,7 @@ function startPuzzle(){
 	var callback = null;
 	if(!ui.debugmode){ callback = accesslog;}
 	else{ puzzle.once('ready', function(puzzle){ ui.menuconfig.set('autocheck', true);});}
-	if(!ui.debugmode && onload_option.type!=='player'){ puzzle.once('ready', countpid);}
+	if(!ui.debugmode && require_accesslog && onload_option.type!=='player'){ puzzle.once('ready', countpid);}
 	puzzle.once('fail-open', failOpen);
 	puzzle.open((!ui.debugmode || !!pzl.qdata) ? pzl : pid+"/"+ui.debug.urls[pid], callback);
 	
