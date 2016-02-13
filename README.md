@@ -36,7 +36,7 @@ This script is developed against HTML5 features and JavaScript.
 * Nintendo 3DS browser may work without errors but they are not comfortable because of working slowly and pressing long is required for mousemove (inputting lines or so)
 
 ## Releases
-* 2016/02/?? v3.5.3
+* 2016/02/13 v3.6.0
 * 2015/12/29 v3.5.2
 * 2015/08/16 v3.5.1
 * 2015/08/08 v3.5.0
