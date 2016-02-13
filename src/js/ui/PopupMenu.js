@@ -1,5 +1,5 @@
 // Menu.js v3.4.0
-/* global Candle:false, ui:false, _doc:false, getEL:false */
+/* global ui:false, _doc:false, getEL:false */
 
 //---------------------------------------------------------------------------
 // ★PopupManagerクラス ポップアップメニューを管理します
@@ -202,7 +202,7 @@ ui.popupmgr.addpopup('newboard',
 		getEL("nb_size").style.display        = ((pid!=='sudoku') ? "" : "none");
 		getEL("nb_size_sudoku").style.display = ((pid==='sudoku') ? "" : "none");
 		
-		var col = bd.qcols, row = bd.qrows;
+		var col = bd.cols, row = bd.rows;
 		if(pid==='tawa' && bd.shape===3){ col++;}
 		
 		if(pid!=='sudoku'){
@@ -311,7 +311,7 @@ ui.popupmgr.addpopup('urloutput',
 	formname : 'urloutput',
 	
 	setFormEvent : function(){
-		var form = this.form, pid = ui.puzzle.pid, exists = pzpr.variety.info[pid].exists;
+		var form = this.form, pid = ui.puzzle.pid, exists = pzpr.variety(pid).exists;
 		// form.pzprapp.style.display = form.pzprapp.nextSibling.style.display = (exists.pzprapp ? "" : "none");
 		form.kanpen.style.display  = form.kanpen.nextSibling.style.display  = (exists.kanpen ? "" : "none");
 		form.heyaapp.style.display = form.heyaapp.nextSibling.style.display = ((pid==="heyawake") ? "" : "none");
@@ -327,7 +327,7 @@ ui.popupmgr.addpopup('urloutput',
 			case "pzprv3":     url = ui.puzzle.getURL(parser.URL_PZPRV3);  break;
 			// case "pzprapp": url = ui.puzzle.getURL(parser.URL_PZPRAPP); break;
 			case "kanpen":     url = ui.puzzle.getURL(parser.URL_KANPEN);  break;
-			case "pzprv3e":    url = ui.puzzle.getURL(parser.URL_PZPRV3E); break;
+			case "pzprv3e":    url = ui.puzzle.getURL(parser.URL_PZPRV3).replace(/\?(\w+)/,"?$1_edit"); break;
 			case "heyaapp":    url = ui.puzzle.getURL(parser.URL_HEYAAPP); break;
 		}
 		this.form.ta.value = url;
@@ -385,9 +385,9 @@ ui.popupmgr.addpopup('filesave',
 		this.form.action = ui.fileio;
 		
 		/* ファイル形式選択オプション */
-		var ispencilbox = pzpr.variety.info[ui.puzzle.pid].exists.pencilbox;
+		var ispencilbox = pzpr.variety(ui.puzzle.pid).exists.pencilbox;
 		this.form.filetype.options[1].disabled = !ispencilbox;
-		this.form.filetype.options[2].disabled = (!ispencilbox || pzpr.env.browser.legacyIE);
+		this.form.filetype.options[2].disabled = !ispencilbox;
 		
 		this.form.filename.value = ui.puzzle.pid + '.txt';
 		this.changefilename();
@@ -407,12 +407,13 @@ ui.popupmgr.addpopup('filesave',
 		var filetype = this.form.filetype.value;
 		var filename = this.form.filename.value.replace('.xml','').replace('.txt','');
 		var ext = (filetype!=='filesave4'?'.txt':'.xml');
-		if(pzpr.variety.toPID(filename)===ui.puzzle.pid){
+		var pinfo = pzpr.variety(filename);
+		if(pinfo.pid===ui.puzzle.pid){
 			if(filetype==='filesave'||filetype==='filesave3'){
-				filename = pzpr.variety.toURLID(ui.puzzle.pid);
+				filename = pinfo.urlid;
 			}
 			else{
-				filename = pzpr.variety.toKanpen(ui.puzzle.pid);
+				filename = pinfo.kanpenid;
 			}
 		}
 		this.form.filename.value = filename + ext;
@@ -483,11 +484,10 @@ ui.popupmgr.addpopup('imagesave',
 		var filetype = this.form.filetype, options = filetype.options;
 		for(var i=0;i<options.length;i++){
 			var option = options[i];
-			if(option.value==="svg" && !ui.enableSaveSVG)  { filetype.removeChild(option);}
-			if(option.value==="png" && !ui.enableSaveImage){ filetype.removeChild(option);}
+			if(!ui.enableImageType[option.value]){ filetype.removeChild(option);}
 		}
 		
-		this.form.filename.value = pzpr.variety.toURLID(ui.puzzle.pid)+".png";
+		this.form.filename.value = pzpr.variety(ui.puzzle.pid).urlid+".png";
 		this.form.cellsize.value = ui.menuconfig.get('cellsizeval');
 		
 		this.changefilename();
@@ -509,8 +509,8 @@ ui.popupmgr.addpopup('imagesave',
 	},
 	
 	changefilename : function(){
-		var filename = this.form.filename.value.replace('.png','.').replace('.svg','.');
-		this.form.filename.value = filename + (this.form.filetype.value!=='svg'?'png':'svg');
+		var filename = this.form.filename.value.replace(/\.\w{3,4}$/,'.');
+		this.form.filename.value = filename + this.form.filetype.value;
 	},
 	estimatesize : function(){
 		var cellsize = +this.form.cellsize.value;
@@ -536,37 +536,35 @@ ui.popupmgr.addpopup('imagesave',
 
 		/* 画像出力ルーチン */
 		var cellsize = +form.cellsize.value;
-		var type = (form.filetype.value!=='svg'?'png':'svg');
+		var type = form.filetype.value;
 
-		var blob = null, filedata = null;
 		try{
 			if(ui.enableSaveBlob || !!this.anchor){
-				blob = ui.puzzle.toBlob(type,cellsize);
+				ui.puzzle.toBlob(function(blob){
+					/* 出力された画像の保存ルーチン */
+					if(ui.enableSaveBlob){
+						navigator.saveBlob(blob, filename);
+						this.close();
+					}
+					else{
+						if(!!this.filesaveurl){ URL.revokeObjectURL(this.filesaveurl);}
+						this.filesaveurl = URL.createObjectURL(blob);
+						this.anchor.href = this.filesaveurl;
+						this.anchor.download = filename;
+						this.anchor.click();
+					}
+				}.bind(this), type, 1.0, cellsize);
 			}
 			else{
-				filedata = ui.puzzle.toDataURL(type,cellsize).replace(/data:.*;base64,/, '');
+				var filedata = ui.puzzle.toDataURL(type,1.0,cellsize).replace(/data:.*;base64,/, '');
+				/* 出力された画像の保存ルーチン */
+				form.urlstr.value = filedata;
+				form.submit();
+				this.close();
 			}
 		}
 		catch(e){
 			ui.notify.alert('画像の出力に失敗しました','Fail to Output the Image');
-		}
-
-		/* 出力された画像の保存ルーチン */
-		if(ui.enableSaveBlob){
-			navigator.saveBlob(blob, filename);
-			this.close();
-		}
-		else if(!!this.anchor){
-			if(!!this.filesaveurl){ URL.revokeObjectURL(this.filesaveurl);}
-			this.filesaveurl = URL.createObjectURL(blob);
-			this.anchor.href = this.filesaveurl;
-			this.anchor.download = filename;
-			this.anchor.click();
-		}
-		else{
-			form.urlstr.value = filedata;
-			form.submit();
-			this.close();
 		}
 	},
 	
@@ -576,32 +574,17 @@ ui.popupmgr.addpopup('imagesave',
 	openimage : function(){
 		/* 画像出力ルーチン */
 		var cellsize = +this.form.cellsize.value;
-		var type = (this.form.filetype.value!=='svg'?'png':'svg');
 		
 		var dataurl = "";
 		try{
-			dataurl = ui.puzzle.toDataURL(type,cellsize);
+			dataurl = ui.puzzle.toDataURL(this.form.filetype.value, 1.0, cellsize);
 		}
 		catch(e){
 			ui.notify.alert('画像の出力に失敗しました','Fail to Output the Image');
 		}
 		
 		/* 出力された画像を開くルーチン */
-		if(!dataurl){ /* dataurlが存在しない */}
-		else if(!pzpr.env.browser.IE9){
-			window.open(dataurl, '', '');
-		}
-		else{
-			// IE9だとアドレスバーの長さが2KBだったり、
-			// そもそもDataURL入れても何も起こらなかったりする対策
-			var cdoc = window.open('', '', '').document;
-			cdoc.open();
-			cdoc.writeln("<!DOCTYPE html>\n<HTML LANG=\"ja\">\n<HEAD>");
-			cdoc.writeln("<META CHARSET=\"utf-8\">");
-			cdoc.writeln("<TITLE>ぱずぷれv3<\/TITLE>\n<\/HEAD>");
-			cdoc.writeln("<BODY><img src=\"", dataurl, "\"><\/BODY>\n<\/HTML>");
-			cdoc.close();
-		}
+		if(!!dataurl){ window.open(dataurl, '', '');}
 	}
 });
 
@@ -613,7 +596,7 @@ ui.popupmgr.addpopup('adjust',
 	formname : 'adjust',
 	
 	adjust : function(e){
-		ui.puzzle.board.exec.execadjust(e.target.name);
+		ui.puzzle.board.operate(e.target.name);
 	}
 });
 
@@ -630,7 +613,7 @@ ui.popupmgr.addpopup('turnflip',
 	},
 	
 	adjust : function(e){
-		ui.puzzle.board.exec.execadjust(e.target.name);
+		ui.puzzle.board.operate(e.target.name);
 	}
 });
 
@@ -646,7 +629,7 @@ ui.popupmgr.addpopup('metadata',
 		
 		var form = this.form;
 		var puzzle = ui.puzzle, bd = puzzle.board, meta = puzzle.metadata;
-		getEL("metadata_variety").innerHTML = pzpr.variety.info[puzzle.pid][pzpr.lang] + "&nbsp;" + bd.qcols+"×"+bd.qrows;
+		getEL("metadata_variety").innerHTML = pzpr.variety(puzzle.pid)[pzpr.lang] + "&nbsp;" + bd.cols+"×"+bd.rows;
 		form.author.value  = meta.author;
 		form.source.value  = meta.source;
 		form.hard.value    = meta.hard;
@@ -683,7 +666,7 @@ ui.popupmgr.addpopup('colors',
 			if(el.nodeName==="INPUT" && el.getAttribute("type")==="color"){
 				var target = ui.customAttr(el,"colorTarget");
 				if(!!target && (!name || name===target)){
-					el.value = Candle.parse(ui.puzzle.painter[target]);
+					el.value = pzpr.Candle.parse(ui.puzzle.painter[target]);
 				}
 			}
 		});
@@ -695,11 +678,11 @@ ui.popupmgr.addpopup('colors',
 	//------------------------------------------------------------------------------
 	setcolor : function(e){
 		var name = ui.customAttr(e.target,"colorTarget");
-		ui.puzzle.setConfig("color_"+name, e.target.value);
+		ui.menuconfig.set("color_"+name, e.target.value);
 	},
 	clearcolor : function(e){
 		var name = ui.customAttr(e.target,"colorTarget");
-		ui.puzzle.setConfig("color_"+name, "");
+		ui.menuconfig.set("color_"+name, "");
 		this.refresh(name);
 	}
 });
@@ -733,5 +716,9 @@ ui.popupmgr.addpopup('dispsize',
 //---------------------------------------------------------------------------
 ui.popupmgr.addpopup('credit',
 {
-	formname : 'credit'
+	formname : 'credit',
+
+	setFormEvent : function(){
+		getEL('pzprversion').innerHTML = pzpr.version;
+	}
 });

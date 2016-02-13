@@ -12,6 +12,8 @@ function createEL(tagName){ return _doc.createElement(tagName);}
 //---------------------------------------------------------------------------
 /* extern */
 window.ui = {
+	version : '<%= pkg.version %>',
+
 	/* このサイトで使用するパズルのオブジェクト */
 	puzzle    : null,
 	
@@ -33,8 +35,8 @@ window.ui = {
 	enableReadText  : false,	// HTML5 FileReader APIでファイルが読めるか
 	reader : null,				// FileReaderオブジェクト
 	
-	enableSaveImage : false,	// 画像保存(png形式)が可能か
-	enableSaveSVG   : false,	// 画像保存(SVG形式)が可能か
+	enableSaveImage : false,	// 画像保存が可能か
+	enableImageType : {},		// 保存可能な画像形式
 	
 	enableSaveBlob  : false,	// saveBlobが使用できるか
 	fileio : 'fileio.cgi',		// fileio.cgiのファイル名
@@ -142,7 +144,7 @@ window.ui = {
 				padding = 0.05; break;
 			
 			case 'bosanowa':
-				padding = (puzzle.getConfig('disptype_bosanowa')!==2?0.50:0.05); break;
+				padding = (ui.menuconfig.get('disptype_bosanowa')!==2?0.50:0.05); break;
 			
 			default: padding = 0.50; break;
 		}
@@ -162,71 +164,7 @@ window.ui = {
 	// ui.getCurrentConfigList() 現在のパズルで有効な設定と設定値を返す
 	//---------------------------------------------------------------------------
 	getCurrentConfigList : function(){
-		var conf = ui.puzzle.getCurrentConfig(), conf2 = ui.menuconfig.getList();
-		for(var idname in conf2){ conf[idname] = conf2[idname];}
-		return conf;
-	},
-
-	//---------------------------------------------------------------------------
-	// ui.setConfig()   値設定の共通処理
-	// ui.getConfig()   値設定の共通処理
-	// ui.validConfig() 設定が有効なパズルかどうかを返す共通処理
-	//---------------------------------------------------------------------------
-	setConfig : function(idname, newval){
-		if(!!ui.puzzle.config.list[idname]){
-			ui.puzzle.setConfig(idname, newval);
-		}
-		else if(!!ui.menuconfig.list[idname]){
-			ui.menuconfig.set(idname, newval);
-		}
-		else if(idname==='language'){
-			pzpr.lang = newval;
-			ui.displayAll();
-		}
-	},
-	getConfig : function(idname){
-		if(!!ui.puzzle.config.list[idname]){
-			return ui.puzzle.getConfig(idname);
-		}
-		else if(!!ui.menuconfig.list[idname]){
-			return ui.menuconfig.get(idname);
-		}
-		else if(idname==='language'){
-			return pzpr.lang;
-		}
-	},
-	validConfig : function(idname){
-		if(!!ui.puzzle.config.list[idname]){
-			return ui.puzzle.validConfig(idname);
-		}
-		else if(!!ui.menuconfig.list[idname]){
-			return ui.menuconfig.valid(idname);
-		}
-		else if(idname==='language'){
-			return true;
-		}
-	},
-
-	//---------------------------------------------------------------------------
-	// ui.restoreConfig()  保存された各種設定値を元に戻す
-	// ui.saveConfig()     各種設定値を保存する
-	//---------------------------------------------------------------------------
-	restoreConfig : function(){
-		/* 設定が保存されている場合は元に戻す */
-		if(pzpr.env.storage.localST && !!window.JSON){
-			var json_puzzle = localStorage['pzprv3_config:puzzle'];
-			var json_menu   = localStorage['pzprv3_config:ui'];
-			if(!!json_puzzle){ ui.puzzle.restoreConfig(JSON.parse(json_puzzle));}
-			if(!!json_menu)  { ui.menuconfig.setAll(JSON.parse(json_menu));}
-			pzpr.lang = localStorage['pzprv3_config:language'] || pzpr.lang;
-		}
-	},
-	saveConfig : function(){
-		if(pzpr.env.storage.localST && !!window.JSON){
-			localStorage['pzprv3_config:puzzle'] = JSON.stringify(ui.puzzle.saveConfig());
-			localStorage['pzprv3_config:ui']     = JSON.stringify(ui.menuconfig.getAll());
-			localStorage['pzprv3_config:language'] = pzpr.lang;
-		}
+		return ui.menuconfig.getList();
 	},
 
 	//----------------------------------------------------------------------
@@ -249,11 +187,20 @@ window.ui = {
 	// ui.initImageSaveMethod() 画像保存関連の処理の初期化を行う
 	//----------------------------------------------------------------------
 	initImageSaveMethod : function(puzzle){
-		if(!!puzzle.imgcanvas[0] && !!_doc.createElement('canvas').toDataURL){
-			this.enableSaveImage = true;
+		if(!!pzpr.Candle.enable.canvas && !!_doc.createElement('canvas').toDataURL){
+			this.enableImageType.png = true;
+			
+			var canvas = _doc.createElement('canvas');
+			canvas.width = canvas.height = 1;
+			if(canvas.toDataURL('image/gif').match('image/gif'))  { this.enableImageType.gif = true;}
+			if(canvas.toDataURL('image/jpeg').match('image/jpeg')){ this.enableImageType.jpeg = true;}
+			if(canvas.toDataURL('image/webp').match('image/webp')){ this.enableImageType.webp = true;}
 		}
-		if(!!puzzle.imgcanvas[1] && !!window.btoa){
-			this.enableSaveSVG = true;
+		if(!!pzpr.Candle.enable.svg && !!window.btoa){
+			this.enableImageType.svg = true;
+		}
+		if(!!this.enableImageType.png || !!this.enableImageType.svg){
+			this.enableSaveImage = true;
 		}
 		
 		this.enableSaveBlob = (!!window.navigator.saveBlob);

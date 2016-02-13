@@ -12,37 +12,19 @@ ui.misc = {
 	//---------------------------------------------------------------------------
 	displayDesign : function(){
 		var pid = ui.puzzle.pid;
-		var pinfo = pzpr.variety.info[pid];
+		var pinfo = pzpr.variety(pid);
 		var title = ui.selectStr(pinfo.ja, pinfo.en);
-		if(pzpr.EDITOR){ title += ui.selectStr(" エディタ - ぱずぷれv3"," editor - PUZ-PRE v3");}
-		else		   { title += ui.selectStr(" player - ぱずぷれv3"  ," player - PUZ-PRE v3");}
+		title += (ui.puzzle.playeronly ? " player" : ui.selectStr(" エディタ"," editor"));
+		title += ui.selectStr(" - ぱずぷれv3"," - PUZ-PRE v3");
 
 		_doc.title = title;
 		var titleEL = _doc.getElementById('title2');
 		titleEL.innerHTML = title;
 
-		var imageurl = this.bgimage(pid);
-		if(!imageurl){ imageurl="./bg/"+pid+".gif";}
-		_doc.body.style.backgroundImage = "url("+imageurl+")";
+		_doc.body.style.backgroundImage = "url("+this.bgimage(pid)+")";
 	},
 	bgimage : function(pid){
 		return toBGimage(pid);
-	},
-
-	//--------------------------------------------------------------------------------
-	// misc.setkeyfocus()     キャンバスにフォーカスをセットするか外す
-	//--------------------------------------------------------------------------------
-	setkeyfocus : function(){
-		var canvas = ui.puzzle.canvas;
-		if(!canvas){}
-		else if(ui.getConfig('keyboard') && ui.puzzle.key.isenablemode()){
-			canvas.focus();
-			canvas.contentEditable = true;
-		}
-		else{
-			canvas.blur();
-			canvas.contentEditable = false;
-		}
 	},
 
 	//--------------------------------------------------------------------------------
@@ -50,12 +32,12 @@ ui.misc = {
 	//--------------------------------------------------------------------------------
 	modifyCSS : function(input){
 		var sheet = _doc.styleSheets[0];
-		var rules = sheet.cssRules || sheet.rules;
+		var rules = sheet.cssRules;
 		if(rules===null){} // Chromeでローカルファイルを開くとおかしくなるので、とりあえず何もしないようにします
 		else if(!this.modifyCSS_sub(rules, input)){
 			var sel = ''; for(sel in input){ break;}
-			if(!!sheet.insertRule){ sheet.insertRule(""+sel+" {}", rules.length);}
-			rules = sheet.cssRules || sheet.rules;	/* IE8まではrulesなし */
+			sheet.insertRule(""+sel+" {}", rules.length);
+			rules = sheet.cssRules;
 			this.modifyCSS_sub(rules, input);
 		}
 	},

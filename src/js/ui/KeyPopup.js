@@ -100,7 +100,7 @@ ui.keypopup =
 	// kp.display()     キーポップアップを表示する
 	//---------------------------------------------------------------------------
 	display : function(){
-		var mode = ui.getConfig('mode');
+		var mode = ui.puzzle.editmode?1:3;
 		if(this.element && !!this.paneltype[mode] && ui.menuconfig.get('keypopup')){
 
 			this.element.style.display = 'block';
@@ -128,7 +128,7 @@ ui.keypopup =
 		var type = this.type[ui.puzzle.pid];
 		if(!type){ type=[0,0];}
 		
-		this.paneltype = { 1:(pzpr.EDITOR?type[0]:0), 3:(type[1])};
+		this.paneltype = { 1:(!ui.puzzle.playeronly?type[0]:0), 3:(type[1])};
 		if(!this.paneltype[1] && !this.paneltype[3]){ return;}
 		
 		if(!this.element){
@@ -205,7 +205,7 @@ ui.keypopup =
 	},
 	gentable10 : function(mode){
 		var pid = ui.puzzle.pid, itemlist = [];
-		if((mode===3)&&(ui.puzzle.Cell.prototype.numberWithMB)){
+		if((mode===3)&&(ui.puzzle.klass.Cell.prototype.numberWithMB)){
 			var mbcolor = ui.puzzle.painter.mbcolor;
 			itemlist.push(
 				['q',{text:'○',color:mbcolor}],
@@ -218,7 +218,7 @@ ui.keypopup =
 		}
 		
 		itemlist.push('0','1','2','3','4','5','6','7','8','9');
-		itemlist.push(((mode===1)||(!ui.puzzle.Cell.prototype.numberWithMB)) ? ' ' : null);
+		itemlist.push(((mode===1)||(!ui.puzzle.klass.Cell.prototype.numberWithMB)) ? ' ' : null);
 		
 		var cap = null;
 		if((mode===3)||(pid==='kakuru'||pid==='tateyoko')){

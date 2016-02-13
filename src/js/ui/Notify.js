@@ -54,7 +54,6 @@ ui.notify =
 	setVerticalPosition : function(el){
 		var elbg = getEL("notifybg");
 		elbg.style.display = "block";
-		if(pzpr.env.browser.legacyIE){ elbg.style.background = "";}
 		el.style.display = 'inline-block';
 		
 		/* innerHeightがIE8以下にないので、代わりに背景要素の高さ(height=100%), 幅を取得します */

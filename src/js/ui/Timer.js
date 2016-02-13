@@ -42,8 +42,8 @@ ui.timer =
 	update : function(){
 		this.current = pzpr.util.currentTime();
 
-		if(pzpr.PLAYER){ this.updatetime();}
-		if(ui.menuconfig.get('autocheck_once')){ this.ACcheck();}
+		if(ui.puzzle.playeronly){ this.updatetime();}
+		if(ui.menuconfig.get('autocheck_once') && !ui.debug.alltimer){ this.ACcheck();}
 	},
 
 	//---------------------------------------------------------------------------
@@ -75,7 +75,7 @@ ui.timer =
 	ACcheck : function(){
 		var puzzle = ui.puzzle;
 		if(this.current>this.nextACtime && puzzle.playmode && !puzzle.checker.inCheck){
-			if(puzzle.check().complete){
+			if(puzzle.check(false).complete){
 				puzzle.mouse.mousereset();
 				ui.menuconfig.set('autocheck_once',false);
 				ui.notify.alert("正解です！","Complete!");

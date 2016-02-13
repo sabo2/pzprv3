@@ -74,13 +74,16 @@ ui.event =
 	onload_func : function(){
 		ui.initFileReadMethod();
 		
-		ui.menuconfig.init();
-		ui.restoreConfig();
+		ui.menuconfig.restore();
 		
 		ui.listener.setListeners(ui.puzzle);
+		
+		if(pzpr.env.OS.Android){
+			ui.misc.modifyCSS({'body, .btn':{fontFamily:'Verdana, Arial, sans-serif'}});
+		}
 	},
 	onunload_func : function(){
-		ui.saveConfig();
+		ui.menuconfig.save();
 	},
 
 	//---------------------------------------------------------------------------
@@ -97,7 +100,7 @@ ui.event =
 		ui.puzzle.mouse.mousereset();
 	},
 	onbeforeunload_func : function(e){
-		if(pzpr.PLAYER || !ui.puzzle.ismodified()){ return;}
+		if(ui.puzzle.playeronly || !ui.puzzle.ismodified()){ return;}
 		
 		var msg = ui.selectStr("盤面が更新されています", "The board is edited.");
 		e.returnValue = msg;

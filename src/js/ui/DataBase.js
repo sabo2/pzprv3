@@ -1,5 +1,5 @@
 // DataBase.js v3.4.0
-/* global ui:false, createEL:false, getEL:false */
+/* global ui:false, createEL:false, getEL:false, JSON:false */
 
 //---------------------------------------------------------------------------
 // ★ProblemDataクラス データベースに保存する1つのデータを保持する
@@ -14,13 +14,13 @@ ui.ProblemData = function(){
 ui.ProblemData.prototype =
 {
 	updatePuzzleData : function(id){
-		var puzzle = ui.puzzle;
+		var puzzle = ui.puzzle, bd = puzzle.board;
 		this.id = id;
 		this.pdata = puzzle.getFileData(pzpr.parser.FILE_PZPR).replace(/\r?\n/g,"/");
 		this.time = (pzpr.util.currentTime()/1000)|0;
 		this.pid = puzzle.pid;
-		this.col = puzzle.board.qcols;
-		this.row = puzzle.board.qrows;
+		this.col = bd.cols;
+		this.row = bd.rows;
 	},
 	updateMetaData : function(){
 		var metadata = new pzpr.MetaData(), form = document.database;
@@ -29,7 +29,7 @@ ui.ProblemData.prototype =
 		metadata.author  = form.author.value;
 		metadata.source  = form.source.value;
 		var pzl = pzpr.parser.parse(this.pdata);
-		pzl.metadata.copydata(metadata);
+		pzl.metadata.update(metadata);
 		this.pdata = pzl.generate();
 		return metadata;
 	},
@@ -45,7 +45,7 @@ ui.ProblemData.prototype =
 		var data = JSON.parse(str);
 		for(var key in data){ this[key]=data[key];}
 		var pzl = pzpr.parser.parse(this.pdata);
-		this.pid = pzl.id;
+		this.pid = pzl.pid;
 		this.col = pzl.cols;
 		this.row = pzl.rows;
 		return this;
@@ -95,9 +95,7 @@ ui.database = {
 	//---------------------------------------------------------------------------
 	openDialog : function(){
 		// データベースを開く
-		if(pzpr.env.storage.localST){ this.dbh = new ui.DataBaseHandler_LS(this);}
-		else{ return;}
-
+		this.dbh = new ui.DataBaseHandler_LS(this);
 		this.sync = false;
 		this.dbh.convert();
 		this.dbh.importDBlist();
@@ -179,7 +177,7 @@ ui.database = {
 	getRowString : function(row){
 		var str = "";
 		str += ((row.id<10?"&nbsp;":"")+row.id+" :&nbsp;");
-		str += (pzpr.variety.info[row.pid][pzpr.lang]+"&nbsp;");
+		str += (pzpr.variety(row.pid)[pzpr.lang]+"&nbsp;");
 		str += (""+row.col+"×"+row.row+" &nbsp;");
 		str += (pzpr.parser.parse(row.pdata).metadata.hard+"&nbsp;");
 		str += ("("+this.dateString(row.time*1000)+")");
@@ -213,7 +211,7 @@ ui.database = {
 		form.hard.value    = ""+metadata.hard;
 		form.author.value  = ""+metadata.author;
 		form.source.value  = ""+metadata.source;
-		getEL("database_info").innerHTML = pzpr.variety.info[item.pid][pzpr.lang] + "&nbsp;" + item.col+"×"+item.row +
+		getEL("database_info").innerHTML = pzpr.variety(item.pid)[pzpr.lang] + "&nbsp;" + item.col+"×"+item.row +
 										   "&nbsp;&nbsp;&nbsp;(" + this.dateString(item.time*1000) + ")";
 
 		var sid = this.DBsid = +item.id; /* selected id */
@@ -278,7 +276,7 @@ ui.database = {
 			}
 			item.updatePuzzleData(id+1);
 			var metadata = item.updateMetaData();
-			ui.puzzle.metadata.copydata(metadata);
+			ui.puzzle.metadata.update(metadata);
 			dbm.DBsid = item.id;
 			
 			dbm.sync = false;

@@ -1,5 +1,5 @@
 // for_test.js v3.5.0
-/* jshint evil:true, es3:false */
+/* jshint evil:true */
 (function(){
 
 /* Debug用オブジェクトに関数などを追加する */
@@ -7,9 +7,9 @@ ui.debug.extend(
 {
 	loadperf : function(){
 		ui.puzzle.open(perfstr, function(puzzle){
-			ui.menuconfig.set('autocheck',false);
-			puzzle.modechange(puzzle.MODE_PLAYER);
-			puzzle.setConfig('irowake',true);
+			ui.menuconfig.set('autocheck_once',false);
+			ui.menuconfig.set('mode', 'play');
+			ui.menuconfig.set('irowake',true);
 		});
 	},
 	
@@ -20,8 +20,7 @@ ui.debug.extend(
 		else if(ca==='shift+ctrl+F10'){ this.all_test();}
 		else{ return false;}
 		
-		ui.puzzle.key.stopEvent();	/* カーソルを移動させない */
-		return true;
+		ui.puzzle.key.cancelEvent = true;	/* カーソルを移動させない */
 	},
 	
 	accheck1 : function(){
@@ -60,15 +59,13 @@ ui.debug.extend(
 				ui.puzzle.ansclear();
 				break;
 			case 'playmode':
-				ui.puzzle.modechange(ui.puzzle.MODE_PLAYER);
-				break;
 			case 'editmode':
-				ui.puzzle.modechange(ui.puzzle.MODE_EDITOR);
+				ui.menuconfig.set('mode', strs[0]);
 				break;
 			case 'setconfig':
-				if     (strs[2]==="true") { ui.puzzle.setConfig(strs[1], true);}
-				else if(strs[2]==="false"){ ui.puzzle.setConfig(strs[1], false);}
-				else                      { ui.puzzle.setConfig(strs[1], strs[2]);}
+				if     (strs[2]==="true") { ui.menuconfig.set(strs[1], true);}
+				else if(strs[2]==="false"){ ui.menuconfig.set(strs[1], false);}
+				else                      { ui.menuconfig.set(strs[1], strs[2]);}
 				break;
 			case 'key':
 				for(var i=1;i<strs.length;i++){
@@ -87,23 +84,19 @@ ui.debug.extend(
 	execmouse : function(strs){
 		var matches = (strs[1].match(/(left|right)(.*)/)[2]||"").match(/x([0-9]+)/);
 		var repeat = matches ? +matches[1] : 1;
+		var args = [];
+		if     (strs[1].substr(0,4)==="left") { args.push('left');}
+		else if(strs[1].substr(0,5)==="right"){ args.push('right');}
+		for(var i=2;i<strs.length;i++){ args.push(+strs[i]);}
 		for(var t=0;t<repeat;t++){
-			var mv = ui.puzzle.mouse;
-			mv.btn.Left  = (strs[1].substr(0,4)==="left");
-			mv.btn.Right = (strs[1].substr(0,5)==="right");
-			
-			mv.moveTo(+strs[2], +strs[3]);
-			for(var i=4;i<strs.length-1;i+=2){ /* 奇数個の最後の一つは切り捨て */
-				mv.lineTo(+strs[i], +strs[i+1]);
-			}
-			mv.inputEnd();
+			ui.puzzle.mouse.inputPath.apply(ui.puzzle.mouse, args);
 		}
 	},
 	inputcheck_popup : function(){
 		this.inputcheck(this.getTA());
 	},
 	inputcheck : function(text){
-		ui.saveConfig();
+		ui.menuconfig.save();
 		var inparray = eval("["+text+"]");
 		for(var n=0;n<inparray.length;n++){
 			var data = inparray[n];
@@ -113,7 +106,7 @@ ui.debug.extend(
 			}
 		}
 		this.execinput("playmode");
-		ui.restoreConfig();
+		ui.menuconfig.restore();
 		ui.displayAll();
 	},
 
@@ -125,32 +118,33 @@ ui.debug.extend(
 		var pnum=0, term, idlist=[], self = this, starttime = pzpr.util.currentTime();
 		self.phase = 99;
 
-		for(var id in pzpr.variety.info){ idlist.push(id);}
-		idlist.sort();
+		idlist = pzpr.variety.getList().sort();
 		term = idlist.length;
 
 		self.alltimer = setInterval(function(){
+			if(self.phase !== 99){ return;}
+
 			var newid = idlist[pnum];
-			if(!self.urls[newid]){
+			if(!!newid && !self.urls[newid]){
 				self.includeDebugScript("test_"+newid+".js");
 				return;
 			}
 
-			if(self.phase !== 99){ return;}
-			self.phase = 0;
-			self.pid = newid;
+			pnum++;
+			if(pnum > term){
+				clearInterval(self.alltimer);
+				self.alltimer = null;
+				var ms = ((pzpr.util.currentTime() - starttime)/100)|0;
+				self.addTA("Total time: "+((ms/10)|0)+"."+(ms%10)+" sec.");
+				return;
+			}
+
 			ui.puzzle.open(newid+"/"+self.urls[newid], function(){
 				/* スクリプトチェック開始 */
 				self.sccheck();
 				self.addTA("Test ("+pnum+", "+newid+") start.");
-				pnum++;
-				if(pnum >= term){
-					clearInterval(self.alltimer);
-					var ms = ((pzpr.util.currentTime() - starttime)/100)|0;
-					self.addTA("Total time: "+((ms/10)|0)+"."+(ms%10)+" sec.");
-				}
 			});
-		},100);
+		},50);
 	},
 
 	starttest : function(){
@@ -160,76 +154,37 @@ ui.debug.extend(
 
 	fails : 0,
 	sccheck : function(){
-		ui.menuconfig.set('autocheck',false);
+		ui.menuconfig.set('autocheck_once',false);
 		var self = this;
-
+		self.phase = 0;
 		self.fails = 0;
+		self.testing = false;
 		self.pid = ui.puzzle.pid;
-		setTimeout(function(){ self.check_encode(self);},0);
-	},
-	//Encode test--------------------------------------------------------------
-	check_encode : function(self){
-		var pzl = new pzpr.parser.URLData('');
-		pzl.id    = self.pid;
-		pzl.type  = pzl.URL_PZPRV3;
-		var inp = pzl.outputURLType() + self.urls[self.pid];
-		var ta  = ui.puzzle.getURL(pzl.URL_PZPRV3);
+		self.filedata = self.acs[self.pid][self.acs[self.pid].length-1][1];
 
-		if(inp!==ta){ self.addTA("Encode test   = failure...<BR> "+inp+"<BR> "+ta); self.fails++;}
-		else if(!self.alltimer){ self.addTA("Encode test   = pass");}
+		var testlist = [];
+		testlist.push('check_input');
+		if(self.pid!=='tawa'){
+			testlist.push('check_turn');
+		}
+		testlist.push('check_flip');
+		testlist.push('check_adjust');
+		testlist.push('check_end');
 
-		setTimeout(function(){ self.check_encode_kanpen(self);},0);
-	},
-	check_encode_kanpen : function(self){
-		if(pzpr.variety.info[self.pid].exists.kanpen){
-			var o = ui.puzzle, bd = o.board, bd2 = self.bd_freezecopy(bd);
-			var kanpen_url = o.getURL(pzpr.parser.URL_KANPEN);
-			var fails_org = self.fails;
-
-			if(pzpr.parser.parse(kanpen_url).id!==o.pid){
-				self.addTA("Encode kanpen = id fail..."); self.fails++;
+		setTimeout(function tests(){
+			if(!self.testing && testlist.length>0){
+				self.testing = true;
+				self[testlist.shift()](self);
 			}
-			o.open(kanpen_url, function(){
-				ui.menuconfig.set('autocheck',false);
-				
-				if(!self.bd_compare(bd,bd2)){
-					self.addTA("Encode kanpen = failure..."); self.fails++;
-				}
-				
-				if(!self.alltimer && (fails_org===self.fails)){ self.addTA("Encode kanpen = pass");}
-				
-				setTimeout(function(){ self.check_answer(self);},0);
-			});
-		}
-		else{
-			setTimeout(function(){ self.check_answer(self);},0);
-		}
-	},
-	//Answer test--------------------------------------------------------------
-	check_answer : function(self){
-		var acsstr = self.acs[self.pid];
-		for(var n=0;n<acsstr.length;n++){
-			ui.puzzle.open(acsstr[n][1]);
-			var faildata = ui.puzzle.check(true), expectcode = acsstr[n][0];
-			var iserror = (!!expectcode ? (faildata[0]!==expectcode) : (!faildata.complete));
-			var errdesc = (!!expectcode ? expectcode : 'complete')+":"+(new ui.puzzle.CheckInfo(expectcode).text());
-
-			var judge = (!iserror ? "pass" : "failure...");
-			if(iserror){ self.fails++;}
-
-			if(iserror || !self.alltimer){
-				self.addTA("Answer test "+(n+1)+" = "+judge+" ("+errdesc+")");
-			}
-		}
-		setTimeout(function(){ self.check_input(self);},0);
+			if(testlist.length>0){ setTimeout(tests,0);}
+		},0);
 	},
 	//Input test---------------------------------------------------------------
 	check_input : function(self){
-		var filedata = ui.puzzle.getFileData();
 		var inps = self.inputs[self.pid];
 		if(inps.length>0){
 			var count=0, pass=0;
-			ui.saveConfig();
+			ui.menuconfig.save();
 			for(var n=0;n<inps.length;n++){
 				var data = inps[n];
 				if(data.input!==void 0 && !!data.input){
@@ -248,247 +203,90 @@ ui.debug.extend(
 				self.addTA("Input test Pass = "+pass+"/"+count);
 			}
 			self.execinput("playmode");
-			ui.restoreConfig();
+			ui.menuconfig.restore();
 			ui.displayAll();
 		}
-
-		ui.puzzle.open(filedata,function(){ self.check_file(self);});
-	},
-	//FileIO test--------------------------------------------------------------
-	check_file : function(self){
-		var o = ui.puzzle, bd = o.board;
-		var outputstr = o.getFileData(pzpr.parser.FILE_PZPR);
-		var bd2 = self.bd_freezecopy(bd);
-
-		o.painter.suspendAll();
-		bd.initBoardSize(1,1);
-		bd.resetInfo();
-
-		o.open(outputstr, function(){
-			if(!self.bd_compare(bd,bd2)){ self.addTA("FileIO test   = failure..."); self.fails++;}
-			else if(!self.alltimer){ self.addTA("FileIO test   = pass");}
-
-			setTimeout(function(){
-				if(pzpr.variety.info[self.pid].exists.pencilbox){ self.check_file_pbox(self);}
-				else{ self.check_turnR1(self);}
-			},0);
-		});
-	},
-	check_file_pbox : function(self){
-		var o = ui.puzzle, bd = o.board, pid = o.pid;
-		var outputstr = o.getFileData(pzpr.parser.FILE_PBOX);
-		var bd2 = self.bd_freezecopy(bd);
-
-		o.painter.suspendAll();
-		bd.initBoardSize(1,1);
-		bd.resetInfo();
-
-		o.open(outputstr, function(){
-			self.qsubf = !(pid==='fillomino'||pid==='hashikake'||pid==='heyabon'||pid==='kurodoko'||pid==='shikaku'||pid==='tentaisho');
-			if(!self.bd_compare(bd,bd2)){ self.addTA("FileIO kanpen = failure..."); self.fails++;}
-			else if(!self.alltimer){ self.addTA("FileIO kanpen = pass");}
-			self.qsubf = true;
-
-			setTimeout(function(){
-				if(!pzpr.env.browser.legacyIE){ self.check_file_pbox_xml(self);}
-				else{ self.check_turnR1(self);}
-			},0);
-		});
-	},
-	check_file_pbox_xml : function(self){
-		var puzzle = ui.puzzle, bd = puzzle.board, pid = puzzle.pid;
-		var outputstr = puzzle.getFileData(pzpr.parser.FILE_PBOX_XML);
-		var bd2 = self.bd_freezecopy(bd);
-
-		puzzle.painter.suspendAll();
-		bd.initBoardSize(1,1);
-		bd.resetInfo();
-
-		puzzle.open(outputstr, function(){
-			self.qsubf = !(pid==='fillomino'||pid==='hashikake'||pid==='heyabon'||pid==='kurodoko'||pid==='shikaku'||pid==='tentaisho');
-			if(!self.bd_compare(bd,bd2)){ self.addTA("FileIO kanpenXML = failure..."); self.fails++;}
-			else if(!self.alltimer){ self.addTA("FileIO kanpenXML = pass");}
-			self.qsubf = true;
-
-			setTimeout(function(){ self.check_turnR1(self);},0);
-		});
+		self.testing = false;
 	},
 	//Turn test--------------------------------------------------------------
-	check_turnR1 : function(self){
-		ui.menuconfig.set('autocheck',false);
+	check_turn : function(self){
+		ui.puzzle.open(self.filedata);
+		ui.menuconfig.set('autocheck_once',false);
 
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<4;i++){ bd.exec.execadjust('turnr');}
+		bd.operate('turnr');
+		bd.operate('turnl');
+		ui.puzzle.undo();
+		ui.puzzle.undo();
 
 		if(!self.bd_compare(bd,bd2)){ self.addTA("TurnR test 1  = failure..."); self.fails++;}
 		else if(!self.alltimer){ self.addTA("TurnR test 1  = pass");}
 
-		setTimeout(function(){ self.check_turnR2(self);},0);
-	},
-	check_turnR2 : function(self){
-		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<4;i++){ ui.puzzle.undo();}
-
-		if(!self.bd_compare(bd,bd2)){ self.addTA("TurnR test 2  = failure..."); self.fails++;}
-		else if(!self.alltimer){ self.addTA("TurnR test 2  = pass");}
-
-		setTimeout(function(){ self.check_turnL1(self);},0);
-	},
-
-	check_turnL1 : function(self){
-		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<4;i++){ bd.exec.execadjust('turnl');}
-
-		if(!self.bd_compare(bd,bd2)){ self.addTA("TurnL test 1  = failure..."); self.fails++;}
-		else if(!self.alltimer){ self.addTA("TurnL test 1  = pass");}
-
-		setTimeout(function(){ self.check_turnL2(self);},0);
-	},
-	check_turnL2 : function(self){
-		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<4;i++){ ui.puzzle.undo();}
-
-		if(!self.bd_compare(bd,bd2)){ self.addTA("TurnL test 2  = failure..."); self.fails++;}
-		else if(!self.alltimer){ self.addTA("TurnL test 2  = pass");}
-
-		setTimeout(function(){ self.check_flipX1(self);},0);
+		self.testing = false;
 	},
 	//Flip test--------------------------------------------------------------
-	check_flipX1 : function(self){
+	check_flip : function(self){
+		ui.puzzle.open(self.filedata);
+		ui.menuconfig.set('autocheck_once',false);
+
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<2;i++){ bd.exec.execadjust('flipx');}
+		bd.operate('flipx');
+		bd.operate('flipy');
+		ui.puzzle.undo();
+		ui.puzzle.undo();
 
 		if(!self.bd_compare(bd,bd2)){ self.addTA("FlipX test 1  = failure..."); self.fails++;}
 		else if(!self.alltimer){ self.addTA("FlipX test 1  = pass");}
 
-		setTimeout(function(){ self.check_flipX2(self);},0);
-	},
-	check_flipX2 : function(self){
-		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<2;i++){ ui.puzzle.undo();}
-
-		if(!self.bd_compare(bd,bd2)){ self.addTA("FlipX test 2  = failure..."); self.fails++;}
-		else if(!self.alltimer){ self.addTA("FlipX test 2  = pass");}
-
-		setTimeout(function(){ self.check_flipY1(self);},0);
-	},
-
-	check_flipY1 : function(self){
-		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<2;i++){ bd.exec.execadjust('flipy');}
-
-		if(!self.bd_compare(bd,bd2)){ self.addTA("FlipY test 1  = failure..."); self.fails++;}
-		else if(!self.alltimer){ self.addTA("FlipY test 1  = pass");}
-
-		setTimeout(function(){ self.check_flipY2(self);},0);
-	},
-	check_flipY2 : function(self){
-		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<2;i++){ ui.puzzle.undo();}
-
-		if(!self.bd_compare(bd,bd2)){ self.addTA("FlipY test 2  = failure..."); self.fails++;}
-		else if(!self.alltimer){ self.addTA("FlipY test 2  = pass");}
-
-		setTimeout(function(){ self.check_adjust1(self);},0);
+		self.testing = false;
 	},
 	//Adjust test--------------------------------------------------------------
-	check_adjust1 : function(self){
+	check_adjust : function(self){
+		ui.puzzle.open(self.filedata);
+		ui.menuconfig.set('autocheck_once',false);
+
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		var names = ['expandup','expanddn','expandlt','expandrt','reduceup','reducedn','reducelt','reducert'];
-		for(var i=0;i<8;i++){ bd.exec.execadjust(names[i]);}
+		bd.operate('expandup');
+		bd.operate('expandrt');
+		bd.operate('reduceup');
+		bd.operate('reducert');
+		ui.puzzle.undo();
+		ui.puzzle.undo();
+		ui.puzzle.undo();
+		ui.puzzle.undo();
 
-		if(!self.bd_compare(bd,bd2)){ self.addTA("Adjust test 1  = failure..."); self.fails++;}
-		else if(!self.alltimer){ self.addTA("Adjust test 1  = pass");}
+		if(!self.bd_compare(bd,bd2)){ self.addTA("Adjust test  = failure..."); self.fails++;}
+		else if(!self.alltimer){ self.addTA("Adjust test  = pass");}
 
-		setTimeout(function(){ self.check_adjust2(self);},0);
-	},
-	check_adjust2 : function(self){
-		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
-		for(var i=0;i<8;i++){ ui.puzzle.undo();}
-
-		if(!self.bd_compare(bd,bd2)){ self.addTA("Adjust test 2  = failure..."); self.fails++;}
-		else if(!self.alltimer){ self.addTA("Adjust test 2  = pass");}
-
-		setTimeout(function(){ self.check_end(self);},0);
+		self.testing = false;
 	},
 	//test end--------------------------------------------------------------
 	check_end : function(self){
 		if(!self.alltimer){ self.addTA("Test end.");}
 		self.phase = 99;
+		self.testing = false;
 	},
 
 	qsubf : true,
+	props : ['ques', 'qdir', 'qnum', 'qnum2', 'qchar', 'qans', 'anum', 'line', 'qsub', 'qcmp'],
 	bd_freezecopy : function(bd1){
 		var bd2 = {cell:[],cross:[],border:[],excell:[]};
-		for(var c=0;c<bd1.cellmax;c++){
-			bd2.cell[c] = {};
-			bd2.cell[c].ques=bd1.cell[c].ques;
-			bd2.cell[c].qnum=bd1.cell[c].qnum;
-			bd2.cell[c].qdir=bd1.cell[c].qdir;
-			bd2.cell[c].anum=bd1.cell[c].anum;
-			bd2.cell[c].qans=bd1.cell[c].qans;
-			bd2.cell[c].qsub=bd1.cell[c].qsub;
-		}
-		if(!!bd1.isexcell){
-			for(var c=0;c<bd1.excellmax;c++){
-				bd2.excell[c] = {};
-				bd2.excell[c].qnum=bd1.excell[c].qnum;
-				bd2.excell[c].qdir=bd1.excell[c].qdir;
-			}
-		}
-		if(!!bd1.iscross){
-			for(var c=0;c<bd1.crossmax;c++){
-				bd2.cross[c] = {};
-				bd2.cross[c].ques=bd1.cross[c].ques;
-				bd2.cross[c].qnum=bd1.cross[c].qnum;
-			}
-		}
-		if(!!bd1.isborder){
-			for(var i=0;i<bd1.bdmax;i++){
-				bd2.border[i] = {};
-				bd2.border[i].ques=bd1.border[i].ques;
-				bd2.border[i].qnum=bd1.border[i].qnum;
-				bd2.border[i].qans=bd1.border[i].qans;
-				bd2.border[i].qsub=bd1.border[i].qsub;
-				bd2.border[i].line=bd1.border[i].line;
+		for(var group in bd2){
+			for(var c=0;c<bd1[group].length;c++){
+				bd2[group][c] = {};
+				for(var a=0;a<this.props.length;a++){ bd2[group][c][this.props[a]] = bd1[group][c][this.props[a]];}
 			}
 		}
 		return bd2;
 	},
 	bd_compare : function(bd1,bd2){
 		var result = true;
-		for(var c=0,len=Math.min(bd1.cell.length,bd2.cell.length);c<len;c++){
-			if(bd1.cell[c].ques!==bd2.cell[c].ques){ result = false; this.addTA("cell ques "+c+" "+bd1.cell[c].ques+" &lt;- "+bd2.cell[c].ques);}
-			if(bd1.cell[c].qnum!==bd2.cell[c].qnum){ result = false; this.addTA("cell qnum "+c+" "+bd1.cell[c].qnum+" &lt;- "+bd2.cell[c].qnum);}
-			if(bd1.cell[c].qdir!==bd2.cell[c].qdir){ result = false; this.addTA("cell qdir "+c+" "+bd1.cell[c].qdir+" &lt;- "+bd2.cell[c].qdir);}
-			if(bd1.cell[c].anum!==bd2.cell[c].anum){ result = false; this.addTA("cell anum "+c+" "+bd1.cell[c].anum+" &lt;- "+bd2.cell[c].anum);}
-			if(bd1.cell[c].qans!==bd2.cell[c].qans){ result = false; this.addTA("cell qans "+c+" "+bd1.cell[c].qans+" &lt;- "+bd2.cell[c].qans);}
-			if(bd1.cell[c].qsub!==bd2.cell[c].qsub){
-				if(this.qsubf){ result = false; this.addTA("cell qsub "+c+" "+bd1.cell[c].qsub+" &lt;- "+bd2.cell[c].qsub);}
-				else{ bd1.cell[c].qsub = bd2.cell[c].qsub;}
-			}
-		}
-		if(!!bd1.isexcell){
-			for(var c=0;c<bd1.excell.length;c++){
-				if(bd1.excell[c].qnum!==bd2.excell[c].qnum ){ result = false;}
-				if(bd1.excell[c].qdir!==bd2.excell[c].qdir){ result = false;}
-			}
-		}
-		if(!!bd1.iscross){
-			for(var c=0;c<bd1.cross.length;c++){
-				if(bd1.cross[c].ques!==bd2.cross[c].ques){ result = false;}
-				if(bd1.cross[c].qnum!==bd2.cross[c].qnum){ result = false;}
-			}
-		}
-		if(!!bd1.isborder){
-			for(var i=0;i<bd1.border.length;i++){
-				if(bd1.border[i].ques!==bd2.border[i].ques){ result = false; this.addTA("border ques "+i+" "+bd1.border[i].ques+" &lt;- "+bd2.border[i].ques);}
-				if(bd1.border[i].qnum!==bd2.border[i].qnum){ result = false; this.addTA("border qnum "+i+" "+bd1.border[i].qnum+" &lt;- "+bd2.border[i].qnum);}
-				if(bd1.border[i].qans!==bd2.border[i].qans){ result = false; this.addTA("border qans "+i+" "+bd1.border[i].qans+" &lt;- "+bd2.border[i].qans);}
-				if(bd1.border[i].line!==bd2.border[i].line){ result = false; this.addTA("border line "+i+" "+bd1.border[i].line+" &lt;- "+bd2.border[i].line);}
-				if(bd1.border[i].qsub!==bd2.border[i].qsub){
-					if(this.qsubf){ result = false; this.addTA("border qsub "+i+" "+bd1.border[i].qsub+" &lt;- "+bd2.border[i].qsub);}
-					else{ bd1.border[i].qsub = bd2.border[i].qsub;}
+		for(var group in bd2){
+			for(var c=0;c<bd1[group].length;c++){
+				for(var a=0;a<this.props.length;a++){
+					if(!this.qsubf && (this.props[a]==='qsub' || this.props[a]==='qcmp')){ continue;}
+					var val2 = bd2[group][c][this.props[a]], val1 = bd1[group][c][this.props[a]];
+					if(val2!==val1){ result = false; this.addTA(group+" "+a+" "+c+" "+val1+" &lt;- "+val2);}
 				}
 			}
 		}

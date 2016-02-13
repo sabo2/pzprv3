@@ -86,12 +86,12 @@ ui.toolarea = {
 	display : function(){
 		/* ツールパネル領域 */
 		/* -------------- */
-		var mandisp  = (ui.getConfig("toolarea")!==0 ? 'block' : 'none');
+		var mandisp  = (ui.menuconfig.get("toolarea") ? 'block' : 'none');
 		getEL('usepanel').style.display = mandisp;
 		getEL('checkpanel').style.display = mandisp;
 		/* 経過時間の表示/非表示設定 */
-		getEL('separator2').style.display = (pzpr.PLAYER ? "" : "none");
-		getEL('timerpanel').style.display = (pzpr.PLAYER ? "block" : "none");
+		getEL('separator2').style.display = (ui.puzzle.playeronly ? "" : "none");
+		getEL('timerpanel').style.display = (ui.puzzle.playeronly ? "block" : "none");
 		
 		for(var idname in this.items){ this.setdisplay(idname);}
 		
@@ -101,11 +101,11 @@ ui.toolarea = {
 		pzpr.util.unselectable(getEL('btnarea'));
 		
 		this.setdisplay("operation");
-		getEL('btnclear2').style.display  = (!ui.puzzle.flags.disable_subclear ? "" : "none");
+		getEL('btnclear2').style.display  = (!ui.puzzle.board.disable_subclear ? "" : "none");
 		getEL('btncircle').style.display  = (ui.puzzle.pid==='pipelinkr' ? "" : "none");
 		getEL('btncolor').style.display   = (ui.puzzle.pid==='tentaisho' ? "" : "none");
 		/* ボタンエリアの色分けボタンは、ツールパネル領域が消えている時に表示 */
-		getEL('btnirowake').style.display = (((ui.puzzle.flags.irowake || ui.puzzle.flags.irowakeblk) && (ui.getConfig("toolarea")===0)) ? "" : "none");
+		getEL('btnirowake').style.display = (((ui.puzzle.painter.irowake || ui.puzzle.painter.irowakeblk) && !ui.menuconfig.get("toolarea")) ? "" : "none");
 		
 		/* 共通：キャプションの設定 */
 		/* --------------------- */
@@ -123,7 +123,7 @@ ui.toolarea = {
 		else if(this.items===null || !this.items[idname]){
 			/* DO NOTHING */
 		}
-		else if(ui.validConfig(idname)){
+		else if(ui.menuconfig.valid(idname)){
 			var toolitem = this.items[idname];
 			toolitem.el.style.display = "";
 			
@@ -131,23 +131,23 @@ ui.toolarea = {
 			if(!!toolitem.children){
 				var children = toolitem.children;
 				for(var i=0;i<children.length;i++){
-					var child = children[i], selected = (ui.customAttr(child,"value")===""+ui.getConfig(idname));
+					var child = children[i], selected = (ui.customAttr(child,"value")===""+ui.menuconfig.get(idname));
 					child.className = (selected ? "child childsel" : "child");
 				}
 			}
 			/* チェックボックスの表記の設定 */
 			else if(!!toolitem.checkbox){
 				var check = toolitem.checkbox;
-				if(!!check){ check.checked = ui.getConfig(idname);}
+				if(!!check){ check.checked = ui.menuconfig.get(idname);}
 				
 				var disabled = null;
-				if(idname==="keypopup"){ disabled = !ui.keypopup.paneltype[ui.getConfig("mode")];}
-				if(idname==="bgcolor") { disabled = (ui.getConfig("mode")!==3);}
+				if(idname==="keypopup"){ disabled = !ui.keypopup.paneltype[ui.puzzle.editmode?1:3];}
+				if(idname==="bgcolor") { disabled = ui.puzzle.editmode;}
 				if(disabled!==null){ toolitem.checkbox.disabled = (!disabled ? "" : "true");}
 			}
 			
 			if((idname==="disptype_pipelinkr") && !!getEL('btncircle')){
-				getEL('btncircle').innerHTML = ((ui.getConfig(idname)===1)?"○":"■");
+				getEL('btncircle').innerHTML = ((ui.menuconfig.get(idname)===1)?"○":"■");
 			}
 		}
 		else if(!!this.items[idname]){
@@ -163,7 +163,7 @@ ui.toolarea = {
 		var idname = ui.customAttr(parent,"config"), value;
 		if(!!this.items[idname].checkbox){ value = !!el.checked;}
 		else                             { value = ui.customAttr(el,"value");}
-		ui.setConfig(idname, value);
+		ui.menuconfig.set(idname, value);
 	},
 
 	//---------------------------------------------------------------------------
@@ -183,7 +183,7 @@ ui.toolarea = {
 	// toolarea.toggledisp()   帰ってきたパイプリンクでアイスと○などの表示切り替え時の処理を行う
 	//---------------------------------------------------------------------------
 	toggledisp : function(){
-		var current = ui.puzzle.getConfig('disptype_pipelinkr');
-		ui.puzzle.setConfig('disptype_pipelinkr', (current===1?2:1));
+		var current = ui.menuconfig.get('disptype_pipelinkr');
+		ui.menuconfig.set('disptype_pipelinkr', (current===1?2:1));
 	}
 };

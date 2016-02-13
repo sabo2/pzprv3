@@ -42,8 +42,7 @@ ui.debug =
 		if(ca==='alt+p'){ this.disppoptest();}
 		else{ return false;}
 		
-		ui.puzzle.key.stopEvent();	/* カーソルを移動させない */
-		return true;
+		ui.puzzle.key.cancelEvent = true;	/* カーソルを移動させない */
 	},
 	disppoptest : function(){
 		ui.popupmgr.popups.debug.show();
@@ -53,7 +52,7 @@ ui.debug =
 		this.setTA(ui.puzzle.getFileData(pzpr.parser.FILE_PZPR, {history:true}));
 	},
 	filesave_pencilbox : function(){
-		if(pzpr.variety.info[ui.puzzle.pid].exists.pencilbox){
+		if(pzpr.variety(ui.puzzle.pid).exists.pencilbox){
 			this.setTA(ui.puzzle.getFileData(pzpr.parser.FILE_PBOX));
 		}
 		else{
@@ -61,7 +60,7 @@ ui.debug =
 		}
 	},
 	filesave_pencilbox_xml : function(){
-		if(pzpr.variety.info[ui.puzzle.pid].exists.pencilbox){
+		if(pzpr.variety(ui.puzzle.pid).exists.pencilbox){
 			this.setTA(ui.puzzle.getFileData(pzpr.parser.FILE_PBOX_XML).replace(/\>/g,'>\n'));
 		}
 		else{
@@ -86,6 +85,23 @@ ui.debug =
 	},
 	resizeeval : function(){
 		this.timeeval("resize描画", function(){ ui.puzzle.redraw(true);});
+	},
+	searcheval : function(){
+		var graph = ui.puzzle.board.linegraph;
+		graph.rebuild();
+		var nodes = [];
+		for(var i=0;i<graph.components.length;i++){
+			nodes = nodes.concat(graph.components[i].nodes);
+		}
+		this.timeeval("search linemgr", function(){
+			graph.components = [];
+			graph.modifyNodes = nodes;
+			graph.searchGraph();
+		});
+	},
+	rebuildeval : function(){
+		var graph = ui.puzzle.board.linegraph;
+		this.timeeval("reset linemgr", function(){ graph.rebuild();});
 	},
 	timeeval : function(text,func){
 		var count=0, old = pzpr.util.currentTime();

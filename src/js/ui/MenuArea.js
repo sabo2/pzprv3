@@ -163,18 +163,16 @@ ui.menuarea = {
 	display : function(){
 		getEL('menupanel').style.display = "";
 		
-		getEL("menu_database").className  = (pzpr.env.storage.localST ? "" : "disabled");
-		getEL("menu_imagesave").className = ((ui.enableSaveImage || ui.enableSaveSVG) ? "" : "disabled");
+		getEL("menu_imagesave").className = (ui.enableSaveImage ? "" : "disabled");
+		getEL("menu_subclear").style.display  = (!ui.puzzle.board.disable_subclear ? "" : "none");
 		
-		getEL("menu_duplicate").className = (pzpr.env.storage.session ? "" : "disabled");
-		getEL("menu_subclear").style.display  = (!ui.puzzle.flags.disable_subclear ? "" : "none");
-		
-		getEL("menu_newboard").style.display  = (pzpr.EDITOR ? "" : "none");
-		getEL("menu_urloutput").style.display = (pzpr.EDITOR ? "" : "none");
-		getEL("menu_metadata").style.display  = (pzpr.EDITOR ? "" : "none");
-		getEL("menu_adjust").style.display    = (pzpr.EDITOR ? "" : "none");
-		getEL("menu_turnflip").style.display  = (pzpr.EDITOR ? "" : "none");
-		getEL("menu_sep_edit1").style.display = (pzpr.EDITOR ? "" : "none");
+		var EDITOR = !ui.puzzle.playeronly;
+		getEL("menu_newboard").style.display  = (EDITOR ? "" : "none");
+		getEL("menu_urloutput").style.display = (EDITOR ? "" : "none");
+		getEL("menu_metadata").style.display  = (EDITOR ? "" : "none");
+		getEL("menu_adjust").style.display    = (EDITOR ? "" : "none");
+		getEL("menu_turnflip").style.display  = (EDITOR ? "" : "none");
+		getEL("menu_sep_edit1").style.display = (EDITOR ? "" : "none");
 		
 		for(var idname in this.menuitem){ this.setdisplay(idname);}
 		this.setdisplay("operation");
@@ -197,14 +195,14 @@ ui.menuarea = {
 		}
 		else if(idname==="toolarea"){
 			var str;
-			if(ui.getConfig("toolarea")===0){ str = ui.selectStr("ツールエリアを表示","Show tool area");}
-			else                            { str = ui.selectStr("ツールエリアを隠す","Hide tool area");}
+			if(!ui.menuconfig.get("toolarea")){ str = ui.selectStr("ツールエリアを表示","Show tool area");}
+			else                              { str = ui.selectStr("ツールエリアを隠す","Hide tool area");}
 			getEL('menu_toolarea').childNodes[0].data = str;
 		}
 		else if(this.menuitem===null || !this.menuitem[idname]){
 			/* DO NOTHING */
 		}
-		else if(ui.validConfig(idname)){
+		else if(ui.menuconfig.valid(idname)){
 			var menuitem = this.menuitem[idname];
 			menuitem.el.style.display = "";
 			
@@ -212,13 +210,13 @@ ui.menuarea = {
 			if(!!menuitem.children){
 				var children = menuitem.children;
 				for(var i=0;i<children.length;i++){
-					var child = children[i], selected = (ui.customAttr(child,"value")===""+ui.getConfig(idname));
+					var child = children[i], selected = (ui.customAttr(child,"value")===""+ui.menuconfig.get(idname));
 					child.className = (selected ? "checked" : "");
 				}
 			}
 			/* Check部の表記の変更 */
 			else if(!!menuitem.el){
-				menuitem.el.className = (ui.getConfig(idname) ? "checked" : "check");
+				menuitem.el.className = (ui.menuconfig.get(idname) ? "checked" : "check");
 			}
 		}
 		else if(!!this.menuitem[idname]){
@@ -235,14 +233,14 @@ ui.menuarea = {
 		if(el.nodeName==="SPAN"){ el = el.parentNode;}
 		
 		var idname = ui.customAttr(el,"config");
-		ui.setConfig(idname, !ui.getConfig(idname));
+		ui.menuconfig.set(idname, !ui.menuconfig.get(idname));
 	},
 	childclick : function(e){
 		var el = e.target;
 		if(el.nodeName==="SPAN"){ el = el.parentNode;}
 		
 		var parent = el.parentNode.parentNode;
-		ui.setConfig(ui.customAttr(parent,"config"), ui.customAttr(el,"value"));
+		ui.menuconfig.set(ui.customAttr(parent,"config"), ui.customAttr(el,"value"));
 	},
 
 	//---------------------------------------------------------------------------
@@ -260,13 +258,13 @@ ui.menuarea = {
 	subclear : function(){ this.ASconfirm();},
 	duplicate: function(){ this.duplicate_board();},
 	toolarea : function(){
-		ui.setConfig("toolarea", (ui.getConfig("toolarea")===0?1:0));
+		ui.menuconfig.set("toolarea", !ui.menuconfig.get("toolarea"));
 		ui.displayAll();
 	},
 	repaint : function(){ ui.puzzle.redraw(true);},
 	jumpexp : function(){
-		ui.saveConfig();	/* faq.htmlで言語設定を使用するので、一旦Config値を保存 */
-		window.open('./faq.html?'+ui.puzzle.pid+(pzpr.EDITOR?"_edit":""), '');
+		ui.menuconfig.save();	/* faq.htmlで言語設定を使用するので、一旦Config値を保存 */
+		window.open('./faq.html?'+ui.puzzle.pid+(!ui.puzzle.playeronly?"_edit":""), '');
 	},
 	disppopup : function(e){
 		var el = e.target;
@@ -289,7 +287,7 @@ ui.menuarea = {
 	duplicate_board : function(){
 		if(getEL("menu_duplicate").className==="disabled"){ return;}
 		var filestr = ui.puzzle.getFileData(pzpr.parser.FILE_PZPR, {history:true});
-		var url = './p.html?'+ui.puzzle.pid+(pzpr.PLAYER?"_play":"");
+		var url = './p.html?'+ui.puzzle.pid+(ui.puzzle.playeronly?"_play":"");
 		if(!pzpr.env.browser.Presto){
 			var old = sessionStorage['filedata'];
 			sessionStorage['filedata'] = filestr;
@@ -310,7 +308,7 @@ ui.menuarea = {
 	// menuarea.ASconfirm()  「補助消去」ボタンを押したときの処理
 	//------------------------------------------------------------------------------
 	answercheck : function(){
-		var str = "", texts = ui.puzzle.check(true).text().split(/\n/);
+		var str = "", texts = ui.puzzle.check(true).text.split(/\n/);
 		for(var i=0;i<texts.length;i++){ str += "<div style=\"margin-bottom:6pt;\">"+texts[i]+"</div>";}
 		this.stopHovering();
 		ui.notify.alert(str);
