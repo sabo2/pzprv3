@@ -35,8 +35,8 @@ window.ui = {
 	enableReadText  : false,	// HTML5 FileReader APIでファイルが読めるか
 	reader : null,				// FileReaderオブジェクト
 	
-	enableSaveImage : false,	// 画像保存(png形式)が可能か
-	enableSaveSVG   : false,	// 画像保存(SVG形式)が可能か
+	enableSaveImage : false,	// 画像保存が可能か
+	enableImageType : {},		// 保存可能な画像形式
 	
 	enableSaveBlob  : false,	// saveBlobが使用できるか
 	fileio : 'fileio.cgi',		// fileio.cgiのファイル名
@@ -188,10 +188,19 @@ window.ui = {
 	//----------------------------------------------------------------------
 	initImageSaveMethod : function(puzzle){
 		if(!!pzpr.Candle.enable.canvas && !!_doc.createElement('canvas').toDataURL){
-			this.enableSaveImage = true;
+			this.enableImageType.png = true;
+			
+			var canvas = _doc.createElement('canvas');
+			canvas.width = canvas.height = 1;
+			if(canvas.toDataURL('image/gif').match('image/gif'))  { this.enableImageType.gif = true;}
+			if(canvas.toDataURL('image/jpeg').match('image/jpeg')){ this.enableImageType.jpeg = true;}
+			if(canvas.toDataURL('image/webp').match('image/webp')){ this.enableImageType.webp = true;}
 		}
 		if(!!pzpr.Candle.enable.svg && !!window.btoa){
-			this.enableSaveSVG = true;
+			this.enableImageType.svg = true;
+		}
+		if(!!this.enableImageType.png || !!this.enableImageType.svg){
+			this.enableSaveImage = true;
 		}
 		
 		this.enableSaveBlob = (!!window.navigator.saveBlob);

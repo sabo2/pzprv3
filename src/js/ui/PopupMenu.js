@@ -484,8 +484,7 @@ ui.popupmgr.addpopup('imagesave',
 		var filetype = this.form.filetype, options = filetype.options;
 		for(var i=0;i<options.length;i++){
 			var option = options[i];
-			if(option.value==="svg" && !ui.enableSaveSVG)  { filetype.removeChild(option);}
-			if(option.value==="png" && !ui.enableSaveImage){ filetype.removeChild(option);}
+			if(!ui.enableImageType[option.value]){ filetype.removeChild(option);}
 		}
 		
 		this.form.filename.value = pzpr.variety(ui.puzzle.pid).urlid+".png";
@@ -510,8 +509,8 @@ ui.popupmgr.addpopup('imagesave',
 	},
 	
 	changefilename : function(){
-		var filename = this.form.filename.value.replace('.png','.').replace('.svg','.');
-		this.form.filename.value = filename + (this.form.filetype.value!=='svg'?'png':'svg');
+		var filename = this.form.filename.value.replace(/\.\w{3,4}$/,'.');
+		this.form.filename.value = filename + this.form.filetype.value;
 	},
 	estimatesize : function(){
 		var cellsize = +this.form.cellsize.value;
@@ -537,7 +536,7 @@ ui.popupmgr.addpopup('imagesave',
 
 		/* 画像出力ルーチン */
 		var cellsize = +form.cellsize.value;
-		var type = (form.filetype.value!=='svg'?'png':'svg');
+		var type = form.filetype.value;
 
 		var blob = null, filedata = null;
 		try{
@@ -577,11 +576,10 @@ ui.popupmgr.addpopup('imagesave',
 	openimage : function(){
 		/* 画像出力ルーチン */
 		var cellsize = +this.form.cellsize.value;
-		var type = (this.form.filetype.value!=='svg'?'png':'svg');
 		
 		var dataurl = "";
 		try{
-			dataurl = ui.puzzle.toDataURL(type,cellsize);
+			dataurl = ui.puzzle.toDataURL(this.form.filetype.value, cellsize);
 		}
 		catch(e){
 			ui.notify.alert('画像の出力に失敗しました','Fail to Output the Image');

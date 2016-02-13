@@ -163,7 +163,7 @@ ui.menuarea = {
 	display : function(){
 		getEL('menupanel').style.display = "";
 		
-		getEL("menu_imagesave").className = ((ui.enableSaveImage || ui.enableSaveSVG) ? "" : "disabled");
+		getEL("menu_imagesave").className = (ui.enableSaveImage ? "" : "disabled");
 		getEL("menu_subclear").style.display  = (!ui.puzzle.board.disable_subclear ? "" : "none");
 		
 		var EDITOR = !ui.puzzle.playeronly;
