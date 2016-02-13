@@ -538,35 +538,33 @@ ui.popupmgr.addpopup('imagesave',
 		var cellsize = +form.cellsize.value;
 		var type = form.filetype.value;
 
-		var blob = null, filedata = null;
 		try{
 			if(ui.enableSaveBlob || !!this.anchor){
-				blob = ui.puzzle.toBlob(type,cellsize);
+				ui.puzzle.toBlob(function(blob){
+					/* 出力された画像の保存ルーチン */
+					if(ui.enableSaveBlob){
+						navigator.saveBlob(blob, filename);
+						this.close();
+					}
+					else{
+						if(!!this.filesaveurl){ URL.revokeObjectURL(this.filesaveurl);}
+						this.filesaveurl = URL.createObjectURL(blob);
+						this.anchor.href = this.filesaveurl;
+						this.anchor.download = filename;
+						this.anchor.click();
+					}
+				}.bind(this), type, 1.0, cellsize);
 			}
 			else{
-				filedata = ui.puzzle.toDataURL(type,cellsize).replace(/data:.*;base64,/, '');
+				var filedata = ui.puzzle.toDataURL(type,1.0,cellsize).replace(/data:.*;base64,/, '');
+				/* 出力された画像の保存ルーチン */
+				form.urlstr.value = filedata;
+				form.submit();
+				this.close();
 			}
 		}
 		catch(e){
 			ui.notify.alert('画像の出力に失敗しました','Fail to Output the Image');
-		}
-
-		/* 出力された画像の保存ルーチン */
-		if(ui.enableSaveBlob){
-			navigator.saveBlob(blob, filename);
-			this.close();
-		}
-		else if(!!this.anchor){
-			if(!!this.filesaveurl){ URL.revokeObjectURL(this.filesaveurl);}
-			this.filesaveurl = URL.createObjectURL(blob);
-			this.anchor.href = this.filesaveurl;
-			this.anchor.download = filename;
-			this.anchor.click();
-		}
-		else{
-			form.urlstr.value = filedata;
-			form.submit();
-			this.close();
 		}
 	},
 	
@@ -579,7 +577,7 @@ ui.popupmgr.addpopup('imagesave',
 		
 		var dataurl = "";
 		try{
-			dataurl = ui.puzzle.toDataURL(this.form.filetype.value, cellsize);
+			dataurl = ui.puzzle.toDataURL(this.form.filetype.value, 1.0, cellsize);
 		}
 		catch(e){
 			ui.notify.alert('画像の出力に失敗しました','Fail to Output the Image');
