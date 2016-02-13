@@ -7,7 +7,7 @@ ui.debug.extend(
 {
 	loadperf : function(){
 		ui.puzzle.open(perfstr, function(puzzle){
-			ui.menuconfig.set('autocheck',false);
+			ui.menuconfig.set('autocheck_once',false);
 			ui.menuconfig.set('mode', 'play');
 			ui.menuconfig.set('irowake',true);
 		});
@@ -122,24 +122,27 @@ ui.debug.extend(
 		term = idlist.length;
 
 		self.alltimer = setInterval(function(){
+			if(self.phase !== 99){ return;}
+
 			var newid = idlist[pnum];
-			if(!self.urls[newid]){
+			if(!!newid && !self.urls[newid]){
 				self.includeDebugScript("test_"+newid+".js");
 				return;
 			}
 
-			if(self.phase !== 99){ return;}
-			self.pid = newid;
+			pnum++;
+			if(pnum > term){
+				clearInterval(self.alltimer);
+				self.alltimer = null;
+				var ms = ((pzpr.util.currentTime() - starttime)/100)|0;
+				self.addTA("Total time: "+((ms/10)|0)+"."+(ms%10)+" sec.");
+				return;
+			}
+
 			ui.puzzle.open(newid+"/"+self.urls[newid], function(){
 				/* スクリプトチェック開始 */
 				self.sccheck();
 				self.addTA("Test ("+pnum+", "+newid+") start.");
-				pnum++;
-				if(pnum >= term){
-					clearInterval(self.alltimer);
-					var ms = ((pzpr.util.currentTime() - starttime)/100)|0;
-					self.addTA("Total time: "+((ms/10)|0)+"."+(ms%10)+" sec.");
-				}
 			});
 		},50);
 	},
@@ -151,7 +154,7 @@ ui.debug.extend(
 
 	fails : 0,
 	sccheck : function(){
-		ui.menuconfig.set('autocheck',false);
+		ui.menuconfig.set('autocheck_once',false);
 		var self = this;
 		self.phase = 0;
 		self.fails = 0;
@@ -208,7 +211,7 @@ ui.debug.extend(
 	//Turn test--------------------------------------------------------------
 	check_turn : function(self){
 		ui.puzzle.open(self.filedata);
-		ui.menuconfig.set('autocheck',false);
+		ui.menuconfig.set('autocheck_once',false);
 
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
 		bd.operate('turnr');
@@ -224,6 +227,8 @@ ui.debug.extend(
 	//Flip test--------------------------------------------------------------
 	check_flip : function(self){
 		ui.puzzle.open(self.filedata);
+		ui.menuconfig.set('autocheck_once',false);
+
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
 		bd.operate('flipx');
 		bd.operate('flipy');
@@ -238,6 +243,8 @@ ui.debug.extend(
 	//Adjust test--------------------------------------------------------------
 	check_adjust : function(self){
 		ui.puzzle.open(self.filedata);
+		ui.menuconfig.set('autocheck_once',false);
+
 		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
 		bd.operate('expandup');
 		bd.operate('expandrt');
@@ -261,71 +268,25 @@ ui.debug.extend(
 	},
 
 	qsubf : true,
+	props : ['ques', 'qdir', 'qnum', 'qnum2', 'qchar', 'qans', 'anum', 'line', 'qsub', 'qcmp'],
 	bd_freezecopy : function(bd1){
 		var bd2 = {cell:[],cross:[],border:[],excell:[]};
-		for(var c=0;c<bd1.cell.length;c++){
-			bd2.cell[c] = {};
-			bd2.cell[c].ques=bd1.cell[c].ques;
-			bd2.cell[c].qnum=bd1.cell[c].qnum;
-			bd2.cell[c].qdir=bd1.cell[c].qdir;
-			bd2.cell[c].anum=bd1.cell[c].anum;
-			bd2.cell[c].qans=bd1.cell[c].qans;
-			bd2.cell[c].qsub=bd1.cell[c].qsub;
-		}
-		for(var c=0;c<bd1.excell.length;c++){
-			bd2.excell[c] = {};
-			bd2.excell[c].qnum=bd1.excell[c].qnum;
-			bd2.excell[c].qdir=bd1.excell[c].qdir;
-		}
-		for(var c=0;c<bd1.cross.length;c++){
-			bd2.cross[c] = {};
-			bd2.cross[c].ques=bd1.cross[c].ques;
-			bd2.cross[c].qnum=bd1.cross[c].qnum;
-		}
-		for(var i=0;i<bd1.border.length;i++){
-			bd2.border[i] = {};
-			bd2.border[i].ques=bd1.border[i].ques;
-			bd2.border[i].qnum=bd1.border[i].qnum;
-			bd2.border[i].qans=bd1.border[i].qans;
-			bd2.border[i].qsub=bd1.border[i].qsub;
-			bd2.border[i].line=bd1.border[i].line;
+		for(var group in bd2){
+			for(var c=0;c<bd1[group].length;c++){
+				bd2[group][c] = {};
+				for(var a=0;a<this.props.length;a++){ bd2[group][c][this.props[a]] = bd1[group][c][this.props[a]];}
+			}
 		}
 		return bd2;
 	},
 	bd_compare : function(bd1,bd2){
 		var result = true;
-		for(var c=0,len=Math.min(bd1.cell.length,bd2.cell.length);c<len;c++){
-			if(bd1.cell[c].ques!==bd2.cell[c].ques){ result = false; this.addTA("cell ques "+c+" "+bd1.cell[c].ques+" &lt;- "+bd2.cell[c].ques);}
-			if(bd1.cell[c].qnum!==bd2.cell[c].qnum){ result = false; this.addTA("cell qnum "+c+" "+bd1.cell[c].qnum+" &lt;- "+bd2.cell[c].qnum);}
-			if(bd1.cell[c].qdir!==bd2.cell[c].qdir){ result = false; this.addTA("cell qdir "+c+" "+bd1.cell[c].qdir+" &lt;- "+bd2.cell[c].qdir);}
-			if(bd1.cell[c].anum!==bd2.cell[c].anum){ result = false; this.addTA("cell anum "+c+" "+bd1.cell[c].anum+" &lt;- "+bd2.cell[c].anum);}
-			if(bd1.cell[c].qans!==bd2.cell[c].qans){ result = false; this.addTA("cell qans "+c+" "+bd1.cell[c].qans+" &lt;- "+bd2.cell[c].qans);}
-			if(bd1.cell[c].qsub!==bd2.cell[c].qsub){
-				if(this.qsubf){ result = false; this.addTA("cell qsub "+c+" "+bd1.cell[c].qsub+" &lt;- "+bd2.cell[c].qsub);}
-				else{ bd1.cell[c].qsub = bd2.cell[c].qsub;}
-			}
-		}
-		if(!!bd1.isexcell){
-			for(var c=0;c<bd1.excell.length;c++){
-				if(bd1.excell[c].qnum!==bd2.excell[c].qnum ){ result = false;}
-				if(bd1.excell[c].qdir!==bd2.excell[c].qdir){ result = false;}
-			}
-		}
-		if(!!bd1.iscross){
-			for(var c=0;c<bd1.cross.length;c++){
-				if(bd1.cross[c].ques!==bd2.cross[c].ques){ result = false;}
-				if(bd1.cross[c].qnum!==bd2.cross[c].qnum){ result = false;}
-			}
-		}
-		if(!!bd1.isborder){
-			for(var i=0;i<bd1.border.length;i++){
-				if(bd1.border[i].ques!==bd2.border[i].ques){ result = false; this.addTA("border ques "+i+" "+bd1.border[i].ques+" &lt;- "+bd2.border[i].ques);}
-				if(bd1.border[i].qnum!==bd2.border[i].qnum){ result = false; this.addTA("border qnum "+i+" "+bd1.border[i].qnum+" &lt;- "+bd2.border[i].qnum);}
-				if(bd1.border[i].qans!==bd2.border[i].qans){ result = false; this.addTA("border qans "+i+" "+bd1.border[i].qans+" &lt;- "+bd2.border[i].qans);}
-				if(bd1.border[i].line!==bd2.border[i].line){ result = false; this.addTA("border line "+i+" "+bd1.border[i].line+" &lt;- "+bd2.border[i].line);}
-				if(bd1.border[i].qsub!==bd2.border[i].qsub){
-					if(this.qsubf){ result = false; this.addTA("border qsub "+i+" "+bd1.border[i].qsub+" &lt;- "+bd2.border[i].qsub);}
-					else{ bd1.border[i].qsub = bd2.border[i].qsub;}
+		for(var group in bd2){
+			for(var c=0;c<bd1[group].length;c++){
+				for(var a=0;a<this.props.length;a++){
+					if(!this.qsubf && (this.props[a]==='qsub' || this.props[a]==='qcmp')){ continue;}
+					var val2 = bd2[group][c][this.props[a]], val1 = bd1[group][c][this.props[a]];
+					if(val2!==val1){ result = false; this.addTA(group+" "+a+" "+c+" "+val1+" &lt;- "+val2);}
 				}
 			}
 		}
