@@ -118,7 +118,7 @@ function importURL(){
 
 	var pzl = pzpr.parser.parseURL(search);
 
-	startmode = startmode || (!pzl.bstr ? 'EDITOR' : 'PLAYER');
+	startmode = startmode || (!pzl.body ? 'EDITOR' : 'PLAYER');
 	if(startmode==='PLAYER'){ onload_option.type = 'player';}
 
 	return pzl;
