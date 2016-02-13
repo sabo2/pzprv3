@@ -69,6 +69,7 @@ ui.menuconfig = {
 	//---------------------------------------------------------------------------
 	restore : function(){
 		/* 設定が保存されている場合は元に戻す */
+		ui.puzzle.config.init();
 		this.init();
 		var json_puzzle = localStorage['pzprv3_config:puzzle'];
 		var json_menu   = localStorage['pzprv3_config:ui'];
