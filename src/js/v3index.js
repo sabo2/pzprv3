@@ -320,7 +320,7 @@ v3index.dbif.extend({
 	},
 	importlist : function(callback){
 		/* jshint eqnull:true */
-		DBlist = [];
+		DBlist = self.list = [];
 		for(var i=1;true;i++){
 			var data = localStorage[pheader+i];
 			if(!data){ break;}
@@ -343,6 +343,7 @@ v3index.dbif.extend({
 			case 'oldsave': DBlist = DBlist.sort(function(a,b){ return (a.time-b.time || a.id-b.id);}); break;
 			case 'size'   : DBlist = DBlist.sort(function(a,b){ return (a.col-b.col || a.row-b.row || a.id-b.id);}); break;
 		}
+		self.list = DBlist;
 		(v3index.doclang==='ja'?_form.sorts_en:_form.sorts_ja).value = order;
 
 		_form.datalist.innerHTML = "";
