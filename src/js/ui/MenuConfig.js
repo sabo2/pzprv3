@@ -47,6 +47,19 @@ ui.menuconfig = {
 	add : Config.add,
 
 	//---------------------------------------------------------------------------
+	// menuconfig.sync()  URL形式などによって変化する可能性がある設定値を同期する
+	//---------------------------------------------------------------------------
+	sync : function(){
+		var idname = null;
+		switch(ui.puzzle.pid){
+			case 'yajirin':   idname = 'disptype_yajilin';   break;
+			case 'pipelinkr': idname = 'disptype_pipelinkr'; break;
+			case 'bosanowa':  idname = 'disptype_bosanowa';  break;
+		}
+		if(!!idname){ this.set(idname, ui.puzzle.getConfig(idname));}
+	},
+
+	//---------------------------------------------------------------------------
 	// menuconfig.get()  各フラグの設定値を返す
 	// menuconfig.set()  各フラグの設定値を設定する
 	//---------------------------------------------------------------------------
@@ -88,6 +101,7 @@ ui.menuconfig = {
 	getexec : function(name){
 		if(!this.list[name]){ return false;}
 		if(name==='mode'){ return !ui.puzzle.playeronly;}
+		else if(name==='disptype_yajilin'){ return (ui.puzzle.pid==='yajirin');} // WorkAround
 		else if(this.list[name].puzzle){ return ui.puzzle.validConfig(name);}
 		return true;
 	},
@@ -111,6 +125,7 @@ ui.menuconfig = {
 		if(!!this.list[name]){ return false;}
 		if(idname==="keypopup"){ return (ui.keypopup.paneltype[1]!==0 || ui.keypopup.paneltype[3]!==0);}
 		else if(idname==='mode'){ return !ui.puzzle.playeronly;}
+		else if(idname==='disptype_yajilin'){ return (ui.puzzle.pid==='yajirin');} // WorkAround
 		else if(this.list[idname].puzzle){ return ui.puzzle.validConfig(idname);}
 		return !!this.list[idname];
 	},
