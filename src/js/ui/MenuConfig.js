@@ -62,6 +62,7 @@ ui.menuconfig = {
 	//---------------------------------------------------------------------------
 	// menuconfig.get()  各フラグの設定値を返す
 	// menuconfig.set()  各フラグの設定値を設定する
+	// menuconfig.reset() 各フラグの設定値を初期化する
 	//---------------------------------------------------------------------------
 	get : Config.get,
 	set : function(idname, newval){
@@ -75,6 +76,7 @@ ui.menuconfig = {
 		
 		this.configevent(idname,newval);
 	},
+	reset : Config.reset,
 
 	//---------------------------------------------------------------------------
 	// menuconfig.restore()  保存された各種設定値を元に戻す

@@ -653,8 +653,20 @@ ui.popupmgr.addpopup('metadata',
 ui.popupmgr.addpopup('colors',
 {
 	formname : 'colors',
+	colorElement : true,
 	
 	setFormEvent : function(){
+		ui.misc.walker(this.form, function(el){
+			var target = ui.customAttr(el.parentNode,"colorTarget") || '';
+			if(el.nodeName==="INPUT" && el.getAttribute("type")==="color"){
+				if(el.type!=="color"){ this.colorElement = false;}
+				el.addEventListener('change', function(e){ this.setcolor(e, target);}.bind(this), false);
+			}
+			if(el.nodeName==="BUTTON"){
+				el.addEventListener('mousedown', function(e){ this.clearcolor(e, target);}.bind(this), false);
+			}
+		}.bind(this));
+		
 		this.refresh();
 	},
 
@@ -664,25 +676,49 @@ ui.popupmgr.addpopup('colors',
 	refresh : function(name){
 		ui.misc.walker(this.form, function(el){
 			if(el.nodeName==="INPUT" && el.getAttribute("type")==="color"){
-				var target = ui.customAttr(el,"colorTarget");
+				var target = ui.customAttr(el.parentNode,"colorTarget") || '';
 				if(!!target && (!name || name===target)){
-					el.value = pzpr.Candle.parse(ui.puzzle.painter[target]);
+					el.value = this.getdefaultcolor(target);
 				}
 			}
-		});
+		}.bind(this));
+	},
+	getdefaultcolor : function(name){
+		var color = '';
+		if(name!=='bgcolor'){
+			color = pzpr.Candle.parse(ui.puzzle.painter[name]);
+		}
+		else{
+			color = ui.menuconfig.get("color_"+name);
+		}
+		if(this.colorElement){
+			switch(color){
+				case 'black': color = '#000000'; break;
+				case 'white': color = '#ffffff'; break;
+			}
+		}
+		return color;
+	},
+	getnamedcolor : function(rgbcolor){
+		var color = rgbcolor;
+		if(this.colorElement){
+			switch(rgbcolor.toLowerCase()){
+				case '#000000': color = 'black'; break;
+				case '#ffffff': color = 'white'; break;
+			}
+		}
+		return color;
 	},
 	
 	//------------------------------------------------------------------------------
 	// setcolor()   色を設定する
 	// clearcolor() 色の設定をクリアする
 	//------------------------------------------------------------------------------
-	setcolor : function(e){
-		var name = ui.customAttr(e.target,"colorTarget");
-		ui.menuconfig.set("color_"+name, e.target.value);
+	setcolor : function(e, name){
+		ui.menuconfig.set("color_"+name, this.getnamedcolor(e.target.value));
 	},
-	clearcolor : function(e){
-		var name = ui.customAttr(e.target,"colorTarget");
-		ui.menuconfig.set("color_"+name, "");
+	clearcolor : function(e, name){
+		ui.menuconfig.reset("color_"+name);
 		this.refresh(name);
 	}
 });

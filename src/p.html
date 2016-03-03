@@ -534,10 +534,16 @@
   <div class="popup">
     <div class="titlebar">__色の変更___Change Colors__</div>
     <form name="colors">
-      <span>__黒マス (回答入力)__Shaded Cell (Answer)__</span>
-      <input type="color" data-color-target="qanscolor" data-change-exec="setcolor" value="">
-      <button type="button" class="btn btn-warn" data-color-target="qanscolor" data-button-exec="clearcolor">__クリア__Reset__</button>
-      <br>
+      <div data-color-target="qanscolor">
+        <span>__黒マス (回答入力)__Shaded Cell (Answer)__</span>
+        <input type="color" value="">
+        <button type="button" class="btn btn-warn">Reset</button>
+      </div>
+      <div data-color-target="bgcolor">
+        <span>__背景色__Background__</span>
+        <input type="color" value="">
+        <button type="button" class="btn btn-warn">Reset</button>
+      </div>
       <button type="button" class="btn" data-button-exec="close">__閉じる__Close__</button>
     </form>
   </div>
