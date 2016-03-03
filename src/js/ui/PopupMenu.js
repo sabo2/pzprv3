@@ -484,7 +484,7 @@ ui.popupmgr.addpopup('imagesave',
 		var filetype = this.form.filetype, options = filetype.options;
 		for(var i=0;i<options.length;i++){
 			var option = options[i];
-			if(!ui.enableImageType[option.value]){ filetype.removeChild(option);}
+			if(!ui.enableImageType[option.value]){ filetype.removeChild(option); i--;}
 		}
 		
 		this.form.filename.value = pzpr.variety(ui.puzzle.pid).urlid+".png";
