@@ -535,7 +535,8 @@ ui.popupmgr.addpopup('imagesave',
 		}
 
 		/* 画像出力ルーチン */
-		var cellsize = +form.cellsize.value;
+		var option = {cellsize:+this.form.cellsize.value};
+		if(this.form.transparent.checked){ option.bgcolor = '';}
 		var type = form.filetype.value;
 
 		try{
@@ -553,12 +554,11 @@ ui.popupmgr.addpopup('imagesave',
 						this.anchor.download = filename;
 						this.anchor.click();
 					}
-				}.bind(this), type, 1.0, cellsize);
+				}.bind(this), type, 1.0, option);
 			}
 			else{
-				var filedata = ui.puzzle.toDataURL(type,1.0,cellsize).replace(/data:.*;base64,/, '');
 				/* 出力された画像の保存ルーチン */
-				form.urlstr.value = filedata;
+				form.urlstr.value = ui.puzzle.toDataURL(type, 1.0, option).replace(/data:.*;base64,/, '');
 				form.submit();
 				this.close();
 			}
@@ -573,11 +573,12 @@ ui.popupmgr.addpopup('imagesave',
 	//------------------------------------------------------------------------------
 	openimage : function(){
 		/* 画像出力ルーチン */
-		var cellsize = +this.form.cellsize.value;
+		var option = {cellsize:+this.form.cellsize.value};
+		if(this.form.transparent.checked){ option.bgcolor = '';}
 		
 		var dataurl = "";
 		try{
-			dataurl = ui.puzzle.toDataURL(this.form.filetype.value, 1.0, cellsize);
+			dataurl = ui.puzzle.toDataURL(this.form.filetype.value, 1.0, option);
 		}
 		catch(e){
 			ui.notify.alert('画像の出力に失敗しました','Fail to Output the Image');
