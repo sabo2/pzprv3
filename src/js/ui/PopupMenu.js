@@ -553,6 +553,7 @@ ui.popupmgr.addpopup('imagesave',
 						this.anchor.href = this.filesaveurl;
 						this.anchor.download = filename;
 						this.anchor.click();
+						this.close();
 					}
 				}.bind(this), type, 1.0, option);
 			}
@@ -575,17 +576,44 @@ ui.popupmgr.addpopup('imagesave',
 		/* 画像出力ルーチン */
 		var option = {cellsize:+this.form.cellsize.value};
 		if(this.form.transparent.checked){ option.bgcolor = '';}
+		var type = this.form.filetype.value;
+		var IEkei = navigator.userAgent.match(/(Trident|Edge)\//);
 		
 		var dataurl = "";
 		try{
-			dataurl = ui.puzzle.toDataURL(this.form.filetype.value, 1.0, option);
+			if(!IEkei || type!=='svg'){
+				dataurl = ui.puzzle.toDataURL(type, 1.0, option);
+			}
+			else{
+				dataurl = ui.puzzle.toBuffer('svg', option);
+			}
 		}
 		catch(e){
 			ui.notify.alert('画像の出力に失敗しました','Fail to Output the Image');
 		}
 		
 		/* 出力された画像を開くルーチン */
-		if(!!dataurl){ window.open(dataurl, '', '');}
+		if(!dataurl){/* dataurlが存在しない */}
+		else if(!IEkei){
+			window.open(dataurl, '', '');
+		}
+		else{
+			// IE系だと？アドレスバーの長さが2KBだったり、
+			// そもそもDataURL入れても何も起こらなかったりする対策
+			var cdoc = window.open('', '', '').document;
+			cdoc.open();
+			cdoc.writeln("<!DOCTYPE html>\n<HTML LANG=\"ja\">\n<HEAD>");
+			cdoc.writeln("<META CHARSET=\"utf-8\">");
+			cdoc.writeln("<TITLE>ぱずぷれv3<\/TITLE>\n<\/HEAD><BODY>");
+			if(type!=='svg'){
+				cdoc.writeln("<img src=\"", dataurl, "\">");
+			}
+			else{
+				cdoc.writeln(dataurl.replace(/^<\?.+?\?>/,''));
+			}
+			cdoc.writeln("<\/BODY>\n<\/HTML>");
+			cdoc.close();
+		}
 	}
 });
 
