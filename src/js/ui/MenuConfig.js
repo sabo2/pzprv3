@@ -47,8 +47,22 @@ ui.menuconfig = {
 	add : Config.add,
 
 	//---------------------------------------------------------------------------
+	// menuconfig.sync()  URL形式などによって変化する可能性がある設定値を同期する
+	//---------------------------------------------------------------------------
+	sync : function(){
+		var idname = null;
+		switch(ui.puzzle.pid){
+			case 'yajirin':   idname = 'disptype_yajilin';   break;
+			case 'pipelinkr': idname = 'disptype_pipelinkr'; break;
+			case 'bosanowa':  idname = 'disptype_bosanowa';  break;
+		}
+		if(!!idname){ this.set(idname, ui.puzzle.getConfig(idname));}
+	},
+
+	//---------------------------------------------------------------------------
 	// menuconfig.get()  各フラグの設定値を返す
 	// menuconfig.set()  各フラグの設定値を設定する
+	// menuconfig.reset() 各フラグの設定値を初期化する
 	//---------------------------------------------------------------------------
 	get : Config.get,
 	set : function(idname, newval){
@@ -62,6 +76,7 @@ ui.menuconfig = {
 		
 		this.configevent(idname,newval);
 	},
+	reset : Config.reset,
 
 	//---------------------------------------------------------------------------
 	// menuconfig.restore()  保存された各種設定値を元に戻す

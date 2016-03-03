@@ -484,7 +484,7 @@ ui.popupmgr.addpopup('imagesave',
 		var filetype = this.form.filetype, options = filetype.options;
 		for(var i=0;i<options.length;i++){
 			var option = options[i];
-			if(!ui.enableImageType[option.value]){ filetype.removeChild(option);}
+			if(!ui.enableImageType[option.value]){ filetype.removeChild(option); i--;}
 		}
 		
 		this.form.filename.value = pzpr.variety(ui.puzzle.pid).urlid+".png";
@@ -535,7 +535,8 @@ ui.popupmgr.addpopup('imagesave',
 		}
 
 		/* 画像出力ルーチン */
-		var cellsize = +form.cellsize.value;
+		var option = {cellsize:+this.form.cellsize.value};
+		if(this.form.transparent.checked){ option.bgcolor = '';}
 		var type = form.filetype.value;
 
 		try{
@@ -552,13 +553,13 @@ ui.popupmgr.addpopup('imagesave',
 						this.anchor.href = this.filesaveurl;
 						this.anchor.download = filename;
 						this.anchor.click();
+						this.close();
 					}
-				}.bind(this), type, 1.0, cellsize);
+				}.bind(this), type, 1.0, option);
 			}
 			else{
-				var filedata = ui.puzzle.toDataURL(type,1.0,cellsize).replace(/data:.*;base64,/, '');
 				/* 出力された画像の保存ルーチン */
-				form.urlstr.value = filedata;
+				form.urlstr.value = ui.puzzle.toDataURL(type, 1.0, option).replace(/data:.*;base64,/, '');
 				form.submit();
 				this.close();
 			}
@@ -573,18 +574,46 @@ ui.popupmgr.addpopup('imagesave',
 	//------------------------------------------------------------------------------
 	openimage : function(){
 		/* 画像出力ルーチン */
-		var cellsize = +this.form.cellsize.value;
+		var option = {cellsize:+this.form.cellsize.value};
+		if(this.form.transparent.checked){ option.bgcolor = '';}
+		var type = this.form.filetype.value;
+		var IEkei = navigator.userAgent.match(/(Trident|Edge)\//);
 		
 		var dataurl = "";
 		try{
-			dataurl = ui.puzzle.toDataURL(this.form.filetype.value, 1.0, cellsize);
+			if(!IEkei || type!=='svg'){
+				dataurl = ui.puzzle.toDataURL(type, 1.0, option);
+			}
+			else{
+				dataurl = ui.puzzle.toBuffer('svg', option);
+			}
 		}
 		catch(e){
 			ui.notify.alert('画像の出力に失敗しました','Fail to Output the Image');
 		}
 		
 		/* 出力された画像を開くルーチン */
-		if(!!dataurl){ window.open(dataurl, '', '');}
+		if(!dataurl){/* dataurlが存在しない */}
+		else if(!IEkei){
+			window.open(dataurl, '', '');
+		}
+		else{
+			// IE系だと？アドレスバーの長さが2KBだったり、
+			// そもそもDataURL入れても何も起こらなかったりする対策
+			var cdoc = window.open('', '', '').document;
+			cdoc.open();
+			cdoc.writeln("<!DOCTYPE html>\n<HTML LANG=\"ja\">\n<HEAD>");
+			cdoc.writeln("<META CHARSET=\"utf-8\">");
+			cdoc.writeln("<TITLE>ぱずぷれv3<\/TITLE>\n<\/HEAD><BODY>");
+			if(type!=='svg'){
+				cdoc.writeln("<img src=\"", dataurl, "\">");
+			}
+			else{
+				cdoc.writeln(dataurl.replace(/^<\?.+?\?>/,''));
+			}
+			cdoc.writeln("<\/BODY>\n<\/HTML>");
+			cdoc.close();
+		}
 	}
 });
 
@@ -653,8 +682,20 @@ ui.popupmgr.addpopup('metadata',
 ui.popupmgr.addpopup('colors',
 {
 	formname : 'colors',
+	colorElement : true,
 	
 	setFormEvent : function(){
+		ui.misc.walker(this.form, function(el){
+			var target = ui.customAttr(el.parentNode,"colorTarget") || '';
+			if(el.nodeName==="INPUT" && el.getAttribute("type")==="color"){
+				if(el.type!=="color"){ this.colorElement = false;}
+				el.addEventListener('change', function(e){ this.setcolor(e, target);}.bind(this), false);
+			}
+			if(el.nodeName==="BUTTON"){
+				el.addEventListener('mousedown', function(e){ this.clearcolor(e, target);}.bind(this), false);
+			}
+		}.bind(this));
+		
 		this.refresh();
 	},
 
@@ -664,25 +705,49 @@ ui.popupmgr.addpopup('colors',
 	refresh : function(name){
 		ui.misc.walker(this.form, function(el){
 			if(el.nodeName==="INPUT" && el.getAttribute("type")==="color"){
-				var target = ui.customAttr(el,"colorTarget");
+				var target = ui.customAttr(el.parentNode,"colorTarget") || '';
 				if(!!target && (!name || name===target)){
-					el.value = pzpr.Candle.parse(ui.puzzle.painter[target]);
+					el.value = this.getdefaultcolor(target);
 				}
 			}
-		});
+		}.bind(this));
+	},
+	getdefaultcolor : function(name){
+		var color = '';
+		if(name!=='bgcolor'){
+			color = pzpr.Candle.parse(ui.puzzle.painter[name]);
+		}
+		else{
+			color = ui.menuconfig.get("color_"+name);
+		}
+		if(this.colorElement){
+			switch(color){
+				case 'black': color = '#000000'; break;
+				case 'white': color = '#ffffff'; break;
+			}
+		}
+		return color;
+	},
+	getnamedcolor : function(rgbcolor){
+		var color = rgbcolor;
+		if(this.colorElement){
+			switch(rgbcolor.toLowerCase()){
+				case '#000000': color = 'black'; break;
+				case '#ffffff': color = 'white'; break;
+			}
+		}
+		return color;
 	},
 	
 	//------------------------------------------------------------------------------
 	// setcolor()   色を設定する
 	// clearcolor() 色の設定をクリアする
 	//------------------------------------------------------------------------------
-	setcolor : function(e){
-		var name = ui.customAttr(e.target,"colorTarget");
-		ui.menuconfig.set("color_"+name, e.target.value);
+	setcolor : function(e, name){
+		ui.menuconfig.set("color_"+name, this.getnamedcolor(e.target.value));
 	},
-	clearcolor : function(e){
-		var name = ui.customAttr(e.target,"colorTarget");
-		ui.menuconfig.set("color_"+name, "");
+	clearcolor : function(e, name){
+		ui.menuconfig.reset("color_"+name);
 		this.refresh(name);
 	}
 });
