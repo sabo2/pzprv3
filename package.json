@@ -1,6 +1,6 @@
 {
   "name": "pzprv3",
-  "version": "3.6.0-patch2",
+  "version": "3.6.1",
   "description": "Playing and editing puzzles by Javascript",
   "main": "index.html",
   "directories": {
