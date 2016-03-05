@@ -29,13 +29,14 @@ This script is developed against HTML5 features and JavaScript.
 * WiiU
 
 ### Restrictions
-* "Browser Save" works in Firefox2.0, Chrome 4, Safari4.0, Opera 10.60, Internet Explorer 8 or later
-* "Output Image" works in Firefox3.5, Chrome 2, Safari4.0, Opera 10.60, Internet Explorer 9 or later
-* "Image Save" to file needs online before Firefox 19, Chrome 13, Internet Explorer 9
 * "Open File" needs online before Firefox 3.5, Chrome 6, Safari 6.0.1, Opera 12.01, Internet Explorer 9
-* Nintendo 3DS browser may work without errors but they are not comfortable because of working slowly and pressing long is required for mousemove (inputting lines or so)
+* "Save File" and"Image Save" to local file needs online before Firefox 19, Chrome 13, Safari(any version), Opera 12, Internet Explorer 9
+* "Image Save" SVG file to local file doesn't work correctly with Internet Explorer 11
 
 ## Releases
+* 2016/03/03 v3.6.1
+* 2016/02/16 v3.6.0-patch2
+* 2016/02/14 v3.6.0-patch1
 * 2016/02/13 v3.6.0
 * 2015/12/29 v3.5.2
 * 2015/08/16 v3.5.1
