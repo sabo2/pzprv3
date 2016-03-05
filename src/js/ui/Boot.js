@@ -5,7 +5,6 @@
 /********************************/
 /* 初期化時のみ使用するルーチン */
 /********************************/
-window.navigator.saveBlob = window.navigator.saveBlob || window.navigator.msSaveBlob;
 
 var require_accesslog = true;
 var onload_pzl = null;
