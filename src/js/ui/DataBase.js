@@ -89,6 +89,8 @@ ui.database = {
 
 	update : function(){ ui.database.updateDialog();},
 
+//	storageType : {},
+
 	//---------------------------------------------------------------------------
 	// dbm.openDialog()   データベースダイアログが開いた時の処理
 	// dbm.closeDialog()  データベースダイアログが閉じた時の処理
@@ -103,6 +105,34 @@ ui.database = {
 	closeDialog : function(){
 		this.DBlist = [];
 	},
+
+//	//---------------------------------------------------------------------------
+//	// dbm.checkStorageType()  使用できるStorageの種類を取得
+//	//---------------------------------------------------------------------------
+//	checkStorageType : function(){
+//		this.storageType = (function(){
+//			var val = 0x00;
+//			try{ if(!!window.sessionStorage){ val |= 0x10;}}catch(e){}
+//			try{ if(!!window.localStorage)  { val |= 0x08;}}catch(e){}
+//			try{ if(!!window.indexedDB)     { val |= 0x04;}}catch(e){}
+//			try{ if(!!window.openDatabase){ // Opera10.50対策
+//				var dbtmp = openDatabase('pzprv3_manage', '1.0', 'manager', 1024*1024*5);	// Chrome3対策
+//				if(!!dbtmp){ val |= 0x02;}
+//			}}catch(e){}
+//			
+//			// Firefox 8.0より前はローカルだとデータベース系は使えない
+//			var Gecko = (UA.indexOf('Gecko')>-1 && UA.indexOf('KHTML')===-1);
+//			var Gecko7orOlder = (Gecko && UA.match(/rv\:(\d+\.\d+)/) && +RegExp.$1<8.0); /* Firefox8.0よりも前 */
+//			if(Gecko7orOlder && !location.hostname){ val = 0;}
+//			
+//			return {
+//				session : !!(val & 0x10),
+//				localST : !!(val & 0x08),
+//				WebIDB  : !!(val & 0x04),
+//				WebSQL  : !!(val & 0x02)
+//			};
+//		})();
+//	}
 
 	//---------------------------------------------------------------------------
 	// dbm.clickHandler()  フォーム上のボタンが押された時、各関数にジャンプする
