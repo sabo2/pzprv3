@@ -326,7 +326,7 @@ v3index.dbif.extend({
 			if(!data){ break;}
 			var row = JSON.parse(data);
 			if(row.id==null){ break;}
-			var pzl = pzpr.parser.parse(row.pdata);
+			var pzl = pzpr.parser(row.pdata);
 			row.pid = pzl.pid;
 			row.col = pzl.cols;
 			row.row = pzl.rows;
@@ -358,7 +358,7 @@ v3index.dbif.extend({
 		}
 		if(DBlist.length>=1){
 			_form.datalist.firstChild.setAttribute('selected', 'selected');
-			var metadata = pzpr.parser.parse(DBlist[0].pdata).metadata;
+			var metadata = pzpr.parser(DBlist[0].pdata).metadata;
 			_form.comtext.value = metadata.comment;
 			_form.author.value  = metadata.author;
 			_form.source.value  = metadata.source;
@@ -382,14 +382,14 @@ v3index.dbif.extend({
 		str += ((row.id<10?"&nbsp;":"")+row.id+" :&nbsp;");
 		str += (pzpr.variety(row.pid)[v3index.doclang]+"&nbsp;");
 		str += (""+row.col+"×"+row.row+" &nbsp;");
-		str += (pzpr.parser.parse(row.pdata).metadata.hard+"&nbsp;");
+		str += (pzpr.parser(row.pdata).metadata.hard+"&nbsp;");
 		str += ("("+datestr+")");
 		return str;
 	},
 
 	select : function(){
 		var selected = self.getvalue();
-		var metadata = (selected>=0 ? pzpr.parser.parse(DBlist[selected].pdata).metadata : {});
+		var metadata = (selected>=0 ? pzpr.parser(DBlist[selected].pdata).metadata : {});
 		_form.comtext.value = metadata.comment;
 		_form.author.value  = metadata.author;
 		_form.source.value  = metadata.source;
@@ -429,13 +429,13 @@ var pstate = {
 	lunch :['nurikabe','tilepaint','norinori','nurimaze','heyawake','hitori','slither','mashu','yajilin',
 			'slalom','numlin','hashikake','herugolf','shikaku','tentaisho','kakuro','sudoku','fillomino','ripple',
 			'akari','shakashaka'],
-	testa :['nagare','makaro','juosan','dosufuwa'],
+	testa :['nagare','juosan','dosufuwa','usoone'],
 	trial :[],
 	lunch2:['box','lits','kurodoko','goishi'],
 	lunch3:['minarism','factors'],
 	nigun :['creek','mochikoro','tasquare','kurotto','shimaguni','yajikazu','bag','country','reflect','icebarn',
 			'firefly','kaero','yosenabe','bdblock','fivecells','sashigane','tatamibari','sukoro',
-			'gokigen','tateyoko','kinkonkan','snakes'],
+			'gokigen','tateyoko','kinkonkan','snakes','makaro'],
 	omopa :['nuribou','tawa','lookair','paintarea','chocona','kurochute','mejilink',
 			'pipelink','loopsp','nagenawa','kouchoku','ringring','pipelinkr','barns','icelom','icelom2',
 			'wblink','kusabi','ichimaga','ichimagam','ichimagax','amibo','bonsan','heyabon','rectslider',

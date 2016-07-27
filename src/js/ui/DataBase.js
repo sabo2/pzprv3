@@ -28,7 +28,7 @@ ui.ProblemData.prototype =
 		metadata.hard    = form.hard.value;
 		metadata.author  = form.author.value;
 		metadata.source  = form.source.value;
-		var pzl = pzpr.parser.parse(this.pdata);
+		var pzl = pzpr.parser(this.pdata);
 		pzl.metadata.update(metadata);
 		this.pdata = pzl.generate();
 		return metadata;
@@ -44,7 +44,7 @@ ui.ProblemData.prototype =
 		if(str===(void 0)){ this.id=null; return this;}
 		var data = JSON.parse(str);
 		for(var key in data){ this[key]=data[key];}
-		var pzl = pzpr.parser.parse(this.pdata);
+		var pzl = pzpr.parser(this.pdata);
 		this.pid = pzl.pid;
 		this.col = pzl.cols;
 		this.row = pzl.rows;
@@ -209,7 +209,7 @@ ui.database = {
 		str += ((row.id<10?"&nbsp;":"")+row.id+" :&nbsp;");
 		str += (pzpr.variety(row.pid)[pzpr.lang]+"&nbsp;");
 		str += (""+row.col+"×"+row.row+" &nbsp;");
-		str += (pzpr.parser.parse(row.pdata).metadata.hard+"&nbsp;");
+		str += (pzpr.parser(row.pdata).metadata.hard+"&nbsp;");
 		str += ("("+this.dateString(row.time*1000)+")");
 		return str;
 	},
@@ -228,7 +228,7 @@ ui.database = {
 		var selected = this.getDataID(), form = document.database, item, metadata;
 		if(selected>=0){
 			item = this.DBlist[selected];
-			metadata = pzpr.parser.parse(item.pdata).metadata;
+			metadata = pzpr.parser(item.pdata).metadata;
 			getEL("database_cand").innerHTML = "";
 		}
 		else{
@@ -434,7 +434,7 @@ ui.DataBaseHandler_LS.prototype =
 		for(var i=1;true;i++){
 			var item = new ui.ProblemData(localStorage[this.pheader+i]);
 			if(item.id===null){ break;}
-			var pzl = pzpr.parser.parse(item.pdata);
+			var pzl = pzpr.parser(item.pdata);
 			if(item.hard!='0'){ pzl.metadata.hard    = this.hardstr[item.hard][pzpr.lang];}
 			if(!!item.comment){ pzl.metadata.comment = item.comment;}
 			item.pdata = pzl.generate();
@@ -469,7 +469,7 @@ ui.DataBaseHandler_LS.prototype =
 					row[keys[c]] = localStorage[pheader+keys[c]];
 					delete localStorage[pheader+keys[c]];
 				}
-				var pzl = pzpr.parser.parse(row.pdata);
+				var pzl = pzpr.parser(row.pdata);
 				pzl.metadata.hard    = this.hardstr[row.hard][pzpr.lang];
 				pzl.metadata.comment = row.comment;
 				row.pdata = pzl.generate();

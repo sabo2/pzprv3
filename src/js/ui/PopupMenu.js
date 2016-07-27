@@ -463,6 +463,8 @@ ui.popupmgr.addpopup('filesave',
 			form.submit();
 			this.close();
 		}
+
+		ui.puzzle.saved();
 	}
 });
 
