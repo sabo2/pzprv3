@@ -176,6 +176,7 @@ ui.menuarea = {
 		
 		for(var idname in this.menuitem){ this.setdisplay(idname);}
 		this.setdisplay("operation");
+		this.setdisplay("trialmode");
 		this.setdisplay("toolarea");
 		
 		/* キャプションの設定 */
@@ -192,6 +193,15 @@ ui.menuarea = {
 			getEL('menu_undo').className   = (opemgr.enableUndo ? "" : "disabled");
 			getEL('menu_redo').className   = (opemgr.enableRedo ? "" : "disabled");
 			getEL('menu_latest').className = (opemgr.enableRedo ? "" : "disabled");
+		}
+		else if(idname==='trialmode'){
+			var trialstage = ui.puzzle.board.trialstage;
+			getEL('menu_trialenter').className         = ((trialstage===0) ? '' : 'disabled');
+			getEL('menu_trialaccept').style.display    = ((trialstage>0) ? '' : 'none');
+			getEL('menu_trialreject').style.display    = ((trialstage===1)? '' : 'none');
+			getEL('menu_trialreject2').style.display   = ((trialstage>1) ? '' : 'none');
+			getEL('menu_trialrejectall').style.display = ((trialstage>1) ? '' : 'none');
+			getEL('menu_trialenter2').style.display    = ((trialstage>0) ? '' : 'none');
 		}
 		else if(idname==="toolarea"){
 			var str;
@@ -256,6 +266,11 @@ ui.menuarea = {
 	redoall  : function(){ ui.puzzle.redoall();},
 	ansclear : function(){ this.ACconfirm();},
 	subclear : function(){ this.ASconfirm();},
+	enterTrial         : function(){ if(ui.puzzle.board.trialstage===0){ ui.puzzle.enterTrial();}},
+	enterFurtherTrial  : function(){ ui.puzzle.enterTrial();},
+	acceptTrial        : function(){ ui.puzzle.acceptTrial();},
+	rejectTrial        : function(){ ui.puzzle.rejectTrial();},
+	rejectCurrentTrial : function(){ ui.puzzle.rejectCurrentTrial();},
 	duplicate: function(){ this.duplicate_board();},
 	toolarea : function(){
 		ui.menuconfig.set("toolarea", !ui.menuconfig.get("toolarea"));
