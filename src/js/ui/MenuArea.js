@@ -197,6 +197,7 @@ ui.menuarea = {
 		else if(idname==='trialmode'){
 			var trialstage = ui.puzzle.board.trialstage;
 			getEL('menu_trialenter').className         = ((trialstage===0) ? '' : 'disabled');
+			getEL('menu_trialenter').nextSibling.nextSibling.style.display = ((trialstage>0) ? '' : 'none'); // hr tag
 			getEL('menu_trialaccept').style.display    = ((trialstage>0) ? '' : 'none');
 			getEL('menu_trialreject').style.display    = ((trialstage===1)? '' : 'none');
 			getEL('menu_trialreject2').style.display   = ((trialstage>1) ? '' : 'none');
