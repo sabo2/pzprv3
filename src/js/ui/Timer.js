@@ -74,7 +74,7 @@ ui.timer =
 	//---------------------------------------------------------------------------
 	ACcheck : function(){
 		var puzzle = ui.puzzle;
-		if(this.current>this.nextACtime && puzzle.playmode && !puzzle.checker.inCheck){
+		if(this.current>this.nextACtime && puzzle.playmode && !puzzle.checker.inCheck && puzzle.board.trialstage===0){
 			if(puzzle.check(false).complete){
 				puzzle.mouse.mousereset();
 				ui.menuconfig.set('autocheck_once',false);
