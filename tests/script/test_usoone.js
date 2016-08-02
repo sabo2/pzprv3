@@ -46,6 +46,6 @@ ui.debug.addDebugData('usoone', {
 		{ input:["mouse,left, 5,1"],
 		  result:"pzprv3/usoone/1/5/1/0 0 0 0 0 /. . 1 . . /1 + + + 1 /"},
 		{ input:["mouse,left, 5,1"],
-		  result:"pzprv3/usoone/1/5/1/0 0 0 0 0 /. . 1 . . /1 + +x + 1 /"},
+		  result:"pzprv3/usoone/1/5/1/0 0 0 0 0 /. . 1 . . /1 + +x + 1 /"}
 	]
 });
