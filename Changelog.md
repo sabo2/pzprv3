@@ -1,6 +1,30 @@
 
 # ReleaseNote
 
+## Version 3.6.2-rc1
+
+Release date: 2016/7/27
+
+### New puzzle
+
+* usoone: ★ウソワンを追加しました
+
+### Improvement
+
+* puzzle, history: 仮置きモードを追加しました
+* opemgr: ファイル保存後にタブを閉じた時ダイアログを開かないように変更
+* env: Safariなどでスクリプトを開いた時にDataBase領域要求のダイアログが出ないように修正
+* html: js, cssファイルにバージョンを付加してバージョンアップ時に再読み込みされるようにします
+
+### BugFix
+
+* lits: テトロミノの形の判定が間違ってしまうのを修正
+* fillomino: 誤って削除されたままになっていた全マス数字なしで正解判定するかどうかのオプションを復活
+* pipelink: 記号が繋がった時に線が分断されている判定になってしまうのを修正
+* parser: twitter短縮URL対策で、URLの末尾がa-z, A-Z or 0-9以外の時末尾に/を付加するよう修正
+* Operation: パズルデータが更新されたかどうかの判定に不具合があったので修正
+* Operation: ファイルの履歴データが空の時にファイルの読み込みに失敗するのを修正
+
 ## Version 3.6.1
 
 Release date: 2016/3/03
@@ -31,7 +55,7 @@ Release date: 2016/3/03
 
 Release : 2016/02/16
 
-BugFix
+### BugFix
 
 * slalom: 旗門の数字生成ルーチンに存在したバグを修正
 * slalom: 線の順番探索ルーチンで逆向きに探索していたと気付いた時誤って探索を打ち切る不具合を修正

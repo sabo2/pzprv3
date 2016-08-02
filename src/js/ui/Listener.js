@@ -17,6 +17,7 @@ ui.listener =
 		puzzle.on('key',      this.onKeyInput);
 		puzzle.on('mouse',    this.onMouseInput);
 		puzzle.on('history',  this.onHistoryChange);
+		puzzle.on('trial',    this.onTrialModeChange);
 		
 		puzzle.on('adjust',     this.onAdjust);
 		puzzle.on('resize',     this.onResize);
@@ -63,6 +64,7 @@ ui.listener =
 	// listener.onKeyInput()    キー入力時に呼び出される関数 (return false = 処理をキャンセル)
 	// listener.onMouseInput()  盤面へのマウス入力時に呼び出される関数 (return false = 処理をキャンセル)
 	// listener.onHistoryChange() 履歴変更時に呼び出される関数
+	// listener.onTrialModeChange() 仮置きモード変更時に呼び出される関数
 	//---------------------------------------------------------------------------
 	onKeyInput : function(puzzle, c){
 		var kc = puzzle.key, ut = ui.undotimer, result = true;
@@ -125,6 +127,12 @@ ui.listener =
 		if(!!ui.currentpid){
 			ui.menuarea.setdisplay("operation");
 			ui.toolarea.setdisplay("operation");
+		}
+	},
+	onTrialModeChange : function(puzzle, trialstage){
+		if(!!ui.currentpid){
+			ui.menuarea.setdisplay("trialmode");
+			ui.toolarea.setdisplay("trialmode");
 		}
 	},
 

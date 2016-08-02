@@ -28,7 +28,7 @@ ui.ProblemData.prototype =
 		metadata.hard    = form.hard.value;
 		metadata.author  = form.author.value;
 		metadata.source  = form.source.value;
-		var pzl = pzpr.parser.parse(this.pdata);
+		var pzl = pzpr.parser(this.pdata);
 		pzl.metadata.update(metadata);
 		this.pdata = pzl.generate();
 		return metadata;
@@ -44,7 +44,7 @@ ui.ProblemData.prototype =
 		if(str===(void 0)){ this.id=null; return this;}
 		var data = JSON.parse(str);
 		for(var key in data){ this[key]=data[key];}
-		var pzl = pzpr.parser.parse(this.pdata);
+		var pzl = pzpr.parser(this.pdata);
 		this.pid = pzl.pid;
 		this.col = pzl.cols;
 		this.row = pzl.rows;
@@ -89,6 +89,8 @@ ui.database = {
 
 	update : function(){ ui.database.updateDialog();},
 
+//	storageType : {},
+
 	//---------------------------------------------------------------------------
 	// dbm.openDialog()   データベースダイアログが開いた時の処理
 	// dbm.closeDialog()  データベースダイアログが閉じた時の処理
@@ -103,6 +105,34 @@ ui.database = {
 	closeDialog : function(){
 		this.DBlist = [];
 	},
+
+//	//---------------------------------------------------------------------------
+//	// dbm.checkStorageType()  使用できるStorageの種類を取得
+//	//---------------------------------------------------------------------------
+//	checkStorageType : function(){
+//		this.storageType = (function(){
+//			var val = 0x00;
+//			try{ if(!!window.sessionStorage){ val |= 0x10;}}catch(e){}
+//			try{ if(!!window.localStorage)  { val |= 0x08;}}catch(e){}
+//			try{ if(!!window.indexedDB)     { val |= 0x04;}}catch(e){}
+//			try{ if(!!window.openDatabase){ // Opera10.50対策
+//				var dbtmp = openDatabase('pzprv3_manage', '1.0', 'manager', 1024*1024*5);	// Chrome3対策
+//				if(!!dbtmp){ val |= 0x02;}
+//			}}catch(e){}
+//			
+//			// Firefox 8.0より前はローカルだとデータベース系は使えない
+//			var Gecko = (UA.indexOf('Gecko')>-1 && UA.indexOf('KHTML')===-1);
+//			var Gecko7orOlder = (Gecko && UA.match(/rv\:(\d+\.\d+)/) && +RegExp.$1<8.0); /* Firefox8.0よりも前 */
+//			if(Gecko7orOlder && !location.hostname){ val = 0;}
+//			
+//			return {
+//				session : !!(val & 0x10),
+//				localST : !!(val & 0x08),
+//				WebIDB  : !!(val & 0x04),
+//				WebSQL  : !!(val & 0x02)
+//			};
+//		})();
+//	}
 
 	//---------------------------------------------------------------------------
 	// dbm.clickHandler()  フォーム上のボタンが押された時、各関数にジャンプする
@@ -179,7 +209,7 @@ ui.database = {
 		str += ((row.id<10?"&nbsp;":"")+row.id+" :&nbsp;");
 		str += (pzpr.variety(row.pid)[pzpr.lang]+"&nbsp;");
 		str += (""+row.col+"×"+row.row+" &nbsp;");
-		str += (pzpr.parser.parse(row.pdata).metadata.hard+"&nbsp;");
+		str += (pzpr.parser(row.pdata).metadata.hard+"&nbsp;");
 		str += ("("+this.dateString(row.time*1000)+")");
 		return str;
 	},
@@ -198,7 +228,7 @@ ui.database = {
 		var selected = this.getDataID(), form = document.database, item, metadata;
 		if(selected>=0){
 			item = this.DBlist[selected];
-			metadata = pzpr.parser.parse(item.pdata).metadata;
+			metadata = pzpr.parser(item.pdata).metadata;
 			getEL("database_cand").innerHTML = "";
 		}
 		else{
@@ -404,7 +434,7 @@ ui.DataBaseHandler_LS.prototype =
 		for(var i=1;true;i++){
 			var item = new ui.ProblemData(localStorage[this.pheader+i]);
 			if(item.id===null){ break;}
-			var pzl = pzpr.parser.parse(item.pdata);
+			var pzl = pzpr.parser(item.pdata);
 			if(item.hard!='0'){ pzl.metadata.hard    = this.hardstr[item.hard][pzpr.lang];}
 			if(!!item.comment){ pzl.metadata.comment = item.comment;}
 			item.pdata = pzl.generate();
@@ -439,7 +469,7 @@ ui.DataBaseHandler_LS.prototype =
 					row[keys[c]] = localStorage[pheader+keys[c]];
 					delete localStorage[pheader+keys[c]];
 				}
-				var pzl = pzpr.parser.parse(row.pdata);
+				var pzl = pzpr.parser(row.pdata);
 				pzl.metadata.hard    = this.hardstr[row.hard][pzpr.lang];
 				pzl.metadata.comment = row.comment;
 				row.pdata = pzl.generate();

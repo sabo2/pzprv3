@@ -106,6 +106,7 @@ ui.toolarea = {
 		getEL('btncolor').style.display   = (ui.puzzle.pid==='tentaisho' ? "" : "none");
 		/* ボタンエリアの色分けボタンは、ツールパネル領域が消えている時に表示 */
 		getEL('btnirowake').style.display = (((ui.puzzle.painter.irowake || ui.puzzle.painter.irowakeblk) && !ui.menuconfig.get("toolarea")) ? "" : "none");
+		this.setdisplay("trialmode");
 		
 		/* 共通：キャプションの設定 */
 		/* --------------------- */
@@ -119,6 +120,15 @@ ui.toolarea = {
 			var opemgr = ui.puzzle.opemgr;
 			getEL('btnundo').style.color = (!opemgr.enableUndo ? 'silver' : '');
 			getEL('btnredo').style.color = (!opemgr.enableRedo ? 'silver' : '');
+		}
+		else if(idname==="trialmode"){
+			var trialstage = ui.puzzle.board.trialstage;
+			getEL('btntrial').style.color       = ((trialstage>0) ? 'silver' : '');
+			getEL('btntrialarea').style.display = ((trialstage>0) ? 'block' : 'none');
+			
+			getEL('btntrialr').style.display  = ((trialstage<=1) ? '' : 'none');
+			getEL('btntrialr2').style.display = ((trialstage>1)  ? '' : 'none');
+			getEL('btntrialra').style.display = ((trialstage>1)  ? '' : 'none');
 		}
 		else if(this.items===null || !this.items[idname]){
 			/* DO NOTHING */
@@ -178,6 +188,11 @@ ui.toolarea = {
 	subclear : function(){ ui.menuarea.ASconfirm();},
 	irowake  : function(){ ui.puzzle.irowake();},
 	encolorall : function(){ ui.puzzle.board.encolorall();}, /* 天体ショーのボタン */
+	enterTrial : function(){ if(ui.puzzle.board.trialstage===0){ ui.puzzle.enterTrial();}},
+	enterFurtherTrial : function(){ ui.puzzle.enterTrial();},
+	acceptTrial : function(){ ui.puzzle.acceptTrial();},
+	rejectTrial : function(){ ui.puzzle.rejectTrial();},
+	rejectCurrentTrial : function(){ ui.puzzle.rejectCurrentTrial();},
 
 	//---------------------------------------------------------------------------
 	// toolarea.toggledisp()   帰ってきたパイプリンクでアイスと○などの表示切り替え時の処理を行う

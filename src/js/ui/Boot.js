@@ -1,11 +1,11 @@
 // Boot.js v3.4.0
+/* jshint latedef:false */
 /* global ui:false, ActiveXObject:false */
 
 (function(){
 /********************************/
 /* 初期化時のみ使用するルーチン */
 /********************************/
-window.navigator.saveBlob = window.navigator.saveBlob || window.navigator.msSaveBlob;
 
 var require_accesslog = true;
 var onload_pzl = null;

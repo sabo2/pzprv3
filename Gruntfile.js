@@ -3,6 +3,8 @@ module.exports = function(grunt){
   var pkg = grunt.file.readJSON('package.json'), deps = pkg.devDependencies;
   for(var plugin in deps){ if(plugin.match(/^grunt\-/)){ grunt.loadNpmTasks(plugin);}}
   
+  var pzprversion = require('./node_modules/pzpr/package.json').version;
+  
   var fs = require('fs');
   var banner_min  = fs.readFileSync('./src/js/common/banner_min.js',  'utf-8');
   var banner_full = fs.readFileSync('./src/js/common/banner_full.js', 'utf-8');
@@ -11,6 +13,9 @@ module.exports = function(grunt){
 
   grunt.initConfig({
     pkg: pkg,
+    pzpr: {
+      version: pzprversion
+    },
 
     clean: ['dist/*', 'pzprv3-*.{zip,tar.gz,tar.bz2}'],
 
