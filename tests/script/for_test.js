@@ -213,7 +213,7 @@ ui.debug.extend(
 		ui.puzzle.open(self.filedata);
 		ui.menuconfig.set('autocheck_once',false);
 
-		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
+		var bd = ui.puzzle.board, bd2 = bd.freezecopy();
 		bd.operate('turnr');
 		bd.operate('turnl');
 		ui.puzzle.undo();
@@ -229,7 +229,7 @@ ui.debug.extend(
 		ui.puzzle.open(self.filedata);
 		ui.menuconfig.set('autocheck_once',false);
 
-		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
+		var bd = ui.puzzle.board, bd2 = bd.freezecopy();
 		bd.operate('flipx');
 		bd.operate('flipy');
 		ui.puzzle.undo();
@@ -245,7 +245,7 @@ ui.debug.extend(
 		ui.puzzle.open(self.filedata);
 		ui.menuconfig.set('autocheck_once',false);
 
-		var bd = ui.puzzle.board, bd2 = self.bd_freezecopy(bd);
+		var bd = ui.puzzle.board, bd2 = bd.freezecopy();
 		bd.operate('expandup');
 		bd.operate('expandrt');
 		bd.operate('reduceup');
@@ -267,29 +267,13 @@ ui.debug.extend(
 		self.testing = false;
 	},
 
-	qsubf : true,
-	props : ['ques', 'qdir', 'qnum', 'qnum2', 'qchar', 'qans', 'anum', 'line', 'qsub', 'qcmp'],
-	bd_freezecopy : function(bd1){
-		var bd2 = {cell:[],cross:[],border:[],excell:[]};
-		for(var group in bd2){
-			for(var c=0;c<bd1[group].length;c++){
-				bd2[group][c] = {};
-				for(var a=0;a<this.props.length;a++){ bd2[group][c][this.props[a]] = bd1[group][c][this.props[a]];}
-			}
-		}
-		return bd2;
-	},
 	bd_compare : function(bd1,bd2){
 		var result = true;
-		for(var group in bd2){
-			for(var c=0;c<bd1[group].length;c++){
-				for(var a=0;a<this.props.length;a++){
-					if(!this.qsubf && (this.props[a]==='qsub' || this.props[a]==='qcmp')){ continue;}
-					var val2 = bd2[group][c][this.props[a]], val1 = bd1[group][c][this.props[a]];
-					if(val2!==val1){ result = false; this.addTA(group+" "+a+" "+c+" "+val1+" &lt;- "+val2);}
-				}
-			}
-		}
+		var self = this;
+		bd1.compareData(bd2,function(group, c, a){
+			self.addTA(group+"["+c+"]."+a+" "+bd1[group][c][a]+" <- "+bd2[group][c][a]);
+			result = false;
+		});
 		return result;
 	}
 });
