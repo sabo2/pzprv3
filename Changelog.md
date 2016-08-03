@@ -1,9 +1,11 @@
 
 # ReleaseNote
 
-## Version 3.6.2-rc1
+## Version 3.6.2
 
-Release date: 2016/7/27
+Release date: 2016/8/05
+
+pzpr.js version: v0.4.0
 
 ### New puzzle
 
@@ -24,6 +26,7 @@ Release date: 2016/7/27
 * parser: twitter短縮URL対策で、URLの末尾がa-z, A-Z or 0-9以外の時末尾に/を付加するよう修正
 * Operation: パズルデータが更新されたかどうかの判定に不具合があったので修正
 * Operation: ファイルの履歴データが空の時にファイルの読み込みに失敗するのを修正
+* iOS 5.1で未サポートのFinction#bindを使用していた箇所を修正
 
 ## Version 3.6.1
 

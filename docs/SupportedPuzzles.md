@@ -10,6 +10,9 @@
 * Kurodoko (Kuromasu)
 * LITS
 
+### Reserver
+* Uso-one
+
 ### Nigun (Legacy)
 * Yajisan-Kazusan
 * Mochikoro
@@ -124,14 +127,12 @@
 * Fillomino
 * Ripple Effect
 
-### Reserver
-* Makaro
-
 ### Nigun (Legacy)
 * Minarism
 * Factors
 * Sukoro
 * Hebi-Ichigo
+* Makaro
 
 ### Omopa
 * Kakuru
