@@ -152,6 +152,7 @@ ui.menuconfig = {
 		case 'mode':
 			ui.setdisplay('keypopup');
 			ui.setdisplay('bgcolor');
+			ui.setdisplay('passallcell');
 			ui.keypopup.display();
 			break;
 			
