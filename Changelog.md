@@ -14,8 +14,7 @@ pzpr.js version: v0.5.0
 ### BugFix
 
 * Opeartion: 仮置き破棄時に仮置き直前の入力データまで消してしまうことがあるのを修正
-* usoone, kurochute: Fix aux. mark on numbers can't be inputted when one button input is selected
-
+* usoone, kurochute: "One Button"入力時(スマホ/タブレットのデフォルト)に補助記号の入力ができなくなっているのを修正
 
 ## Version 3.6.2
 
