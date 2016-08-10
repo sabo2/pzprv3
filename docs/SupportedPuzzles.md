@@ -10,6 +10,9 @@
 * Kurodoko (Kuromasu)
 * LITS
 
+### Reserver
+* Uso-one
+
 ### Nigun (Legacy)
 * Yajisan-Kazusan
 * Mochikoro
@@ -46,6 +49,9 @@
 * Country-road
 * Reflect-link
 * Icebarn
+
+### Reserver (Omopa)
+* The moon or the sun
 
 ### Omopa
 * Pipelink
@@ -84,6 +90,9 @@
 * Heyabon
 * Amibo
 * Rectangle Slider
+
+### Non-nikoli puzzle
+* Arukone
 
 ## Area Deviding Puzzles
 ### Regular
@@ -124,14 +133,12 @@
 * Fillomino
 * Ripple Effect
 
-### Reserver
-* Makaro
-
 ### Nigun (Legacy)
 * Minarism
 * Factors
 * Sukoro
 * Hebi-Ichigo
+* Makaro
 
 ### Omopa
 * Kakuru
@@ -165,3 +172,7 @@
 * Gokigen-naname-wagiri
 * Rome
 * Toichika
+* Nondango
+
+### Non-nikoli puzzle
+* Yin-Yang
