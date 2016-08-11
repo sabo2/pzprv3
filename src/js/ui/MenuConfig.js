@@ -126,6 +126,7 @@ ui.menuconfig = {
 		if(!!this.list[name]){ return false;}
 		if(idname==="keypopup"){ return (ui.keypopup.paneltype[1]!==0 || ui.keypopup.paneltype[3]!==0);}
 		else if(idname==='mode'){ return !ui.puzzle.playeronly;}
+		else if(idname==='passallcell'){ return ui.puzzle.pid==='arukone';}
 		else if(this.list[idname].puzzle){ return ui.puzzle.validConfig(idname);}
 		return !!this.list[idname];
 	},
