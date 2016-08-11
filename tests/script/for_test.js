@@ -120,7 +120,7 @@ ui.debug.extend(
 		var self = this;
 		self.pnum = 0;
 		self.idlist = pzpr.variety.getList().sort();
-		self.starttime = pzpr.util.currentTime()
+		self.starttime = pzpr.util.currentTime();
 		self.alltimer = true;
 		self.each_test();
 	},
