@@ -1,7 +1,7 @@
 
 # ReleaseNote
 
-## Version 3.6.3-rc1
+## Version 3.6.3
 
 Release date: 2016/8/11
 
