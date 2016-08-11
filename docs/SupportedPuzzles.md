@@ -50,6 +50,9 @@
 * Reflect-link
 * Icebarn
 
+### Reserver (Omopa)
+* The moon or the sun
+
 ### Omopa
 * Pipelink
 * Pipelink Returns
@@ -87,6 +90,9 @@
 * Heyabon
 * Amibo
 * Rectangle Slider
+
+### Non-nikoli puzzle
+* Arukone
 
 ## Area Deviding Puzzles
 ### Regular
@@ -166,3 +172,7 @@
 * Gokigen-naname-wagiri
 * Rome
 * Toichika
+* Nondango
+
+### Non-nikoli puzzle
+* Yin-Yang

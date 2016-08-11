@@ -1,6 +1,21 @@
 
 # ReleaseNote
 
+## Version 3.6.3-rc1
+
+Release date: 2016/8/11
+
+pzpr.js version: v0.5.0
+
+### New puzzle
+
+* ★アルコネ、しろまるくろまる、ノンダンゴ、月か太陽を追加しました
+
+### BugFix
+
+* Opeartion: 仮置き破棄時に仮置き直前の入力データまで消してしまうことがあるのを修正
+* usoone, kurochute: "One Button"入力時(スマホ/タブレットのデフォルト)に補助記号の入力ができなくなっているのを修正
+
 ## Version 3.6.2
 
 Release date: 2016/8/05

@@ -101,8 +101,9 @@ v3index.extend({
 		/* Set visibility of each puzzle */
 		Array.prototype.slice.call(_doc.querySelectorAll('.lists ul > li')).forEach(function(el){
 			var pid = pzpr.variety.toPID(customAttr(el, 'pid'));
-			if(!!pid && self.variety[pid]){
-				el.style.display = ((filtername==='all'||filtername===self.variety[pid].tab) ? '' : 'none');
+			if(!!pid){
+				var isdisp = (filtername==='all' || filtername===(self.variety[pid] ? self.variety[pid].tab : 'extra'));
+				el.style.display = (isdisp ? '' : 'none');
 			}
 		});
 		/* Set visibility of each flexbox */
@@ -153,7 +154,7 @@ v3index.extend({
 			var pid = pinfo.pid;
 			if(!pinfo.valid){ return;}
 			if(el.childNodes.length===0){
-				el.className = self.variety[pid].state;
+				el.className = (self.variety[pid] ? self.variety[pid].state : 'omopa');
 				el.innerHTML = '<a href="p.html?'+pid+(!self.testdoc?'':'_test')+'"></a>';
 			}
 			self.captions.push({anode:el.firstChild, str_jp:pinfo.ja, str_en:pinfo.en});
@@ -430,7 +431,7 @@ var pstate = {
 			'slalom','numlin','hashikake','herugolf','shikaku','tentaisho','kakuro','sudoku','fillomino','ripple',
 			'akari','shakashaka'],
 	testa :['nagare','juosan','dosufuwa','usoone'],
-	trial :[],
+	trial :['moonsun'],
 	lunch2:['box','lits','kurodoko','goishi'],
 	lunch3:['minarism','factors'],
 	nigun :['creek','mochikoro','tasquare','kurotto','shimaguni','yajikazu','bag','country','reflect','icebarn',
@@ -441,9 +442,9 @@ var pstate = {
 			'wblink','kusabi','ichimaga','ichimagam','ichimagax','amibo','bonsan','heyabon','rectslider',
 			'nawabari','triplace','fourcells','kramma','kramman','shwolf','loute','fillmat','usotatami','yajitatami',
 			'kakuru','view','bosanowa','nanro','cojun','renban','sukororoom','hanare','kazunori',
-			'wagiri','shugaku','hakoiri','roma','toichika','cbblock'],
+			'wagiri','shugaku','hakoiri','roma','toichika','cbblock','nondango'],
 	orig  :['mochinyoro','ayeheya','aho'],
-	genre :['tapa']
+	genre :['tapa','arukone','yinyang']
 };
 var tabstate = {
 	lunch:'lunch', lunch2:'lunch', lunch3:'nigun',

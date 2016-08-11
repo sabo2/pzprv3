@@ -123,6 +123,7 @@
      <li class="check" data-config="multierr"><span>__複数エラー検出__Check multiple errors__</span></li>
      <li class="check" data-config="allowempty"><span>__空盤面でも正解許可__Allow empty board__</span></li>
      <li class="check" data-config="forceallcell"><span>__全マス数字必須__Number in all cells__</span></li>
+     <li class="check" data-config="passallcell"><span>__全交差点通過__Pass all crossings__</span></li>
      <li class="check" data-config="dirauxmark"><span>__方向の補助記号__Direction Aux. Mark__</span></li>
      <li class="check" data-config="enline"><span>__線は点の間__Line between points__</span></li>
      <li class="check" data-config="lattice"><span>__格子点チェック__Check lattice point__</span></li>
@@ -235,6 +236,10 @@
     <div class="config" data-config="forceallcell">
       <input type="checkbox">
       <span>__全てのマスに数字が入った場合のみ正解とする__Force each cell to have a number__</span>
+    </div>
+    <div class="config" data-config="passallcell">
+      <input type="checkbox">
+      <span>__全ての交差点に線が通過した場合のみ正解とする__Lines should pass all crossings__</span>
     </div>
     <div class="config" data-config="snakebd">
       <input type="checkbox">

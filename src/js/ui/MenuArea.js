@@ -227,7 +227,12 @@ ui.menuarea = {
 			}
 			/* Check部の表記の変更 */
 			else if(!!menuitem.el){
-				menuitem.el.className = (ui.menuconfig.get(idname) ? "checked" : "check");
+				var cname = (ui.menuconfig.get(idname) ? "checked" : "check");
+				var disabled = null;
+				if(idname==="passallcell"){ disabled = !ui.puzzle.editmode;}
+				if(disabled===true){ cname += " disabled";}
+				
+				menuitem.el.className = cname;
 			}
 		}
 		else if(!!this.menuitem[idname]){
@@ -242,6 +247,7 @@ ui.menuarea = {
 	checkclick : function(e){
 		var el = e.target;
 		if(el.nodeName==="SPAN"){ el = el.parentNode;}
+		if(el.className.match(/disabled/)){ return;}
 		
 		var idname = ui.customAttr(el,"config");
 		ui.menuconfig.set(idname, !ui.menuconfig.get(idname));
