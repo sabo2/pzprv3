@@ -13,6 +13,9 @@
 ### Reserver
 * Uso-one
 
+### Reserver (Omopa)
+* Stostone
+
 ### Nigun (Legacy)
 * Yajisan-Kazusan
 * Mochikoro
@@ -38,20 +41,20 @@
 ### Regular
 * Slitherlink
 * Masyu (Pearl Puzzle)
-* Yajirin
-* Slalom
+* Yajilin
+* Slalom (Suraromu)
 
 ### Reserver
 * Nagareru-loop
 
+### Reserver (Omopa)
+* Moon or Sun
+
 ### Nigun (Legacy)
-* BAG (Correl)
+* BAG (Correl, Cave)
 * Country-road
 * Reflect-link
 * Icebarn
-
-### Reserver (Omopa)
-* The moon or the sun
 
 ### Omopa
 * Pipelink
@@ -96,7 +99,7 @@
 
 ## Area Deviding Puzzles
 ### Regular
-* Shikaku (Devide By Box)
+* Shikaku (Divide By Box)
 
 ### Nigun (Legacy)
 * Border block
@@ -143,7 +146,7 @@
 ### Omopa
 * Kakuru
 * Nanro
-* Bosanowa
+* Bossa nova
 * Cojun
 * Renban-madoguchi
 * Sukoro room
