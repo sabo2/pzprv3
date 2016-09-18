@@ -88,6 +88,8 @@
      <hr>
      <li class="check" data-config="irowake"><span>__線の色分け__Color coding__</span></li>
      <li class="check" data-config="irowakeblk"><span>__黒マスの色分け__Color coding__</span></li>
+     <li class="check" data-config="dispqnumbg"><span>__問題背景描画__Paint bg of question circles__</span></li>
+     <li class="check" data-config="undefcell"><span>__未確定領域背景描画__Paint undefined cells__</span></li>
      <li class="check" data-config="cursor"><span>__カーソルの表示__Show cursor__</span></li>
      <li class="check" data-config="adjsize"><span>__自動横幅調節__Auto Size Adjust__</span></li>
      <li class="check" data-config="fullwidth"><span>__横幅最大拡張__Expand Canvas Width__</span></li>
@@ -117,7 +119,7 @@
      <li class="check" data-config="bgcolor"><span>__背景色入力__Input BGcolor__</span></li>
      <li class="check" data-config="autocmp"><span data-disp-pid="bonsan,heyabon,rectslider,hashikake,herugolf,kurotto">__数字をグレーにする__Set Grey Color__</span
                                             ><span data-disp-pid="kouchoku">__点をグレーにする__Set Grey Color__</span
-                                            ><span data-disp-pid="dosufuwa,nondango">__背景色をつける__Paint background__</span></li>
+                                            ><span data-disp-pid="dosufuwa,nondango,toichika,hanare">__背景色をつける__Paint background__</span></li>
      <li class="check" data-config="autoerr"><span data-disp-pid="hitori">__重複した数字を表示__Show overlapped number__</span
                                             ><span data-disp-pid="gokigen,wagiri">__ループした斜線の色分け__Loop slash with color__</span></li>
      <li class="check" data-config="multierr"><span>__複数エラー検出__Check multiple errors__</span></li>
@@ -128,6 +130,7 @@
      <li class="check" data-config="enline"><span>__線は点の間__Line between points__</span></li>
      <li class="check" data-config="lattice"><span>__格子点チェック__Check lattice point__</span></li>
      <li class="check" data-config="uramashu"><span>__裏ましゅ__Ura-Mashu__</span></li>
+     <li class="check" data-config="singlenum"><span>__領域に数字1つ__Single num in a region__</span></li>
      <li class="check" data-config="dispmove"><span>__動かしたように描画__Paint as move__</span></li>
      <li class="check" data-config="snakebd"><span>__へび境界線描画__Draw snake border__</span></li>
      <li class="check" data-config="bdpadding"><span>__空隙つきURL__URL with Padding__</span></li>
@@ -209,13 +212,17 @@
       <input type="checkbox">
       <span data-disp-pid="bonsan,heyabon,rectslider,hashikake,herugolf,kurotto">__正しい数字をグレーにする__Grey each correct number__</span>
       <span data-disp-pid="kouchoku">__線が2本以上になったら点をグレーにする__Grey each letter which links over two segments__</span>
-      <span data-disp-pid="dosufuwa,nondango">__条件を満たした領域に背景色をつける__Paint background of each completed block__</span>
+      <span data-disp-pid="dosufuwa,nondango,toichika,hanare">__条件を満たした領域に背景色をつける__Paint background of each completed block__</span>
     </div>
     <div class="config" data-config="autoerr">
       <input type="checkbox">
       <span data-disp-pid="hitori">__重複している数字を赤くする__Show overlapped number as red__</span>
       <span data-disp-pid="gokigen">__ループになっている斜線を赤くする__Draw loop line as red__</span>
       <span data-disp-pid="wagiri">__ループになっている斜線を太くする__Draw loop line as bold__</span>
+    </div>
+    <div class="config" data-config="dispqnumbg">
+      <input type="checkbox">
+      <span>__問題の背景色をグレーにする__Paint background of question circles__</span>
     </div>
     <div class="config" data-config="dirauxmark">
       <input type="checkbox">
@@ -232,6 +239,10 @@
     <div class="config" data-config="uramashu">
       <input type="checkbox">
       <span>__裏ましゅにする__Change to Ura-Mashu__</span>
+    </div>
+    <div class="config" data-config="singlenum">
+      <input type="checkbox">
+      <span>__領域に一つだけ数字を入力できるようにする__Ensure that a region has a number__</span>
     </div>
     <div class="config" data-config="forceallcell">
       <input type="checkbox">
