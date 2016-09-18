@@ -79,6 +79,9 @@ ui.listener =
 				else if(puzzle.playmode && c==='shift+F2'){ ui.menuconfig.set("mode", puzzle.MODE_EDITOR); result = false;}
 			}
 
+			/* ストストーンのブロックを落とすルーチン有効化 */
+			if(ui.puzzle.pid==='stostone' && c==='x'){ ui.puzzle.board.operate('drop'); result = false;}
+
 			/* デバッグ用ルーチンを通す */
 			if(ui.debug.keydown(c)){ result = false;}
 		}
@@ -86,6 +89,9 @@ ui.listener =
 			/* TimerのUndo/Redoを停止する */
 			if(c==='ctrl+z' || c==='meta+z'){ ut.stopKeyUndo(); result = false;}
 			if(c==='ctrl+y' || c==='meta+y'){ ut.stopKeyRedo(); result = false;}
+
+			/* ストストーンのブロックを落とすルーチン有効化 */
+			if(ui.puzzle.pid==='stostone' && c==='x'){ ui.puzzle.board.operate('resetpos'); result = false;}
 		}
 		
 		if(!kc.isCTRL && !kc.isMETA){ ut.reset();}

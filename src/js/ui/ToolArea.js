@@ -18,6 +18,7 @@ ui.toolarea = {
 			this.walkElement(getEL('btnarea'));
 		}
 		this.walkElement2(getEL("checkpanel"));
+		this.walkElement2(getEL("btnarea"));
 		
 		this.display();
 	},
@@ -72,7 +73,7 @@ ui.toolarea = {
 	},
 	walkElement2 : function(parent){
 		ui.misc.walker(parent, function(el){
-			if(el.nodeType===1 && el.nodeName==="SPAN"){
+			if(el.nodeType===1){
 				var disppid = ui.customAttr(el,"dispPid");
 				if(!!disppid){ el.style.display = (pzpr.util.checkpid(disppid, ui.puzzle.pid) ? "" : "none");}
 			}
@@ -105,7 +106,8 @@ ui.toolarea = {
 		getEL('btncircle').style.display  = (ui.puzzle.pid==='pipelinkr' ? "" : "none");
 		getEL('btncolor').style.display   = (ui.puzzle.pid==='tentaisho' ? "" : "none");
 		/* ボタンエリアの色分けボタンは、ツールパネル領域が消えている時に表示 */
-		getEL('btnirowake').style.display = (((ui.puzzle.painter.irowake || ui.puzzle.painter.irowakeblk) && !ui.menuconfig.get("toolarea")) ? "" : "none");
+		getEL('btnirowake').style.display = ((ui.puzzle.painter.irowake && !ui.menuconfig.get("toolarea")) ? "" : "none");
+		getEL('btnirowakeblk').style.display = ((ui.puzzle.painter.irowakeblk && !ui.menuconfig.get("toolarea")) ? "" : "none");
 		this.setdisplay("trialmode");
 		
 		/* 共通：キャプションの設定 */
@@ -189,6 +191,8 @@ ui.toolarea = {
 	subclear : function(){ ui.menuarea.ASconfirm();},
 	irowake  : function(){ ui.puzzle.irowake();},
 	encolorall : function(){ ui.puzzle.board.encolorall();}, /* 天体ショーのボタン */
+	dropblocks : function(){ ui.puzzle.board.operate('drop');},
+	resetblocks: function(){ ui.puzzle.board.operate('resetpos');},
 	enterTrial : function(){ if(ui.puzzle.board.trialstage===0){ ui.puzzle.enterTrial();}},
 	enterFurtherTrial : function(){ ui.puzzle.enterTrial();},
 	acceptTrial : function(){ ui.puzzle.acceptTrial();},

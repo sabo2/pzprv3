@@ -108,7 +108,7 @@ ui.menuarea = {
 	},
 	walkElement2 : function(parent){
 		ui.misc.walker(parent, function(el){
-			if(el.nodeType===1 && el.nodeName==="SPAN"){
+			if(el.nodeType===1){
 				var disppid = ui.customAttr(el,"dispPid");
 				if(!!disppid){ el.style.display = (pzpr.util.checkpid(disppid, ui.puzzle.pid) ? "" : "none");}
 			}
@@ -273,6 +273,9 @@ ui.menuarea = {
 	redoall  : function(){ ui.puzzle.redoall();},
 	ansclear : function(){ this.ACconfirm();},
 	subclear : function(){ this.ASconfirm();},
+	dropblocks  : function(){ ui.puzzle.board.operate('drop');},
+	raiseblocks : function(){ ui.puzzle.board.operate('raise');},
+	resetblocks : function(){ ui.puzzle.board.operate('resetpos');},
 	enterTrial         : function(){ if(ui.puzzle.board.trialstage===0){ ui.puzzle.enterTrial();}},
 	enterFurtherTrial  : function(){ ui.puzzle.enterTrial();},
 	acceptTrial        : function(){ ui.puzzle.acceptTrial();},

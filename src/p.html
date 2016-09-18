@@ -43,6 +43,10 @@
        <li data-menu-exec="ansclear"><span>__回答消去__Erase answer__</span></li>
        <li data-menu-exec="subclear" id="menu_subclear"><span>__補助記号消去__Erase auxiliary marks__</span></li>
      </menu></li>
+     <li data-disp-pid="stostone"><span>__ブロックの位置__Blocks position__</span> -&gt;<menu label="__ブロックの位置__Blocks position__">
+       <li data-press-exec="dropblocks,resetblocks"><span>__ブロックを落とす__Drop blocks__</span></li>
+       <li data-press-exec="raiseblocks,resetblocks"><span>__ブロックを上げる__Raise blocks__</span></li>
+     </menu></li>
      <li><span>__仮置きモード__Trial mode__</span> -&gt;<menu label="__仮置き__Trial__">
        <li data-menu-exec="enterTrial"         id="menu_trialenter"><span>__仮置きモードに入る__Enter trial mode__</span></li>
        <hr>
@@ -298,8 +302,10 @@
   <button type="button" class="btn" id="btnclear"   data-button-exec="ansclear">__回答消去__Erase Answer__</button
  ><button type="button" class="btn" id="btnclear2"  data-button-exec="subclear">__補助消去__Erase Aux. Marks__</button>
   <button type="button" class="btn" id="btnirowake" data-button-exec="irowake" style="display:none;">__色分けしなおす__Change the color of Line__</button>
+  <button type="button" class="btn" id="btnirowakeblk" data-button-exec="irowake" style="display:none;">__色分けしなおす__Change the color of shaded cells__</button>
   <button type="button" class="btn" id="btncircle"  data-button-exec="toggledisp">○</button>
   <button type="button" class="btn" id="btncolor"   data-button-exec="encolorall">__色をつける__Color up__</button>
+  <button type="button" class="btn" data-disp-pid="stostone" data-press-exec="dropblocks,resetblocks">__ブロックを落とす__Drop blocks__</button>
   <button type="button" class="btn" id="btntrial"   data-button-exec="enterTrial">__仮置きモード__Trial mode__</button>
   <div id="btntrialarea" style="display:none;">
     <button type="button" class="btn btn-ok" id="btntriala"  data-button-exec="acceptTrial">__仮置き確定__Accept trial__</button>
