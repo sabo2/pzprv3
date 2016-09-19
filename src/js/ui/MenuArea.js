@@ -298,8 +298,14 @@ ui.menuarea = {
 		if(el.nodeName==="SPAN"){ el = el.parentNode;}
 		if(el.className!=="disabled"){
 			var idname = ui.customAttr(el,"popup");
-			var pos = pzpr.util.getPagePos(e);
-			ui.popupmgr.open(idname, pos.px-8, pos.py-8);
+			if(!pzpr.env.OS.mobile){
+				var pos = pzpr.util.getPagePos(e);
+				ui.popupmgr.open(idname, pos.px-8, pos.py-8);
+			}
+			else{
+				var rect = pzpr.util.getRect(getEL("menupanel"));
+				ui.popupmgr.open(idname, 8, rect.bottom+8);
+			}
 			this.stopHovering();
 		}
 	},
