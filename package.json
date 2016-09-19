@@ -39,6 +39,6 @@
     "grunt-newer": "^1.2.0"
   },
   "dependencies": {
-    "pzpr": "^0.6.0"
+    "pzpr": "^0.6.1"
   }
 }
