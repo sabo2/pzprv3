@@ -134,7 +134,7 @@ ui.debug.extend(
 				var timetext = ""+((ms/10)|0)+"."+(ms%10)+" sec.";
 				self.addTA("Total time: "+timetext);
 				self.alltimer = false;
-				alert(["All tests done.", "pzpr.js: v"+pzpr.version+" pzprv3-ui.js: v"+ui.version, "Total time: "+timetext, "Fail count="+self.totalfails].join('\n'));
+				alert(["All tests done.", "pzpr.js: v"+pzpr.version+" pzprv3-ui.js: v"+ui.version, "Total time: "+timetext, "Fail count="+self.totalfails].join('\n')); // jshint ignore:line
 			}
 			return;
 		}
