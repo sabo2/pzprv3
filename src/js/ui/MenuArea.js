@@ -174,6 +174,8 @@ ui.menuarea = {
 		getEL("menu_turnflip").style.display  = (EDITOR ? "" : "none");
 		getEL("menu_sep_edit1").style.display = (EDITOR ? "" : "none");
 		
+		getEL("menualltest").style.display = (!ui.debugmode ? "none" : "");
+		
 		for(var idname in this.menuitem){ this.setdisplay(idname);}
 		this.setdisplay("operation");
 		this.setdisplay("trialmode");
@@ -307,6 +309,7 @@ ui.menuarea = {
 		ui.popupmgr.open("debug", 0, 0);
 		this.stopHovering();
 	},
+	debugalltest : function(){ ui.debug.all_test();},
 
 	//------------------------------------------------------------------------------
 	// menuarea.duplicate_board() 盤面の複製を行う => 受取はBoot.jsのimportFileData()
