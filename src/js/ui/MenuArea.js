@@ -276,6 +276,8 @@ ui.menuarea = {
 	dropblocks  : function(){ ui.puzzle.board.operate('drop');},
 	raiseblocks : function(){ ui.puzzle.board.operate('raise');},
 	resetblocks : function(){ ui.puzzle.board.operate('resetpos');},
+	showgatenum : function(){ ui.puzzle.board.operate('showgatenumber');},
+	hidegatenum : function(){ ui.puzzle.board.operate('hidegatenumber');},
 	enterTrial         : function(){ if(ui.puzzle.board.trialstage===0){ ui.puzzle.enterTrial();}},
 	enterFurtherTrial  : function(){ ui.puzzle.enterTrial();},
 	acceptTrial        : function(){ ui.puzzle.acceptTrial();},
