@@ -10,6 +10,7 @@ JavaScriptおよびHTML5の機能を使用して開発しています。
 
 ## その他のドキュメント
 * [対応パズル一覧](SupportedPuzzles.md)
+* [ChangeLog](../../Changelog.md)
 
 ### 推奨ブラウザ
 * Firefox (最新安定版)
@@ -31,6 +32,7 @@ JavaScriptおよびHTML5の機能を使用して開発しています。
 * IE11では "画像を保存" でSVGファイルの保存が正しく動作しません
 
 ## リリース
+* 2016/09/19 Version 3.6.4 リリース
 * 2016/08/11 Version 3.6.3 リリース
 * 2016/08/05 Version 3.6.2 リリース
 * 2016/03/03 Version 3.6.1 リリース
@@ -38,12 +40,6 @@ JavaScriptおよびHTML5の機能を使用して開発しています。
 * 2016/02/14 Version 3.6.0-patch1 リリース
 * 2016/02/13 Version 3.6.0 リリース
 * 2015/12/29 Version 3.5.2 リリース
-
-= 動作環境 =
-推奨ブラウザ
-  * Firefox 最新版
-  * Google Chrome 最新版
-  * Safari 9.0+
 
 ## リンク
 * [ぱずぷれv3公開サイト](http://pzv.jp/)
