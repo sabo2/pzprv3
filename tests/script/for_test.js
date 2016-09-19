@@ -131,9 +131,10 @@ ui.debug.extend(
 		if(self.idlist.length===0){
 			if(self.alltimer){
 				var ms = ((pzpr.util.currentTime() - self.starttime)/100)|0;
-				self.addTA("Total time: "+((ms/10)|0)+"."+(ms%10)+" sec.");
+				var timetext = ""+((ms/10)|0)+"."+(ms%10)+" sec.";
+				self.addTA("Total time: "+timetext);
 				self.alltimer = false;
-				alert(["All tests done.", "pzpr.js: v"+pzpr.version+" pzprv3-ui.js: v"+ui.version, "Fail count="+self.totalfails].join('\n'));
+				alert(["All tests done.", "pzpr.js: v"+pzpr.version+" pzprv3-ui.js: v"+ui.version, "Total time: "+timetext, "Fail count="+self.totalfails].join('\n'));
 			}
 			return;
 		}
