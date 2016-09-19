@@ -115,22 +115,26 @@ ui.debug.extend(
 	pid  : '',
 	pnum : 0,
 	starttime : 0,
+	totalfails : 0,
 	all_test : function(){
 		if(this.alltimer !== null){ return;}
 		var self = this;
 		self.pnum = 0;
+		self.totalfails = 0;
 		self.idlist = pzpr.variety.getList().sort();
 		self.starttime = pzpr.util.currentTime();
 		self.alltimer = true;
 		self.each_test();
 	},
 	each_test : function(){
-		var self =ui. debug;
+		var self = ui.debug;
 		if(self.idlist.length===0){
 			if(self.alltimer){
 				var ms = ((pzpr.util.currentTime() - self.starttime)/100)|0;
-				self.addTA("Total time: "+((ms/10)|0)+"."+(ms%10)+" sec.");
+				var timetext = ""+((ms/10)|0)+"."+(ms%10)+" sec.";
+				self.addTA("Total time: "+timetext);
 				self.alltimer = false;
+				alert(["All tests done.", "pzpr.js: v"+pzpr.version+" pzprv3-ui.js: v"+ui.version, "Total time: "+timetext, "Fail count="+self.totalfails].join('\n'));
 			}
 			return;
 		}
@@ -181,7 +185,10 @@ ui.debug.extend(
 				self[testlist.shift()](self);
 			}
 			if(testlist.length>0){ setTimeout(tests,0);}
-			else{ self.each_test();}
+			else{
+				self.totalfails += self.fails;
+				self.each_test();
+			}
 		},0);
 	},
 	//Input test---------------------------------------------------------------

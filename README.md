@@ -1,5 +1,7 @@
 # PUZ-PRE v3
 
+* Readme Japanese version is [here](docs/ja/README.md).
+
 ## About PUZ-PRE v3
 
 PUZ-PRE v3 is the Web Application that is used to create or edit "pencil puzzles" which we solve by the rules and questions boards.
@@ -10,7 +12,7 @@ This script is developed against HTML5 features and JavaScript.
 [nikoli]: http://nikoli.co.jp/
 
 ## Other documents
-* [Supported puzzles](docs/SupportedPuzzles.md)
+* [Supported puzzles](docs/en/SupportedPuzzles.md)
 
 ## Working environment
 
@@ -41,21 +43,7 @@ This script is developed against HTML5 features and JavaScript.
 * 2016/02/14 v3.6.0-patch1
 * 2016/02/13 v3.6.0
 * 2015/12/29 v3.5.2
-* 2015/08/16 v3.5.1
-* 2015/08/08 v3.5.0
-* 2015/03/08 v3.5.0beta3
-* 2015/03/03 v3.5.0beta2
-* 2015/02/17 v3.5.0pre
-* 2014/12/23 v3.4.4
-* 2014/10/18 v3.4.3p1
-* 2014/10/15 v3.4.3
-* 2014/09/22 v3.4.2
-* 2014/09/15 v3.4.1
-* 2014/03/30 v3.4.0p1
-* 2014/03/23 v3.4.0
-* 2013/01/21 v3.3.6
-* 2011/10/04 v3.3.5
 
 ## Links
-* [PUZ-PRE v3](http://pzv.jp/index_en.html)
+* [PUZ-PRE v3](http://pzv.jp/)
 * [Access Counter](http://log.pzv.jp/logview.php)
