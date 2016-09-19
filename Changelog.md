@@ -1,6 +1,49 @@
 
 # ReleaseNote
 
+## Version 3.6.4
+
+Release date: 2016/9/19
+
+pzpr.js version: v0.6.1
+
+### New puzzle
+
+* ★ストストーンを追加しました
+
+### Improvement
+
+* menuarea, toolarea: スラロームの旗門上数字表示用ボタン/メニューを追加
+* Config: しろまるくろまるの問題へ背景色を描画するかどうかのconfigを追加
+* hanare: 部屋に数字を一つだけ入力するかどうか設定するconfigを追加
+* shugaku: 布団も通路もないセルの背景色をグレーにするかどうかのconfigを追加
+* toichika, hanare: 背景色を自動でつけるautocmp configを有効化
+* Graph: ストストーンの黒マス色分けを行う'irowakeblk' configを有効化
+* variety: cave, rome, bossanovaをそれぞれBAG, ろーま, ボサノワの別名に追加
+
+### BugFix
+
+* p.html: autocmp関連で抜けているキャプションを追加
+* variety, Answer: Divideのスペルミスを修正
+* yinyang: しろまるくろまるで補助記号消去のボタンを表示しないよう変更
+* Config: "passallcell"のコンフィグが誤って全パズル有効になっているのを変更
+* shimaguni, stostone: いくつかの正答判定系ルーチンをLITSを共通化
+
+### Minor changes
+
+* プロジェクトのURLをBitbucketからGithubに変更
+* docs: ドキュメントフォルダに日本語を追加しフォルダ構成を変更
+* arukone: エラー時の背景描画範囲を修正
+* Graphic: 色分け無効時の仮置きモードで線の太さを変更しないように修正
+* moonsun: 月か太陽の英語名を'Moon or Sun'に変更
+* Graphic: 境界線と黒マス間に描画する線を少し明るくしました
+* Graphic: 外枠の描画位置を少し内側に修正しました
+* Graphic: 描画色設定ルーチンを共通化
+* Graphic: 回答の黒マス描画ルーチンを従来のdrawBGCells、drawQuesCellsと分離
+* KeyInput: スラロームとストストーンで使うためxキーを押した時の情報表示ルーチンkeyDispInfoを作成
+* slalom: board.operate関数に数字を旗門上に表示するためshow/hidegatenumberを追加
+* norinori: 不要な黒マス管理オブジェクトを生成しないよう修正
+
 ## Version 3.6.3
 
 Release date: 2016/8/11
