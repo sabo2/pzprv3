@@ -184,11 +184,13 @@ function accesslog(puzzle){
 
 	if(document.domain!=='indi.s58.xrea.com' &&
 	   document.domain!=='pzprv3.sakura.ne.jp' &&
-	   !document.domain.match(/pzv\.jp/)){ return;}
+	   !document.domain.match(/(dev\.)?pzv\.jp/)){ return;}
 
-	var refer = document.referrer.replace(/\?/g,"%3f").replace(/\&/g,"%26")
-								 .replace(/\=/g,"%3d").replace(/\//g,"%2f");
-	if(refer.match(/http\:\%2f\%2f(www\.)?pzv.jp/)){ return;}
+	var refer = document.referrer;
+	if(refer.match(/http\:\/\/[\w\.]*pzv\.jp/)){ return;}
+
+	refer = refer.replace(/\?/g,"%3f").replace(/\&/g,"%26")
+				 .replace(/\=/g,"%3d").replace(/\//g,"%2f");
 
 	// 送信
 	var xmlhttp = false;
