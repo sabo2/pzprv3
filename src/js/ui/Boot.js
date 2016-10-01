@@ -33,6 +33,7 @@ function importData(){
 }
 
 function failOpen(){
+	if(!!ui.puzzle && !!ui.puzzle.pid){ return;}
 	var title2 = document.getElementById('title2');
 	if(!!title2){ title2.innerHTML = "Fail to import puzzle data or URL.";}
 	document.getElementById('menupanel').innerHTML = '';
