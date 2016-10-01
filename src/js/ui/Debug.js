@@ -10,7 +10,7 @@ ui.popupmgr.addpopup('debug',
 	formname : 'debug',
 	multipopup : true,
 	
-	setFormEvent : function(){
+	init : function(){
 		if(!ui.debugmode){
 			var form = this.form;
 			form.starttest.style.display = "none";
