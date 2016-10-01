@@ -57,7 +57,7 @@ ui.misc = {
 
 	//--------------------------------------------------------------------------------
 	// misc.walker()        DOMツリーをたどる
-	// misc.elementWalker() 要素のみDOMツリーをたどる
+	// misc.displayByPid()  要素のdata-pidカスタム属性によって表示するしないを切り替える
 	//--------------------------------------------------------------------------------
 	walker : function(parent, func){
 		var els = [parent.firstChild];
@@ -65,11 +65,16 @@ ui.misc = {
 			var el = els.pop();
 			func(el);
 			if(!!el.nextSibling){ els.push(el.nextSibling);}
-			if(el.childNodes.length>0){ els.push(el.firstChild);}
+			if(el.nodeType===1 && el.childNodes.length>0){ els.push(el.firstChild);}
 		}
 	},
-	elementWalker : function(parent, func){
-		this.walker(parent, function(el){ if(el.nodeType===1){ func(el);}});
+	displayByPid : function(parent){
+		ui.misc.walker(parent, function(el){
+			if(el.nodeType===1){
+				var disppid = ui.customAttr(el,"dispPid");
+				if(!!disppid){ el.style.display = (pzpr.util.checkpid(disppid, ui.puzzle.pid) ? "" : "none");}
+			}
+		});
 	}
 };
 

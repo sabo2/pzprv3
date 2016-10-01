@@ -17,8 +17,8 @@ ui.toolarea = {
 			this.walkElement(getEL("checkpanel"));
 			this.walkElement(getEL('btnarea'));
 		}
-		this.walkElement2(getEL("checkpanel"));
-		this.walkElement2(getEL("btnarea"));
+		ui.misc.displayByPid(getEL("checkpanel"));
+		ui.misc.displayByPid(getEL("btnarea"));
 		
 		this.display();
 	},
@@ -68,14 +68,6 @@ ui.toolarea = {
 				if(el.data.match(/^__(.+)__(.+)__$/)){
 					toolarea.captions.push({textnode:el, str_jp:RegExp.$1, str_en:RegExp.$2});
 				}
-			}
-		});
-	},
-	walkElement2 : function(parent){
-		ui.misc.walker(parent, function(el){
-			if(el.nodeType===1){
-				var disppid = ui.customAttr(el,"dispPid");
-				if(!!disppid){ el.style.display = (pzpr.util.checkpid(disppid, ui.puzzle.pid) ? "" : "none");}
 			}
 		});
 	},

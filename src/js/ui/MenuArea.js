@@ -26,7 +26,7 @@ ui.menuarea = {
 			this.menuitem = {};
 			this.walkElement(getEL("menupanel"));
 		}
-		this.walkElement2(getEL("menupanel"));
+		ui.misc.displayByPid(getEL("menupanel"));
 		this.stopHovering();
 	},
 
@@ -103,14 +103,6 @@ ui.menuarea = {
 				if(el.data.match(/^__(.+)__(.+)__$/)){
 					menuarea.captions.push({textnode:el, str_jp:RegExp.$1, str_en:RegExp.$2});
 				}
-			}
-		});
-	},
-	walkElement2 : function(parent){
-		ui.misc.walker(parent, function(el){
-			if(el.nodeType===1){
-				var disppid = ui.customAttr(el,"dispPid");
-				if(!!disppid){ el.style.display = (pzpr.util.checkpid(disppid, ui.puzzle.pid) ? "" : "none");}
 			}
 		});
 	},
