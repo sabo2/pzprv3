@@ -320,7 +320,7 @@ ui.popupmgr.addpopup('newboard',
 		this.close();
 		if(!!obj){
 			var url = pid+'/'+obj.col+'/'+obj.row;
-			if(pid==='tawa'){ url += ('/'+obj.shape)}
+			if(pid==='tawa'){ url += ('/'+obj.shape);}
 			ui.puzzle.open(url);
 		}
 	}
