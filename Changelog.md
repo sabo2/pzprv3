@@ -5,6 +5,50 @@
 
 Release date: 2016/9/19
 
+pzpr.js version: v0.7.0
+
+### New puzzle
+
+* ★温泉めぐりを追加しました
+
+### Improvement
+
+* moonsun: スマホ・タブレットで×印を入力できるように修正
+* shugaku: スマホ・タブレットで黒マスを入力できるように修正
+* kakuru: スマホ・タブレットで問題の黒マスを入力できるように修正
+* hakoiri: ドラッグでドットを入力できるように修正
+* hebi: ドラッグでドットを入力できるように修正
+* tatamibari: あみぼーと同じように問題の記号を入力できるように修正
+* amibo: スマホ・タブレットで補助記号を入力できるように修正
+* bag: bgcolor設定値に関わらず背景色を入力できるように修正
+* Graph: 入力時に不必要な場合部屋・黒マス情報などを再生成しないように修正
+
+### BugFix
+
+* tilepaint: 設定値によって黒マスが入力できないことがあったのを修正
+* boot: 一度パズルが読み込まれた後はfailOpen関数を呼び出さないように修正
+* p.html: 黒マスの色分けにつけたキャプションを変更
+
+### Minor Changes
+
+* Boot: dev.pzv.jpでもアクセスログを取得できるようコードを修正
+* PopupMenu: 盤面サイズをフォームに反映する初期化ルーチンを整理
+* PopupMenu: ポップアップ表示時の内容初期化メソッドをinit/reset/showの3つに分離
+* Misc: data-disp-pid属性をもとに要素の表示を切り替えるdisplayByPid関数をui.miscへ移動
+* menuarea: スマートフォンでのポップアップメニュー表示位置を修正
+* tests: All Testの呼び出し元をmenuからcredit表示に移動
+* Graphic: いくつかのパズルのドット色を黒ではなく緑色に変更
+* variety: いくつかのパズルの英語名を変更
+* stostone: 落とした黒マスの位置を記憶して再計算しないよう修正
+* stostone: 黒マスを落とした時に背景の数字を隠すよう修正
+* stostone: 黒マス色分けがエラーになるのを修正　
+* hebi: へびいちごのURL名をsnakesからhebiに修正
+* Graph: いくつか部屋・黒マス情報などの生成にあった不具合を修正
+
+## Version 3.6.4
+
+Release date: 2016/9/19
+
 pzpr.js version: v0.6.1
 
 ### New puzzle
