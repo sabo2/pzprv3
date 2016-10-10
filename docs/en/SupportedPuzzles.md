@@ -49,6 +49,7 @@
 
 ### Reserver (Omopa)
 * Moon or Sun
+* Onsen-meguri
 
 ### Nigun (Legacy)
 * BAG (Correl, Cave)
