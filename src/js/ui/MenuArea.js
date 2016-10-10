@@ -26,7 +26,7 @@ ui.menuarea = {
 			this.menuitem = {};
 			this.walkElement(getEL("menupanel"));
 		}
-		this.walkElement2(getEL("menupanel"));
+		ui.misc.displayByPid(getEL("menupanel"));
 		this.stopHovering();
 	},
 
@@ -106,14 +106,6 @@ ui.menuarea = {
 			}
 		});
 	},
-	walkElement2 : function(parent){
-		ui.misc.walker(parent, function(el){
-			if(el.nodeType===1){
-				var disppid = ui.customAttr(el,"dispPid");
-				if(!!disppid){ el.style.display = (pzpr.util.checkpid(disppid, ui.puzzle.pid) ? "" : "none");}
-			}
-		});
-	},
 
 	//--------------------------------------------------------------------------------
 	// menuarea.modifySelector()  MenuAreaに関するCSSセレクタテキストを変更する (Android向け)
@@ -173,8 +165,6 @@ ui.menuarea = {
 		getEL("menu_adjust").style.display    = (EDITOR ? "" : "none");
 		getEL("menu_turnflip").style.display  = (EDITOR ? "" : "none");
 		getEL("menu_sep_edit1").style.display = (EDITOR ? "" : "none");
-		
-		getEL("menualltest").style.display = (!ui.debugmode ? "none" : "");
 		
 		for(var idname in this.menuitem){ this.setdisplay(idname);}
 		this.setdisplay("operation");
@@ -300,8 +290,14 @@ ui.menuarea = {
 		if(el.nodeName==="SPAN"){ el = el.parentNode;}
 		if(el.className!=="disabled"){
 			var idname = ui.customAttr(el,"popup");
-			var pos = pzpr.util.getPagePos(e);
-			ui.popupmgr.open(idname, pos.px-8, pos.py-8);
+			if(!pzpr.env.OS.mobile){
+				var pos = pzpr.util.getPagePos(e);
+				ui.popupmgr.open(idname, pos.px-8, pos.py-8);
+			}
+			else{
+				var rect = pzpr.util.getRect(getEL("menupanel"));
+				ui.popupmgr.open(idname, 8, rect.bottom+8);
+			}
 			this.stopHovering();
 		}
 	},
@@ -309,7 +305,6 @@ ui.menuarea = {
 		ui.popupmgr.open("debug", 0, 0);
 		this.stopHovering();
 	},
-	debugalltest : function(){ ui.debug.all_test();},
 
 	//------------------------------------------------------------------------------
 	// menuarea.duplicate_board() 盤面の複製を行う => 受取はBoot.jsのimportFileData()

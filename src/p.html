@@ -96,7 +96,7 @@
      <li class="check" data-config="irowake"><span>__線の色分け__Color coding__</span></li>
      <li class="check" data-config="irowakeblk"><span>__黒マスの色分け__Color coding__</span></li>
      <li class="check" data-config="dispqnumbg"><span>__問題背景描画__Paint bg of question circles__</span></li>
-     <li class="check" data-config="undefcell"><span>__未確定領域背景描画__Paint undefined cells__</span></li>
+     <li class="check" data-config="undefcell"><span>__未確定領域背景描画__Paint uninputted cells__</span></li>
      <li class="check" data-config="cursor"><span>__カーソルの表示__Show cursor__</span></li>
      <li class="check" data-config="adjsize"><span>__自動横幅調節__Auto Size Adjust__</span></li>
      <li class="check" data-config="fullwidth"><span>__横幅最大拡張__Expand Canvas Width__</span></li>
@@ -162,7 +162,6 @@
      </menu></li>
      <li><span>__デバッグ__Debug__</span> -&gt;<menu>
        <li data-menu-exec="dispdebug"><span>__pop_testを表示__Show pop_test window__</span></li>
-       <li id="menualltest" data-menu-exec="debugalltest"><span>ALL Test</span></li>
      </menu></li>
    </menu></li>
   </menu>
@@ -232,6 +231,10 @@
       <input type="checkbox">
       <span>__問題の背景色をグレーにする__Paint background of question circles__</span>
     </div>
+    <div class="config" data-config="undefcell">
+      <input type="checkbox">
+      <span>__何も入力されていないセルの背景色をグレーにする__Paint background of uninputted cells__</span>
+    </div>
     <div class="config" data-config="dirauxmark">
       <input type="checkbox">
       <span>__方向を表す補助記号を入力する__Enable to input aux mark of direction__</span>
@@ -288,7 +291,7 @@
     <div class="config" data-config="irowakeblk">
       <input type="checkbox">
       <span>__黒マスの色分けをする__Color each blocks__</span>
-      <button class="btn" data-button-exec="irowake">__色分けしなおす__Change the color of Line__</button>
+      <button class="btn" data-button-exec="irowake">__色分けしなおす__Change the color of Blocks__</button>
     </div>
   </div>
   <hr id="separator2">
@@ -306,7 +309,7 @@
   <button type="button" class="btn" id="btnclear"   data-button-exec="ansclear">__回答消去__Erase Answer__</button
  ><button type="button" class="btn" id="btnclear2"  data-button-exec="subclear">__補助消去__Erase Aux. Marks__</button>
   <button type="button" class="btn" id="btnirowake" data-button-exec="irowake" style="display:none;">__色分けしなおす__Change the color of Line__</button>
-  <button type="button" class="btn" id="btnirowakeblk" data-button-exec="irowake" style="display:none;">__色分けしなおす__Change the color of shaded cells__</button>
+  <button type="button" class="btn" id="btnirowakeblk" data-button-exec="irowake" style="display:none;">__色分けしなおす__Change the color of blocks__</button>
   <button type="button" class="btn" id="btncircle"  data-button-exec="toggledisp">○</button>
   <button type="button" class="btn" id="btncolor"   data-button-exec="encolorall">__色をつける__Color up__</button>
   <button type="button" class="btn" data-disp-pid="stostone" data-press-exec="dropblocks,resetblocks">__ブロックを落とす__Drop blocks__</button>
@@ -361,16 +364,16 @@
     <form name="newboard">
       <span>__盤面を新規作成します。__Create New Board.__</span>
       <br>
-      <div id="nb_size">
-        <span id="nb_cols">__よこ__Cols__</span>
+      <div id="nb_size" data-disp-pid="!sudoku">
+        <span id="nb_cols" data-disp-pid="!tawa">__よこ__Cols__</span>
         <input type="number" name="col" value="1" size=4 maxlength=3 min=1 max=999>
-        <span id="nb_cols_tawa">__横幅 (黄色の数)__Width (Yellows)__</span>
+        <span id="nb_cols_tawa" data-disp-pid="tawa">__横幅 (黄色の数)__Width (Yellows)__</span>
         <br>
-        <span id="nb_rows">__たて__Rows__</span>
+        <span id="nb_rows" data-disp-pid="!tawa">__たて__Rows__</span>
         <input type="number" name="row" value="1" size=4 maxlength=3 min=1 max=999>
-        <span id="nb_rows_tawa">__高さ__Height__</span>
+        <span id="nb_rows_tawa" data-disp-pid="tawa">__高さ__Height__</span>
       </div>
-      <div id="nb_size_sudoku">
+      <div id="nb_size_sudoku" data-disp-pid="sudoku">
         <input type="radio" name="size" id="nb_size_sudoku_0" value="0"> 4x4<br>
         <input type="radio" name="size" id="nb_size_sudoku_4" value="4"> 6x6<br>
         <input type="radio" name="size" id="nb_size_sudoku_1" value="1" checked> 9x9<br>
@@ -378,7 +381,7 @@
         <input type="radio" name="size" id="nb_size_sudoku_3" value="3"> 25x25
       </div>
       <br>
-      <table id="nb_shape_tawa" border=0 cell-padding=0 cell-spaceing=2><tr>
+      <table id="nb_shape_tawa" data-disp-pid="tawa" border=0 cell-padding=0 cell-spaceing=2><tr>
         <td><div id="nb_shape_0"><img src="" data-button-exec="clickshape"></div></td>
         <td><div id="nb_shape_1"><img src="" data-button-exec="clickshape"></div></td>
         <td><div id="nb_shape_2"><img src="" data-button-exec="clickshape"></div></td>
@@ -610,6 +613,7 @@
       <span>__ぱずぷれv3は はっぱ/連続発破が作成しています。__PUZ-PRE v3 is made by happa.__</span>
       <br>
       <button type="button" class="btn btn-ok" data-button-exec="close">OK</button>
+      <button type="button" class="btn" id="menualltest" data-button-exec="debugalltest">ALL Test</button>
     </form>
   </div>
 

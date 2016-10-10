@@ -431,7 +431,7 @@ var pstate = {
 			'slalom','numlin','hashikake','herugolf','shikaku','tentaisho','kakuro','sudoku','fillomino','ripple',
 			'akari','shakashaka'],
 	testa :['nagare','juosan','dosufuwa','usoone'],
-	trial :['moonsun','stostone'],
+	trial :['moonsun','stostone','onsen'],
 	lunch2:['box','lits','kurodoko','goishi'],
 	lunch3:['minarism','factors'],
 	nigun :['creek','mochikoro','tasquare','kurotto','shimaguni','yajikazu','bag','country','reflect','icebarn',

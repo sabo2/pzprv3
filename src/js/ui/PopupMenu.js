@@ -101,12 +101,24 @@ ui.popupmgr.addpopup('template',
 {
 	formname : '',
 	multipopup : false,
+	pid : '',
 
-	reset : function(){
-		this.pop       = null;
-		this.titlebar  = null;
-		this.form      = null;
-		this.captions  = [];
+	init : function(){ // 初回1回のみ呼び出される
+		this.form      = document[this.formname];
+		this.pop       = this.form.parentNode;
+		this.titlebar  = this.pop.querySelector('.titlebar') || null;
+		if(!!this.titlebar){
+			pzpr.util.unselectable(this.titlebar);
+			pzpr.util.addEvent(this.titlebar, "mousedown", ui.popupmgr, ui.popupmgr.titlebardown);
+		}
+		pzpr.util.addEvent(this.form, "submit", this, function(e){ e.preventDefault();});
+
+		this.walkCaption(this.pop);
+		this.translate();
+
+		this.walkEvent(this.pop);
+	},
+	reset : function(){ // パズルの種類が変わったら呼び出される
 	},
 
 	translate : function(){
@@ -119,33 +131,14 @@ ui.popupmgr.addpopup('template',
 		}
 	},
 
-	searchForm : function(){
-		this.form = document[this.formname];
-		this.pop = this.form.parentNode;
-		this.walkElement(this.pop);
-		this.translate();
-		
-		pzpr.util.unselectable(this.titlebar);
-	},
-	walkElement : function(parent){
+	walkCaption : function(parent){
 		var popup = this;
+		this.captions  = [];
 		ui.misc.walker(parent, function(el){
-			if(el.nodeType===1 && el.className==='titlebar'){ popup.titlebar=el;}
-			else if(el.nodeType===3 && el.data.match(/^__(.+)__(.+)__$/)){
+			if(el.nodeType===3 && el.data.match(/^__(.+)__(.+)__$/)){
 				popup.captions.push({textnode:el, str_jp:RegExp.$1, str_en:RegExp.$2});
 			}
 		});
-	},
-
-	setEvent : function(){
-		this.walkEvent(this.pop);
-		this.setFormEvent();
-		
-		pzpr.util.addEvent(this.form, "submit", this, function(e){ e.preventDefault();});
-		if(!!this.titlebar){
-			var mgr = ui.popupmgr;
-			pzpr.util.addEvent(this.titlebar, "mousedown", mgr, mgr.titlebardown);
-		}
 	},
 	walkEvent : function(parent){
 		var popup = this;
@@ -161,15 +154,14 @@ ui.popupmgr.addpopup('template',
 			}
 		});
 	},
-	setFormEvent : function(){
-	},
 
-	show : function(px,py){
-		if(!this.pop){
+	show : function(px,py){ // 表示するたびに呼び出される
+		if(!this.pop){ this.init();}
+		if(this.pid!==ui.puzzle.pid){
+			this.pid = ui.puzzle.pid;
 			this.reset();
-			this.searchForm();
-			this.setEvent();
 		}
+		
 		this.pop.style.left = px + 'px';
 		this.pop.style.top  = py + 'px';
 		this.pop.style.display = 'inline';
@@ -195,94 +187,141 @@ ui.popupmgr.addpopup('newboard',
 {
 	formname : 'newboard',
 	
-	setFormEvent : function(){
-		var puzzle = ui.puzzle, bd = puzzle.board, pid = puzzle.pid;
-		
-		/* タテヨコのサイズ指定部分 */
-		getEL("nb_size").style.display        = ((pid!=='sudoku') ? "" : "none");
-		getEL("nb_size_sudoku").style.display = ((pid==='sudoku') ? "" : "none");
-		
-		var col = bd.cols, row = bd.rows;
-		if(pid==='tawa' && bd.shape===3){ col++;}
-		
-		if(pid!=='sudoku'){
-			this.form.col.value=''+col;
-			this.form.row.value=''+row;
-			
-			getEL("nb_cols").style.display      = ((pid!=='tawa') ? "" : "none");
-			getEL("nb_rows").style.display      = ((pid!=='tawa') ? "" : "none");
-			getEL("nb_cols_tawa").style.display = ((pid==='tawa') ? "" : "none");
-			getEL("nb_rows_tawa").style.display = ((pid==='tawa') ? "" : "none");
-		}
-		else{
-			for(var i=0;i<4;i++){ getEL("nb_size_sudoku_"+i).checked = '';}
-			if     (col===16){ getEL("nb_size_sudoku_2").checked = true;}
-			else if(col===25){ getEL("nb_size_sudoku_3").checked = true;}
-			else if(col=== 4){ getEL("nb_size_sudoku_0").checked = true;}
-			else if(col=== 6){ getEL("nb_size_sudoku_4").checked = true;}
-			else             { getEL("nb_size_sudoku_1").checked = true;}
-		}
-		
-		/* たわむレンガの形状指定ルーチン */
-		getEL("nb_shape_tawa").style.display = ((pid==='tawa') ? "" : "none");
-		if(pid==='tawa'){ this.setFormEvent_tawa();}
-	},
-	setFormEvent_tawa : function(){
+	reset : function(){
+		ui.misc.displayByPid(this.pop);
+		if(this.pid!=='tawa'){ return;}
 		for(var i=0;i<=3;i++){
 			var _div = getEL("nb_shape_"+i), _img = _div.children[0];
 			_img.src = "data:image/gif;base64,R0lGODdhgAAgAKEBAAAAAP//AP//////ACwAAAAAgAAgAAAC/pSPqcvtD6OctNqLs968+98A4kiWJvmcquisrtm+MpAAwY0Hdn7vPN1aAGstXs+oQw6FyqZxKfDlpDhqLyXMhpw/ZfHJndbCVW9QATWkEdYk+Pntvn/j+dQc0hK39jKcLxcoxkZ29JeHpsfUZ0gHeMeoUyfo54i4h7lI2TjI0PaJp1boZumpeLCGOvoZB7kpyTbzIiTrglY7o4Yrc8l2irYamjiciar2G4VM7Lus6fpcdVZ8PLxmrTyd3AwcydprvK19HZ6aPf5YCX31TW3ezuwOcQ7vGXyIPA+e/w6ORZ5ir9S/gfu0ZRt4UFU3YfHiFSyoaxeMWxJLUKx4IiLGZIn96HX8iNBjQ5EG8Zkk+dDfyJAgS7Lkxy9lOJTYXMK0ibOlTJ0n2eEs97OnUJ40X668SfRo0ZU7SS51erOp0XxSkSaFGtTo1a0bUcSo9bVr2I0gypo9izat2rVs27p9Czfu2QIAOw==";
 			_img.style.clip = "rect(0px,"+((i+1)*32)+"px,"+32+"px,"+(i*32)+"px)";
 		}
-		this.setbgcolor([0,2,3,1][ui.puzzle.board.shape]);
 	},
-	setbgcolor : function(idx){
+	show : function(px,py){
+		ui.popupmgr.popups.template.show.call(this,px,py);
+		ui.puzzle.key.enableKey = false;
+		
+		switch(ui.puzzle.pid){
+			case 'sudoku': this.setsize_sudoku(); break;
+			case 'tawa':   this.setsize_tawa();   break;
+			default:       this.setsize();        break;
+		}
+	},
+
+	//---------------------------------------------------------------------------
+	// setsize()   盤面のサイズをセットする
+	// getsize()   盤面のサイズを取得する
+	//---------------------------------------------------------------------------
+	setsize : function(){
+		var bd = ui.puzzle.board;
+		this.form.col.value=''+bd.cols;
+		this.form.row.value=''+bd.rows;
+	},
+	getsize : function(){
+		var col = this.form.col.value|0;
+		var row = this.form.row.value|0;
+		return ((!!col && !!row) ? {col:col, row:row} : null);
+	},
+
+	//---------------------------------------------------------------------------
+	// setsize_sudoku()   盤面のサイズをセットする (数独向け)
+	// getsize_sudoku()   盤面のサイズを取得する (数独向け)
+	//---------------------------------------------------------------------------
+	setsize_sudoku : function(){
+		for(var i=0;i<4;i++){ getEL("nb_size_sudoku_"+i).checked = '';}
+		switch(ui.puzzle.board.cols){
+			case 16: getEL("nb_size_sudoku_2").checked = true; break;
+			case 25: getEL("nb_size_sudoku_3").checked = true; break;
+			case  4: getEL("nb_size_sudoku_0").checked = true; break;
+			case  6: getEL("nb_size_sudoku_4").checked = true; break;
+			default: getEL("nb_size_sudoku_1").checked = true; break;
+		}
+	},
+	getsize_sudoku : function(){
+		var col, row;
+		if     (getEL("nb_size_sudoku_2").checked){ col=row=16;}
+		else if(getEL("nb_size_sudoku_3").checked){ col=row=25;}
+		else if(getEL("nb_size_sudoku_0").checked){ col=row= 4;}
+		else if(getEL("nb_size_sudoku_4").checked){ col=row= 6;}
+		else                                      { col=row= 9;}
+		return {col:col, row:row};
+	},
+
+	//---------------------------------------------------------------------------
+	// setsize_tawa()   盤面のサイズをセットする (たわむれんが向け)
+	// getsize_tawa()   盤面のサイズを取得する (たわむれんが向け)
+	//---------------------------------------------------------------------------
+	setsize_tawa : function(){
+		/* タテヨコのサイズ指定部分 */
+		var bd = ui.puzzle.board, col = bd.cols, row = bd.rows, shape = bd.shape;
+		
+		if(shape===3){ col++;}
+		this.form.col.value=''+col;
+		this.form.row.value=''+row;
+		
+		/* たわむレンガの形状指定ルーチン */
+		this.setshape(shape);
+	},
+	getsize_tawa : function(){
+		var col = this.form.col.value|0;
+		var row = this.form.row.value|0;
+		if(!col || !row){ return null;}
+		
+		var shape = this.getshape();
+		if(!isNaN(shape) && !(col===1 && (shape===0||shape===3))){
+			if(shape===3){ col--;}
+		}
+		else{ return null;}
+		
+		return {col:col, row:row, shape:shape};
+	},
+
+	//---------------------------------------------------------------------------
+	// setshape()   たわむれんの形状から形状指定ボタンの初期値をセットする
+	// getshape()   たわむれんがのどの形状が指定されか取得する
+	// clickshape() たわむれんがの形状指定ボタンを押した時の処理を行う
+	// setshapeidx() たわむれんがの形状指定ボタンに背景色を設定する
+	// getshapeidx() たわむれんがの形状指定ボタン背景色からインデックスを取得する
+	//---------------------------------------------------------------------------
+	setshape : function(shape){
+		this.setshapeidx([0,2,3,1][shape]);
+	},
+	getshape : function(){
+		var idx = this.getshapeidx();
+		return (idx!==null ? [0,3,1,2][idx] : null);
+	},
+	clickshape : function(e){
+		this.setshapeidx(+e.target.parentNode.id.charAt(9));
+	},
+
+	setshapeidx : function(idx){
 		for(var i=0;i<=3;i++){
 			getEL("nb_shape_"+i).style.backgroundColor = (i===idx?'red':'');
 		}
 	},
-	clickshape : function(e){
-		this.setbgcolor(+e.target.parentNode.id.charAt(9));
+	getshapeidx : function(){
+		for(var i=0;i<=3;i++){
+			if(getEL("nb_shape_"+i).style.backgroundColor==='red'){ return i;}
+		}
+		return null;
 	},
-	
-	show : function(px,py){
-		ui.popupmgr.popups.template.show.call(this,px,py);
-		ui.puzzle.key.enableKey = false;
-	},
+
 	//---------------------------------------------------------------------------
 	// execute() 新規盤面を作成するボタンを押したときの処理を行う
 	//---------------------------------------------------------------------------
 	execute : function(){
 		var pid = ui.puzzle.pid;
-		var col, row, url=[], NB=this.form;
-		
-		if(pid!=='sudoku'){
-			col = NB.col.value|0;
-			row = NB.row.value|0;
-		}
-		else{
-			if     (getEL("nb_size_sudoku_2").checked){ col=row=16;}
-			else if(getEL("nb_size_sudoku_3").checked){ col=row=25;}
-			else if(getEL("nb_size_sudoku_0").checked){ col=row= 4;}
-			else if(getEL("nb_size_sudoku_4").checked){ col=row= 6;}
-			else                                      { col=row= 9;}
-		}
-		if(!!col && !!row){ url = [col, row];}
-		
-		if(url.length>0 && pid==='tawa'){
-			var selected=null;
-			for(var i=0;i<=3;i++){
-				if(getEL("nb_shape_"+i).style.backgroundColor==='red'){ selected=[0,3,1,2][i]; break;}
-			}
-			if(!isNaN(selected) && !(col===1 && (selected===0||selected===3))){
-				if(selected===3){ col--; url=[col,row];}
-				url.push(selected);
-			}
-			else{ url=[];}
+		var obj;
+		switch(pid){
+			case 'sudoku': obj = this.getsize_sudoku(); break;
+			case 'tawa':   obj = this.getsize_tawa();   break;
+			default:       obj = this.getsize();        break;
 		}
 		
 		this.close();
-		if(url.length>0){
-			ui.puzzle.open(pid+"/"+url.join('/'));
+		if(!!obj){
+			var url = pid+'/'+obj.col+'/'+obj.row;
+			if(pid==='tawa'){ url += ('/'+obj.shape);}
+			ui.puzzle.open(url);
 		}
 	}
 });
@@ -310,7 +349,7 @@ ui.popupmgr.addpopup('urloutput',
 {
 	formname : 'urloutput',
 	
-	setFormEvent : function(){
+	reset : function(px,py){
 		var form = this.form, pid = ui.puzzle.pid, exists = pzpr.variety(pid).exists;
 		// form.pzprapp.style.display = form.pzprapp.nextSibling.style.display = (exists.pzprapp ? "" : "none");
 		form.kanpen.style.display  = form.kanpen.nextSibling.style.display  = (exists.kanpen ? "" : "none");
@@ -346,7 +385,9 @@ ui.popupmgr.addpopup('fileopen',
 {
 	formname : 'fileform',
 	
-	setFormEvent : function(){
+	init : function(){
+		ui.popupmgr.popups.template.init.call(this);
+		
 		this.form.action = ui.fileio;
 	},
 	
@@ -379,22 +420,25 @@ ui.popupmgr.addpopup('filesave',
 {
 	formname : 'filesave',
 	anchor : null,
-	setFormEvent : function(){
+	init : function(){
+		ui.popupmgr.popups.template.init.call(this);
+		
 		this.anchor = ((!ui.enableSaveBlob && pzpr.env.API.anchor_download) ? getEL("saveanchor") : null);
 		
 		this.form.action = ui.fileio;
-		
+	},
+	reset : function(){
 		/* ファイル形式選択オプション */
 		var ispencilbox = pzpr.variety(ui.puzzle.pid).exists.pencilbox;
 		this.form.filetype.options[1].disabled = !ispencilbox;
 		this.form.filetype.options[2].disabled = !ispencilbox;
-		
-		this.form.filename.value = ui.puzzle.pid + '.txt';
-		this.changefilename();
 	},
 	/* オーバーライド */
 	show : function(px,py){
 		ui.popupmgr.popups.template.show.call(this,px,py);
+		
+		this.form.filename.value = ui.puzzle.pid + '.txt';
+		this.changefilename();
 		
 		ui.puzzle.key.enableKey = false;
 	},
@@ -476,7 +520,9 @@ ui.popupmgr.addpopup('imagesave',
 	formname : 'imagesave',
 	anchor : null,
 	showsize : null,
-	setFormEvent : function(){
+	init : function(){
+		ui.popupmgr.popups.template.init.call(this);
+		
 		this.anchor = ((!ui.enableSaveBlob && pzpr.env.API.anchor_download) ? getEL("saveanchor") : null);
 		this.showsize = getEL("showsize");
 		
@@ -488,12 +534,6 @@ ui.popupmgr.addpopup('imagesave',
 			var option = options[i];
 			if(!ui.enableImageType[option.value]){ filetype.removeChild(option); i--;}
 		}
-		
-		this.form.filename.value = pzpr.variety(ui.puzzle.pid).urlid+".png";
-		this.form.cellsize.value = ui.menuconfig.get('cellsizeval');
-		
-		this.changefilename();
-		this.estimatesize();
 	},
 	
 	/* オーバーライド */
@@ -502,6 +542,12 @@ ui.popupmgr.addpopup('imagesave',
 		
 		ui.puzzle.key.enableKey = false;
 		ui.puzzle.mouse.enableMouse = false;
+		
+		this.form.filename.value = pzpr.variety(ui.puzzle.pid).urlid+".png";
+		this.form.cellsize.value = ui.menuconfig.get('cellsizeval');
+		
+		this.changefilename();
+		this.estimatesize();
 	},
 	close : function(){
 		if(!!this.saveimageurl){ URL.revokeObjectURL(this.saveimageurl);}
@@ -638,7 +684,7 @@ ui.popupmgr.addpopup('turnflip',
 {
 	formname : 'turnflip',
 	
-	setFormEvent : function(){
+	reset : function(){
 		this.form.turnl.disabled = (ui.puzzle.pid==='tawa');
 		this.form.turnr.disabled = (ui.puzzle.pid==='tawa');
 	},
@@ -686,7 +732,9 @@ ui.popupmgr.addpopup('colors',
 	formname : 'colors',
 	colorElement : true,
 	
-	setFormEvent : function(){
+	init : function(){
+		ui.popupmgr.popups.template.init.call(this);
+		
 		ui.misc.walker(this.form, function(el){
 			var target = ui.customAttr(el.parentNode,"colorTarget") || '';
 			if(el.nodeName==="INPUT" && el.getAttribute("type")==="color"){
@@ -697,7 +745,9 @@ ui.popupmgr.addpopup('colors',
 				el.addEventListener('mousedown', function(e){ this.clearcolor(e, target);}.bind(this), false);
 			}
 		}.bind(this));
-		
+	},
+	show : function(px,py){
+		ui.popupmgr.popups.template.show.call(this,px,py);
 		this.refresh();
 	},
 
@@ -785,7 +835,14 @@ ui.popupmgr.addpopup('credit',
 {
 	formname : 'credit',
 
-	setFormEvent : function(){
+	init : function(){
+		ui.popupmgr.popups.template.init.call(this);
+		
 		getEL('pzprversion').innerHTML = pzpr.version;
+		getEL("menualltest").style.display = (!ui.debugmode ? "none" : "");
+	},
+	debugalltest : function(){
+		ui.debug.all_test();
+		this.close();
 	}
 });
