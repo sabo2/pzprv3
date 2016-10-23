@@ -1,9 +1,9 @@
 
 # ReleaseNote
 
-## Version 3.6.4
+## Version 3.6.5
 
-Release date: 2016/9/19
+Release date: 2016/10/10
 
 pzpr.js version: v0.7.0
 
