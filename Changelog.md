@@ -1,6 +1,17 @@
 
 # ReleaseNote
 
+## Version 3.6.6
+
+Release date: 2016/12/4
+
+pzpr.js version: v0.7.1
+
+### BugFix
+
+* LineManager: ごきげんななめのループ判定計算ができなくなることがあるバグを修正
+* onsen: 単独の○が残っていても正解と判定してしまうバグを修正
+
 ## Version 3.6.5
 
 Release date: 2016/10/10
