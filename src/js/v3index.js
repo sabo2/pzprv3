@@ -436,7 +436,7 @@ var pstate = {
 	lunch3:['minarism','factors'],
 	nigun :['creek','mochikoro','tasquare','kurotto','shimaguni','yajikazu','bag','country','reflect','icebarn',
 			'firefly','kaero','yosenabe','bdblock','fivecells','sashigane','tatamibari','sukoro',
-			'gokigen','tateyoko','kinkonkan','snakes','makaro'],
+			'gokigen','tateyoko','kinkonkan','hebi','makaro'],
 	omopa :['nuribou','tawa','lookair','paintarea','chocona','kurochute','mejilink',
 			'pipelink','loopsp','nagenawa','kouchoku','ringring','pipelinkr','barns','icelom','icelom2',
 			'wblink','kusabi','ichimaga','ichimagam','ichimagax','amibo','bonsan','heyabon','rectslider',
