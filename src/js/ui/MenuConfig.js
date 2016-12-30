@@ -60,12 +60,18 @@ ui.menuconfig = {
 	},
 
 	//---------------------------------------------------------------------------
+	// menuconfig.getCurrnetName()  指定されたidを現在使用している名前に変換する
+	//---------------------------------------------------------------------------
+	getCurrnetName : Config.getCurrnetName,
+
+	//---------------------------------------------------------------------------
 	// menuconfig.get()  各フラグの設定値を返す
-	// menuconfig.set()  各フラグの設定値を設定する
+	// menuconfig.get()  各フラグの設定値を返す
 	// menuconfig.reset() 各フラグの設定値を初期化する
 	//---------------------------------------------------------------------------
 	get : Config.get,
 	set : function(idname, newval){
+		idname = this.getCurrnetName(idname);
 		if(!this.list[idname]){ return;}
 		if(idname==='mode'){ ui.puzzle.setMode(newval); newval = (!ui.puzzle.playmode?'edit':'play');}
 		
@@ -123,12 +129,11 @@ ui.menuconfig = {
 	//---------------------------------------------------------------------------
 	setproper : Config.setproper,
 	valid : function(idname){
-		if(!!this.list[name]){ return false;}
+		if(!this.list[idname]){ return false;}
 		if(idname==="keypopup"){ return (ui.keypopup.paneltype[1]!==0 || ui.keypopup.paneltype[3]!==0);}
 		else if(idname==='mode'){ return !ui.puzzle.playeronly;}
-		else if(idname==='passallcell'){ return ui.puzzle.pid==='arukone';}
 		else if(this.list[idname].puzzle){ return ui.puzzle.validConfig(idname);}
-		return !!this.list[idname];
+		return true;
 	},
 
 	//---------------------------------------------------------------------------
