@@ -147,8 +147,13 @@ ui.listener =
 	// listener.onResize()  canvasのサイズを変更したときの処理を呼び出す
 	//---------------------------------------------------------------------------
 	onResize : function(puzzle){
-		var pc = puzzle.painter, val = (ui.getBoardPadding()*Math.min(pc.cw, pc.ch))|0;
+		var pc = puzzle.painter, cellsize = Math.min(pc.cw, pc.ch);
+		var val = (ui.getBoardPadding()*cellsize)|0, valTop = val;
+		if(puzzle.pid==='starbattle'||puzzle.pid==='easyasabc'){
+			valTop = ((0.05*cellsize)|0)+'px';
+		}
 		puzzle.canvas.parentNode.style.padding = val+'px';
+		puzzle.canvas.parentNode.style.paddingTop = valTop+'px';
 		
 		ui.keypopup.resizepanel();
 	}
