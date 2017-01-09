@@ -1,6 +1,20 @@
 
 # ReleaseNote
 
+## Version 3.6.7-beta2
+
+Release date: 2017/1/9
+
+pzpr.js version: v0.8.0-beta2
+
+### New puzzle
+
+* ★ビルディングパズル、Kropki、スターバトル、ABCプレースを追加しました
+
+### Notable change
+
+* menuconfig: デフォルトのサイズを大きくしました
+
 ## Version 3.6.7-beta1
 
 Release date: 2016/12/31
