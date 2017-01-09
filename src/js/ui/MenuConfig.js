@@ -27,7 +27,7 @@ ui.menuconfig = {
 		this.add('keypopup', false);						/* キーポップアップ (数字などのパネル入力) */
 
 		this.add('adjsize', true);							/* 自動横幅調節 */
-		this.add('cellsizeval', 36);						/* セルのサイズ設定用 */
+		this.add('cellsizeval', (ui.windowWidth()<=960?36:48));	/* セルのサイズ設定用 */
 		this.add('fullwidth', (ui.windowWidth()<600));		/* キャンバスを横幅いっぱいに広げる */
 		
 		this.add('toolarea', true);							/* ツールエリアの表示 */
