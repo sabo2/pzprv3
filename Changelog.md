@@ -1,6 +1,16 @@
 
 # ReleaseNote
 
+## Version 3.6.7-rc
+
+Release date: 2017/2/9
+
+pzpr.js version: v0.8.0
+
+#### BugFix
+
+* slalom: 旗門の数字がうまく再生成できないことがあるのを修正
+
 ## Version 3.6.7-beta2
 
 Release date: 2017/1/9
