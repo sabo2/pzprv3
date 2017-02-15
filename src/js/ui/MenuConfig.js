@@ -142,7 +142,7 @@ ui.menuconfig = {
 	},
 
 	//---------------------------------------------------------------------------
-	// config.configevent()  設定変更時の動作を記述する
+	// config.configevent()  設定変更時の動作を記述する (modeはlistener.onModeChangeで変更)
 	//---------------------------------------------------------------------------
 	configevent : function(idname, newval){
 		if(!ui.menuarea.menuitem){ return;}
@@ -158,15 +158,6 @@ ui.menuconfig = {
 			
 		case 'autocheck':
 			this.list.autocheck_once.val = newval;
-			break;
-			
-		case 'mode':
-			ui.setdisplay('keypopup');
-			ui.setdisplay('bgcolor');
-			ui.setdisplay('passallcell');
-			ui.keypopup.display();
-			this.list.inputmode.val = ui.puzzle.mouse.inputMode;
-			ui.setdisplay('inputmode');
 			break;
 		
 		case 'language':
