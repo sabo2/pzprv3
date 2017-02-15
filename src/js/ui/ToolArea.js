@@ -134,10 +134,16 @@ ui.toolarea = {
 			/* 子要素の設定を行う */
 			if(!!toolitem.children){
 				var children = toolitem.children;
+				var validval = (idname==='inputmode' ? ui.puzzle.mouse.getInputModeList() : null);
 				for(var i=0;i<children.length;i++){
-					var child = children[i], selected = (ui.customAttr(child,"value")===""+ui.menuconfig.get(idname));
+					var child = children[i], value = ui.customAttr(child,"value"), selected = (value===""+ui.menuconfig.get(idname));
 					child.className = (selected ? "child childsel" : "child");
+					child.style.display = ((validval===null || validval.indexOf(value)>=0) ? '' : 'none');
 				}
+				
+				var disabled = null;
+				if(idname==="inputmode"){ disabled = (validval.length===1);}
+				if(disabled!==null){ toolitem.el.className = (!disabled ? "" : "disabled");}
 			}
 			/* チェックボックスの表記の設定 */
 			else if(!!toolitem.checkbox){

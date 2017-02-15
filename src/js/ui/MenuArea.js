@@ -212,9 +212,11 @@ ui.menuarea = {
 			/* セレクタ部の設定を行う */
 			if(!!menuitem.children){
 				var children = menuitem.children;
+				var validval = (idname==='inputmode' ? ui.puzzle.mouse.getInputModeList() : null);
 				for(var i=0;i<children.length;i++){
-					var child = children[i], selected = (ui.customAttr(child,"value")===""+ui.menuconfig.get(idname));
+					var child = children[i], value = ui.customAttr(child,"value"), selected = (value===""+ui.menuconfig.get(idname));
 					child.className = (selected ? "checked" : "");
+					child.style.display = ((validval===null || validval.indexOf(value)>=0) ? '' : 'none');
 				}
 			}
 			/* Check部の表記の変更 */

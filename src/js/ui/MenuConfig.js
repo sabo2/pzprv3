@@ -32,6 +32,9 @@ ui.menuconfig = {
 		
 		this.add('toolarea', true);							/* ツールエリアの表示 */
 		
+		this.add('inputmode', 'auto');						/* inputMode */
+		this.list.inputmode.volatile = true;
+		
 		this.add('language', pzpr.lang, ['en','ja']);		/* 言語設定 */
 
 		/* puzzle.configを一括で扱うため登録 */
@@ -74,6 +77,7 @@ ui.menuconfig = {
 		idname = this.getCurrnetName(idname);
 		if(!this.list[idname]){ return;}
 		if(idname==='mode'){ ui.puzzle.setMode(newval); newval = (!ui.puzzle.playmode?'edit':'play');}
+		else if(idname==='inputmode'){ ui.puzzle.mouse.setInputMode(newval); newval = ui.puzzle.mouse.inputMode;}
 		
 		newval = this.setproper(idname, newval);
 		
@@ -132,6 +136,7 @@ ui.menuconfig = {
 		if(!this.list[idname]){ return false;}
 		if(idname==="keypopup"){ return (ui.keypopup.paneltype[1]!==0 || ui.keypopup.paneltype[3]!==0);}
 		else if(idname==='mode'){ return !ui.puzzle.playeronly;}
+		else if(idname==='inputmode'){ return (ui.puzzle.mouse.getInputModeList('play').length>1 || (!ui.puzzle.playeronly && ui.puzzle.mouse.getInputModeList('edit').length>1));}
 		else if(this.list[idname].puzzle){ return ui.puzzle.validConfig(idname);}
 		return true;
 	},
@@ -160,8 +165,10 @@ ui.menuconfig = {
 			ui.setdisplay('bgcolor');
 			ui.setdisplay('passallcell');
 			ui.keypopup.display();
+			this.list.inputmode.val = ui.puzzle.mouse.inputMode;
+			ui.setdisplay('inputmode');
 			break;
-			
+		
 		case 'language':
 			ui.displayAll();
 			break;

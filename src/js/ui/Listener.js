@@ -125,14 +125,12 @@ ui.listener =
 	},
 	onHistoryChange : function(puzzle){
 		if(!!ui.currentpid){
-			ui.menuarea.setdisplay("operation");
-			ui.toolarea.setdisplay("operation");
+			ui.setdisplay("operation");
 		}
 	},
 	onTrialModeChange : function(puzzle, trialstage){
 		if(!!ui.currentpid){
-			ui.menuarea.setdisplay("trialmode");
-			ui.toolarea.setdisplay("trialmode");
+			ui.setdisplay("trialmode");
 		}
 	},
 
