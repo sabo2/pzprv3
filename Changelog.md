@@ -7,11 +7,11 @@ Release date: 2017/2/16
 
 pzpr.js version: v0.8.1
 
-#### Notable change
+### Notable change
 
 * p.html: InputMode選択のメニューを追加します
 
-#### BugFix
+### BugFix
 
 * akari: 正解判定ボタンを押した後照明が照らしているセルの情報が消えてしまう不具合を修正
 * kinkonkan: Opera12.17でキンコンカンのファイル出力がただしくなくなる不具合を修正
@@ -23,7 +23,7 @@ Release date: 2017/2/9
 
 pzpr.js version: v0.8.0
 
-#### BugFix
+### BugFix
 
 * slalom: 旗門の数字がうまく再生成できないことがあるのを修正
 
