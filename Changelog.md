@@ -1,6 +1,22 @@
 
 # ReleaseNote
 
+## Version 3.6.7
+
+Release date: 2017/2/16
+
+pzpr.js version: v0.8.1
+
+#### Notable change
+
+* p.html: InputMode選択のメニューを追加します
+
+#### BugFix
+
+* akari: 正解判定ボタンを押した後照明が照らしているセルの情報が消えてしまう不具合を修正
+* kinkonkan: Opera12.17でキンコンカンのファイル出力がただしくなくなる不具合を修正
+* listener: Alt+Cでモードを切り替えた時にMenuなどが切り替わらない不具合を修正
+
 ## Version 3.6.7-rc
 
 Release date: 2017/2/9
