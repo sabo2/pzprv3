@@ -444,7 +444,7 @@ var pstate = {
 			'kakuru','view','bosanowa','nanro','cojun','renban','sukororoom','hanare','kazunori',
 			'wagiri','shugaku','hakoiri','roma','toichika','cbblock','nondango'],
 	orig  :['mochinyoro','ayeheya','aho'],
-	genre :['tapa','arukone','yinyang']
+	genre :['tapa','arukone','yinyang','building','kropki','starbattle','easyasabc']
 };
 var tabstate = {
 	lunch:'lunch', lunch2:'lunch', lunch3:'nigun',

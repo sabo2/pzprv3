@@ -27,10 +27,13 @@ ui.menuconfig = {
 		this.add('keypopup', false);						/* キーポップアップ (数字などのパネル入力) */
 
 		this.add('adjsize', true);							/* 自動横幅調節 */
-		this.add('cellsizeval', 36);						/* セルのサイズ設定用 */
+		this.add('cellsizeval', (ui.windowWidth()<=960?36:48));	/* セルのサイズ設定用 */
 		this.add('fullwidth', (ui.windowWidth()<600));		/* キャンバスを横幅いっぱいに広げる */
 		
 		this.add('toolarea', true);							/* ツールエリアの表示 */
+		
+		this.add('inputmode', 'auto');						/* inputMode */
+		this.list.inputmode.volatile = true;
 		
 		this.add('language', pzpr.lang, ['en','ja']);		/* 言語設定 */
 
@@ -60,14 +63,21 @@ ui.menuconfig = {
 	},
 
 	//---------------------------------------------------------------------------
+	// menuconfig.getCurrnetName()  指定されたidを現在使用している名前に変換する
+	//---------------------------------------------------------------------------
+	getCurrnetName : Config.getCurrnetName,
+
+	//---------------------------------------------------------------------------
 	// menuconfig.get()  各フラグの設定値を返す
-	// menuconfig.set()  各フラグの設定値を設定する
+	// menuconfig.get()  各フラグの設定値を返す
 	// menuconfig.reset() 各フラグの設定値を初期化する
 	//---------------------------------------------------------------------------
 	get : Config.get,
 	set : function(idname, newval){
+		idname = this.getCurrnetName(idname);
 		if(!this.list[idname]){ return;}
 		if(idname==='mode'){ ui.puzzle.setMode(newval); newval = (!ui.puzzle.playmode?'edit':'play');}
+		else if(idname==='inputmode'){ ui.puzzle.mouse.setInputMode(newval); newval = ui.puzzle.mouse.inputMode;}
 		
 		newval = this.setproper(idname, newval);
 		
@@ -123,16 +133,16 @@ ui.menuconfig = {
 	//---------------------------------------------------------------------------
 	setproper : Config.setproper,
 	valid : function(idname){
-		if(!!this.list[name]){ return false;}
+		if(!this.list[idname]){ return false;}
 		if(idname==="keypopup"){ return (ui.keypopup.paneltype[1]!==0 || ui.keypopup.paneltype[3]!==0);}
 		else if(idname==='mode'){ return !ui.puzzle.playeronly;}
-		else if(idname==='passallcell'){ return ui.puzzle.pid==='arukone';}
+		else if(idname==='inputmode'){ return (ui.puzzle.mouse.getInputModeList('play').length>1 || (!ui.puzzle.playeronly && ui.puzzle.mouse.getInputModeList('edit').length>1));}
 		else if(this.list[idname].puzzle){ return ui.puzzle.validConfig(idname);}
-		return !!this.list[idname];
+		return true;
 	},
 
 	//---------------------------------------------------------------------------
-	// config.configevent()  設定変更時の動作を記述する
+	// config.configevent()  設定変更時の動作を記述する (modeはlistener.onModeChangeで変更)
 	//---------------------------------------------------------------------------
 	configevent : function(idname, newval){
 		if(!ui.menuarea.menuitem){ return;}
@@ -149,14 +159,7 @@ ui.menuconfig = {
 		case 'autocheck':
 			this.list.autocheck_once.val = newval;
 			break;
-			
-		case 'mode':
-			ui.setdisplay('keypopup');
-			ui.setdisplay('bgcolor');
-			ui.setdisplay('passallcell');
-			ui.keypopup.display();
-			break;
-			
+		
 		case 'language':
 			ui.displayAll();
 			break;

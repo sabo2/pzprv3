@@ -109,6 +109,9 @@
 
 	div#checkpanel input[type="checkbox"]:disabled + span { color:silver;}
 
+	div#usepanel div.disabled { color:silver;}
+	div#usepanel div.disabled div.childsel{ color:silver; font-weight:100; background-color:white;}
+
 	/* パズル表示部 */
 	div#quesboard {
 		margin     : 16pt auto 16pt auto;

@@ -18,6 +18,7 @@ ui.listener =
 		puzzle.on('mouse',    this.onMouseInput);
 		puzzle.on('history',  this.onHistoryChange);
 		puzzle.on('trial',    this.onTrialModeChange);
+		puzzle.on('config',   this.onConfigChange);
 		
 		puzzle.on('adjust',     this.onAdjust);
 		puzzle.on('resize',     this.onResize);
@@ -63,8 +64,6 @@ ui.listener =
 	//---------------------------------------------------------------------------
 	// listener.onKeyInput()    キー入力時に呼び出される関数 (return false = 処理をキャンセル)
 	// listener.onMouseInput()  盤面へのマウス入力時に呼び出される関数 (return false = 処理をキャンセル)
-	// listener.onHistoryChange() 履歴変更時に呼び出される関数
-	// listener.onTrialModeChange() 仮置きモード変更時に呼び出される関数
 	//---------------------------------------------------------------------------
 	onKeyInput : function(puzzle, c){
 		var kc = puzzle.key, ut = ui.undotimer, result = true;
@@ -123,17 +122,37 @@ ui.listener =
 		
 		mv.cancelEvent = !result;
 	},
+
+	//---------------------------------------------------------------------------
+	// listener.onHistoryChange() 履歴変更時に呼び出される関数
+	// listener.onTrialModeChange() 仮置きモード変更時に呼び出される関数
+	// listener.onConfigChange()    Config値/Mode変更時に呼び出される関数
+	// listener.onModeChange()      Mode変更時に呼び出される関数
+	//---------------------------------------------------------------------------
 	onHistoryChange : function(puzzle){
 		if(!!ui.currentpid){
-			ui.menuarea.setdisplay("operation");
-			ui.toolarea.setdisplay("operation");
+			ui.setdisplay("operation");
 		}
 	},
 	onTrialModeChange : function(puzzle, trialstage){
 		if(!!ui.currentpid){
-			ui.menuarea.setdisplay("trialmode");
-			ui.toolarea.setdisplay("trialmode");
+			ui.setdisplay("trialmode");
 		}
+	},
+	onConfigChange : function(puzzle, idname, newval){
+		if(idname==='mode'){
+			ui.listener.onModeChange(puzzle);
+		}
+	},
+	onModeChange : function(puzzle){
+		ui.menuconfig.list.mode.val = (ui.puzzle.playmode ? 'play' : 'edit');
+		ui.setdisplay('mode');
+		ui.menuconfig.set('inputmode', ui.puzzle.mouse.inputMode);
+		
+		ui.setdisplay('keypopup');
+		ui.setdisplay('bgcolor');
+		ui.setdisplay('passallcell');
+		ui.keypopup.display();
 	},
 
 	//---------------------------------------------------------------------------
@@ -147,8 +166,13 @@ ui.listener =
 	// listener.onResize()  canvasのサイズを変更したときの処理を呼び出す
 	//---------------------------------------------------------------------------
 	onResize : function(puzzle){
-		var pc = puzzle.painter, val = (ui.getBoardPadding()*Math.min(pc.cw, pc.ch))|0;
+		var pc = puzzle.painter, cellsize = Math.min(pc.cw, pc.ch);
+		var val = (ui.getBoardPadding()*cellsize)|0, valTop = val;
+		if(puzzle.pid==='starbattle'||puzzle.pid==='easyasabc'){
+			valTop = ((0.05*cellsize)|0)+'px';
+		}
 		puzzle.canvas.parentNode.style.padding = val+'px';
+		puzzle.canvas.parentNode.style.paddingTop = valTop+'px';
 		
 		ui.keypopup.resizepanel();
 	}
