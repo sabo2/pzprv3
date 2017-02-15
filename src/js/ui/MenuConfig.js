@@ -35,6 +35,9 @@ ui.menuconfig = {
 		this.add('inputmode', 'auto');						/* inputMode */
 		this.list.inputmode.volatile = true;
 		
+		this.add('lrinvert', false);						/* マウスの左右ボタンを反転する設定 */
+		this.list.lrinvert.volatile = true;
+		
 		this.add('language', pzpr.lang, ['en','ja']);		/* 言語設定 */
 
 		/* puzzle.configを一括で扱うため登録 */
