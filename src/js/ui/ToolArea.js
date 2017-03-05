@@ -61,6 +61,7 @@ ui.toolarea = {
 					pzpr.util.addEvent(el, "mousedown", toolarea, toolarea[roles[0]]);
 					if(!!role[1]){
 						pzpr.util.addEvent(el, "mouseup", toolarea, toolarea[roles[1]]);
+						pzpr.util.addEvent(el, "mouseleave", toolarea, toolarea[roles[1]]);
 					}
 				}
 			}

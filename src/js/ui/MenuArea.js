@@ -72,6 +72,7 @@ ui.menuarea = {
 					addmdevent(el, mdfactory(roles[0]));
 					if(!!role[1]){
 						pzpr.util.addEvent(el, "mouseup", menuarea, menuarea[roles[1]]);
+						pzpr.util.addEvent(el, "mouseleave", menuarea, menuarea[roles[1]]);
 					}
 					setevent = true;
 				}
