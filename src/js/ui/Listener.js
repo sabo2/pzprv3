@@ -95,10 +95,6 @@ ui.listener =
 	},
 	onMouseInput : function(puzzle){
 		var mv = puzzle.mouse, result = true;
-		if(ui.menuconfig.get('lrinvert') && mv.mousestart){
-			if     (mv.btn==='left'){ mv.btn = 'right';}
-			else if(mv.btn==='right'){ mv.btn = 'left';}
-		}
 		if(mv.mousestart && mv.btn==='middle'){ /* 中ボタン */
 			ui.menuconfig.set('mode', puzzle.playmode ? 'edit' : 'play');
 			mv.mousereset();
