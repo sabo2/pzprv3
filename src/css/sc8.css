@@ -108,7 +108,8 @@
 	div.childsel{ color:maroon; font-weight:bold; background-color:#efefef;}
 
 	div#usepanel > div { display: flex; display: -webkit-flex;}
-	div#usepanel > div > div:first-child { white-space:nowrap; margin-right:6px;}
+	div#usepanel > div > div { display: inline-block;}
+	div#usepanel > div > div:first-child { white-space:nowrap; margin-right:6px; display: inline-block;}
 	div#usepanel > div > div > div { margin-right:6px; white-space: nowrap;}
 
 	div#checkpanel input[type="checkbox"]:disabled + span { color:silver;}
