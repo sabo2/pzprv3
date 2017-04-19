@@ -172,8 +172,8 @@ ui.toolarea = {
 	// toolarea.toolclick()   ツールパネルの入力があった時、設定を変更する
 	//---------------------------------------------------------------------------
 	toolclick : function(e){
-		var el = e.target, parent = el.parentNode.parentNode;
-		var idname = ui.customAttr(parent,"config"), value;
+		var el = e.target, parent = el.parentNode;
+		var idname = ui.customAttr(parent,"config")||ui.customAttr(parent.parentNode,"config"), value;
 		if(!!this.items[idname].checkbox){ value = !!el.checked;}
 		else                             { value = ui.customAttr(el,"value");}
 		ui.menuconfig.set(idname, value);
