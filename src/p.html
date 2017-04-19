@@ -180,9 +180,9 @@
      </menu></li>
      <hr>
      <li class="check" data-config="bgcolor"><span>__背景色入力__Input BGcolor__</span></li>
-     <li class="check" data-config="autocmp"><span data-disp-pid="!kouchoku">__数字をグレーにする__Set Grey Color__</span
-                                            ><span data-disp-pid="kouchoku">__点をグレーにする__Set Grey Color__</span></li>
-     <li class="check" data-config="autocmp_area"><span>__背景色をつける__Paint background__</span></li>
+     <li class="check" data-config="autocmp"><span data-autocmp-type="number">__数字をグレーにする__Set Grey Color__</span
+                                            ><span data-autocmp-type="room">__背景色をつける__Paint background__</span
+                                            ><span data-autocmp-type="kouchoku">__点をグレーにする__Set Grey Color__</span></li>
      <li class="check" data-config="autoerr"><span data-disp-pid="hitori">__重複した数字を表示__Show overlapped number__</span
                                             ><span data-disp-pid="gokigen,wagiri">__ループした斜線の色分け__Loop slash with color__</span></li>
      <li class="check" data-config="multierr"><span>__複数エラー検出__Check multiple errors__</span></li>
@@ -332,12 +332,9 @@
     </div>
     <div class="config" data-config="autocmp">
       <input type="checkbox">
-      <span data-disp-pid="!kouchoku">__正しい数字をグレーにする__Grey each correct number__</span>
-      <span data-disp-pid="kouchoku">__線が2本以上になったら点をグレーにする__Grey each letter which links over two segments__</span>
-    </div>
-    <div class="config" data-config="autocmp_area">
-      <input type="checkbox">
-      <span>__条件を満たした領域に背景色をつける__Paint background of each completed block__</span>
+      <span data-autocmp-type="number">__正しい数字をグレーにする__Grey each correct number__</span>
+      <span data-autocmp-type="room">__条件を満たした領域に背景色をつける__Paint background of each completed block__</span>
+      <span data-autocmp-type="kouchoku">__線が2本以上になったら点をグレーにする__Grey each letter which links over two segments__</span>
     </div>
     <div class="config" data-config="autoerr">
       <input type="checkbox">
