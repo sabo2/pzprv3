@@ -35,7 +35,7 @@ ui.toolarea = {
 					toolarea.items[ui.customAttr(el,"config")] = {el:el};
 				}
 				else if(el.className.match(/child/)){
-					var parent = el.parentNode, idname = ui.customAttr(parent,"config");
+					var parent = el.parentNode.parentNode, idname = ui.customAttr(parent,"config");
 					var item = toolarea.items[idname];
 					if(!item.children){ item.children=[];}
 					item.children.push(el);
@@ -172,7 +172,7 @@ ui.toolarea = {
 	// toolarea.toolclick()   ツールパネルの入力があった時、設定を変更する
 	//---------------------------------------------------------------------------
 	toolclick : function(e){
-		var el = e.target, parent = el.parentNode;
+		var el = e.target, parent = el.parentNode.parentNode;
 		var idname = ui.customAttr(parent,"config"), value;
 		if(!!this.items[idname].checkbox){ value = !!el.checked;}
 		else                             { value = ui.customAttr(el,"value");}
