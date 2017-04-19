@@ -333,7 +333,7 @@ ui.menuarea = {
 
 	//------------------------------------------------------------------------------
 	// menuarea.answercheck()「正答判定」ボタンを押したときの処理
-	// menuarea.ACconfirm()  「回答消去」ボタンを押したときの処理
+	// menuarea.ACconfirm()  「解答消去」ボタンを押したときの処理
 	// menuarea.ASconfirm()  「補助消去」ボタンを押したときの処理
 	//------------------------------------------------------------------------------
 	answercheck : function(){
@@ -344,7 +344,7 @@ ui.menuarea = {
 	},
 	ACconfirm : function(){
 		this.stopHovering();
-		ui.notify.confirm("回答を消去しますか？","Do you want to erase the Answer?", function(){ ui.puzzle.ansclear();});
+		ui.notify.confirm("解答を消去しますか？","Do you want to erase the Answer?", function(){ ui.puzzle.ansclear();});
 	},
 	ASconfirm : function(){
 		this.stopHovering();

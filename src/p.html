@@ -40,7 +40,7 @@
      </menu></li>
      <li><span>__盤面__Board__</span> -&gt;<menu label="__盤面__Board__">
        <li data-menu-exec="anscheck"><span>__チェック__Check the Answer__</span></li>
-       <li data-menu-exec="ansclear"><span>__回答消去__Erase answer__</span></li>
+       <li data-menu-exec="ansclear"><span>__解答消去__Erase answer__</span></li>
        <li data-menu-exec="subclear" id="menu_subclear"><span>__補助記号消去__Erase auxiliary marks__</span></li>
      </menu></li>
      <li data-disp-pid="stostone"><span>__ブロックの位置__Blocks position__</span> -&gt;<menu label="__ブロックの位置__Blocks position__">
@@ -108,7 +108,7 @@
    <li><span>__設定__Setting__</span><menu label="__設定__Setting__">
      <li data-config="mode"><span>__モード__mode__</span> -&gt;<menu label="__モード__mode__">
        <li data-value="edit"><span>__問題作成モード__Edit mode__</span></li>
-       <li data-value="play"><span>__回答モード__Answer mode__</span></li>
+       <li data-value="play"><span>__解答モード__Answer mode__</span></li>
      </menu></li>
      <li data-config="use"><span>__操作方法__Input Type__</span> -&gt;<menu label="__操作方法__Input Type__">
        <li data-value="1"><span>__左右ボタン__LR Button__</span></li>
@@ -225,7 +225,7 @@
      <div><span>__モード__mode__</span> | </div>
      <div>
       <div class="child" data-value="edit">__問題入力モード__Edit mode__</div>
-      <div class="child" data-value="play">__回答モード__Answer mode__</div>
+      <div class="child" data-value="play">__解答モード__Answer mode__</div>
      </div>
     </div>
     <div class="config" data-config="use">
@@ -420,7 +420,7 @@
   <button type="button" class="btn btn-ok" id="btncheck" data-button-exec="answercheck">__チェック__Check__</button>
   <button type="button" class="btn" id="btnundo"    data-press-exec="undo,undostop">__戻__&lt;-__</button
  ><button type="button" class="btn" id="btnredo"    data-press-exec="redo,redostop">__進__-&gt;__</button>
-  <button type="button" class="btn" id="btnclear"   data-button-exec="ansclear">__回答消去__Erase Answer__</button
+  <button type="button" class="btn" id="btnclear"   data-button-exec="ansclear">__解答消去__Erase Answer__</button
  ><button type="button" class="btn" id="btnclear2"  data-button-exec="subclear">__補助消去__Erase Aux. Marks__</button>
   <button type="button" class="btn" id="btnirowake" data-button-exec="irowake" style="display:none;">__色分けしなおす__Change the color of Line__</button>
   <button type="button" class="btn" id="btnirowakeblk" data-button-exec="irowake" style="display:none;">__色分けしなおす__Change the color of blocks__</button>
@@ -706,7 +706,7 @@
     <div class="titlebar">__色の変更___Change Colors__</div>
     <form name="colors">
       <div data-color-target="shadecolor">
-        <span>__黒マス (回答入力)__Shaded Cell (Answer)__</span>
+        <span>__黒マス (解答入力)__Shaded Cell (Answer)__</span>
         <input type="color" value="">
         <button type="button" class="btn btn-warn">Reset</button>
       </div>
