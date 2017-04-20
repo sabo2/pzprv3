@@ -295,7 +295,7 @@ ui.menuarea = {
 		if(el.className!=="disabled"){
 			var idname = ui.customAttr(el,"popup");
 			if(idname==='database'){
-				if(pzpr.util.currentTime() > (localStorage['pzprv3_storage:warning-time'] || 0) + 43200000){ // 12hours
+				if(pzpr.util.currentTime() > parseInt(localStorage['pzprv3_storage:warning-time'] || 0) + 43200000){ // 12hours
 					ui.notify.alert("ブラウザのデータクリア等で意図せずデータが消えることありますので、長期保存に使用しないでください",
 									"Don't use this for long-term use as these data will be cleared unexpectedly due to browser's cache clear etc.");
 					localStorage['pzprv3_storage:warning-time'] = pzpr.util.currentTime();
