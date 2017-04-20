@@ -1,6 +1,32 @@
 
 # ReleaseNote
 
+## Version 3.6.8
+
+Release date: 2017/4/21
+
+pzpr.js version: v0.9.1
+
+### Improvement
+
+* dosufuwa: 問題入力の黒マス入力用input modeを追加
+* css: flexbox非対応UA向けの指定を追加
+
+### BugFix
+
+* variety: ヤギとオオカミの英語名が誤っていたので修正
+* Mouse: 白丸と黒丸のinput modeが逆になっていたのを修正
+* bonsan, yosenabe: 丸数字をグレーにするinput modeの処理が誤っていたので修正
+* MenuArea: ブラウザ保存注意のNotifyを出す時間間隔の計算が文字列結合になってしまったので修正
+* MenuArea: TouchEvent時にイベントが二重に発生しないよう修正
+* toolarea: AndroidのChromeでToolAreaの文字列を押した時サーチのサジェストが出てこないよう処理を修正
+* Graphic: Opera 12で画像が表示できずエラーになるのを修正
+
+### Minor Changes
+
+* html: input modeの順番を変更
+* html: input modeのdotがなくなったのでメニューから削除
+
 ## Version 3.6.8-rc
 
 Release date: 2017/4/19
