@@ -37,7 +37,7 @@ ui.menuarea = {
 		var menuarea = this;
 		function addmdevent(el,func){ pzpr.util.addEvent(el, "mousedown", menuarea, func);}
 		function mdfactory(role){
-			return function(e){ menuarea[role](e); if(menuarea.nohover){ e.stopPropagation();}};
+			return function(e){ menuarea[role](e); if(menuarea.nohover){ e.preventDefault(); e.stopPropagation();}};
 		}
 		ui.misc.walker(parent, function(el){
 			if(el.nodeType===1 && el.nodeName==="LI"){
@@ -88,7 +88,7 @@ ui.menuarea = {
 						addmdevent(el, function(e){ e.preventDefault();});
 					}
 					else{
-						addmdevent(el, function(e){ menuarea.showHovering(e,el);});
+						addmdevent(el, function(e){ menuarea.showHovering(e,el); e.preventDefault(); e.stopPropagation();});
 					}
 				}
 			}
@@ -140,8 +140,6 @@ ui.menuarea = {
 		ui.misc.walker(getEL("menupanel"), function(el){
 			if(el.nodeType===1 && !!el.classList && !el.contains(el0)){ el.classList.remove("hovering");}
 		});
-		e.preventDefault();
-		e.stopPropagation();
 	},
 	stopHovering : function(){
 		if(!this.nohover){ return;}
