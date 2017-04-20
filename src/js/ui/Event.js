@@ -9,27 +9,21 @@ ui.event =
 {
 	resizetimer : null,	// resizeタイマー
 
-	evlist : [],
+	removers : [],
 
 	//----------------------------------------------------------------------
 	// event.addEvent()        addEventListener(など)を呼び出す
 	//----------------------------------------------------------------------
 	addEvent : function(el, event, self, callback, capt){
-		var func = pzpr.util.addEvent(el, event, self, callback, !!capt);
-		this.evlist.push({el:el, event:event, func:func, capt:!!capt});
+		this.removers.push( pzpr.util.addEvent(el, event, self, callback, !!capt) );
 	},
 
 	//----------------------------------------------------------------------
 	// event.removeAllEvents() addEventで登録されたイベントを削除する
 	//----------------------------------------------------------------------
 	removeAllEvents : function(){
-		var islt = !!_doc.removeEventListener;
-		for(var i=0,len=this.evlist.length;i<len;i++){
-			var e=this.evlist[i];
-			if(islt){ e.el.removeEventListener(e.event, e.func, e.capt);}
-			else    { e.el.detachEvent('on'+e.event, e.func);}
-		}
-		this.evlist=[];
+		this.removers.forEach(function(remover){ remover();});
+		this.removers=[];
 	},
 
 	//---------------------------------------------------------------------------

@@ -35,7 +35,7 @@ ui.toolarea = {
 					toolarea.items[ui.customAttr(el,"config")] = {el:el};
 				}
 				else if(el.className.match(/child/)){
-					var parent = el.parentNode, idname = ui.customAttr(parent,"config");
+					var parent = el.parentNode.parentNode, idname = ui.customAttr(parent,"config");
 					var item = toolarea.items[idname];
 					if(!item.children){ item.children=[];}
 					item.children.push(el);
@@ -61,6 +61,8 @@ ui.toolarea = {
 					pzpr.util.addEvent(el, "mousedown", toolarea, toolarea[roles[0]]);
 					if(!!role[1]){
 						pzpr.util.addEvent(el, "mouseup", toolarea, toolarea[roles[1]]);
+						pzpr.util.addEvent(el, "mouseleave", toolarea, toolarea[roles[1]]);
+						pzpr.util.addEvent(el, "touchcancel", toolarea, toolarea[roles[1]]);
 					}
 				}
 			}
@@ -171,10 +173,12 @@ ui.toolarea = {
 	//---------------------------------------------------------------------------
 	toolclick : function(e){
 		var el = e.target, parent = el.parentNode;
-		var idname = ui.customAttr(parent,"config"), value;
+		var idname = ui.customAttr(parent,"config")||ui.customAttr(parent.parentNode,"config"), value;
 		if(!!this.items[idname].checkbox){ value = !!el.checked;}
 		else                             { value = ui.customAttr(el,"value");}
 		ui.menuconfig.set(idname, value);
+		e.preventDefault();
+		e.stopPropagation();
 	},
 
 	//---------------------------------------------------------------------------

@@ -18,7 +18,7 @@ ui.listener =
 		puzzle.on('mouse',    this.onMouseInput);
 		puzzle.on('history',  this.onHistoryChange);
 		puzzle.on('trial',    this.onTrialModeChange);
-		puzzle.on('config',   this.onConfigChange);
+		puzzle.on('mode',     this.onModeChange);
 		
 		puzzle.on('adjust',     this.onAdjust);
 		puzzle.on('resize',     this.onResize);
@@ -126,7 +126,6 @@ ui.listener =
 	//---------------------------------------------------------------------------
 	// listener.onHistoryChange() 履歴変更時に呼び出される関数
 	// listener.onTrialModeChange() 仮置きモード変更時に呼び出される関数
-	// listener.onConfigChange()    Config値/Mode変更時に呼び出される関数
 	// listener.onModeChange()      Mode変更時に呼び出される関数
 	//---------------------------------------------------------------------------
 	onHistoryChange : function(puzzle){
@@ -137,11 +136,6 @@ ui.listener =
 	onTrialModeChange : function(puzzle, trialstage){
 		if(!!ui.currentpid){
 			ui.setdisplay("trialmode");
-		}
-	},
-	onConfigChange : function(puzzle, idname, newval){
-		if(idname==='mode'){
-			ui.listener.onModeChange(puzzle);
 		}
 	},
 	onModeChange : function(puzzle){

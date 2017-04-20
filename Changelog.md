@@ -1,17 +1,48 @@
 
 # ReleaseNote
 
+## Version 3.6.8-rc
+
+Release date: 2017/4/19
+
+pzpr.js version: v0.9.0-beta2
+
+### Improvement
+
+* Config: デフォルトでautocmpを有効にしました
+* Graphic: 2桁以上の数字表示を細く描画するよう修正
+* Cell: 数字の最大値を255から999に上げました
+* Mouse: スマートデバイスで盤面上ピンチズーム可能なよう修正
+* Mouse: 入力するオブジェクトを指定できるよう変更
+* Mouse: マウスの左右反転設定を復活
+* CellList: ウソワンにて、補助記号消去でばつ印が消えないように変更しました
+* icebarn: 向きを示す補助記号を入力可能にしました
+* kakuru: カックルの盤面表示を札幌ニコリストスタイルに変更
+
+### BugFix
+
+* util: 2 in 1 PCのFirefoxでマウス入力できるよう修正
+* util: 2本以上の指でタッチした時に盤面入力を無効にするよう修正
+* util: Pointer Event発生時のボタン検出処理を修正
+* Operation: 解答消去をUndoしたりするとヘルゴルフなどの数字が消えてしまう不具合を修正
+* html: "回答"を"解答"に変更
+* database: データを長期保存しないよう注意を追加
+
+### Minor Changes
+
+* Configs: 線や黒マスの繋がりをチェックする設定の位置を変更
+
 ## Version 3.6.7
 
 Release date: 2017/2/16
 
 pzpr.js version: v0.8.1
 
-#### Notable change
+### Notable change
 
 * p.html: InputMode選択のメニューを追加します
 
-#### BugFix
+### BugFix
 
 * akari: 正解判定ボタンを押した後照明が照らしているセルの情報が消えてしまう不具合を修正
 * kinkonkan: Opera12.17でキンコンカンのファイル出力がただしくなくなる不具合を修正
@@ -23,7 +54,7 @@ Release date: 2017/2/9
 
 pzpr.js version: v0.8.0
 
-#### BugFix
+### BugFix
 
 * slalom: 旗門の数字がうまく再生成できないことがあるのを修正
 

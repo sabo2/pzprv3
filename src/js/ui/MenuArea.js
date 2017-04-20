@@ -37,7 +37,7 @@ ui.menuarea = {
 		var menuarea = this;
 		function addmdevent(el,func){ pzpr.util.addEvent(el, "mousedown", menuarea, func);}
 		function mdfactory(role){
-			return function(e){ menuarea[role](e); if(menuarea.nohover){ e.stopPropagation();}};
+			return function(e){ menuarea[role](e); if(menuarea.nohover){ e.preventDefault(); e.stopPropagation();}};
 		}
 		ui.misc.walker(parent, function(el){
 			if(el.nodeType===1 && el.nodeName==="LI"){
@@ -72,6 +72,8 @@ ui.menuarea = {
 					addmdevent(el, mdfactory(roles[0]));
 					if(!!role[1]){
 						pzpr.util.addEvent(el, "mouseup", menuarea, menuarea[roles[1]]);
+						pzpr.util.addEvent(el, "mouseleave", menuarea, menuarea[roles[1]]);
+						pzpr.util.addEvent(el, "touchcancel", menuarea, menuarea[roles[1]]);
 					}
 					setevent = true;
 				}
@@ -86,7 +88,7 @@ ui.menuarea = {
 						addmdevent(el, function(e){ e.preventDefault();});
 					}
 					else{
-						addmdevent(el, function(e){ menuarea.showHovering(e,el);});
+						addmdevent(el, function(e){ menuarea.showHovering(e,el); e.preventDefault(); e.stopPropagation();});
 					}
 				}
 			}
@@ -138,8 +140,6 @@ ui.menuarea = {
 		ui.misc.walker(getEL("menupanel"), function(el){
 			if(el.nodeType===1 && !!el.classList && !el.contains(el0)){ el.classList.remove("hovering");}
 		});
-		e.preventDefault();
-		e.stopPropagation();
 	},
 	stopHovering : function(){
 		if(!this.nohover){ return;}
@@ -292,6 +292,13 @@ ui.menuarea = {
 		if(el.nodeName==="SPAN"){ el = el.parentNode;}
 		if(el.className!=="disabled"){
 			var idname = ui.customAttr(el,"popup");
+			if(idname==='database'){
+				if(pzpr.util.currentTime() > parseInt(localStorage['pzprv3_storage:warning-time'] || 0) + 43200000){ // 12hours
+					ui.notify.alert("ブラウザのデータクリア等で意図せずデータが消えることありますので、長期保存に使用しないでください",
+									"Don't use this for long-term use as these data will be cleared unexpectedly due to browser's cache clear etc.");
+					localStorage['pzprv3_storage:warning-time'] = pzpr.util.currentTime();
+				}
+			}
 			if(!pzpr.env.OS.mobile){
 				var pos = pzpr.util.getPagePos(e);
 				ui.popupmgr.open(idname, pos.px-8, pos.py-8);
@@ -331,7 +338,7 @@ ui.menuarea = {
 
 	//------------------------------------------------------------------------------
 	// menuarea.answercheck()「正答判定」ボタンを押したときの処理
-	// menuarea.ACconfirm()  「回答消去」ボタンを押したときの処理
+	// menuarea.ACconfirm()  「解答消去」ボタンを押したときの処理
 	// menuarea.ASconfirm()  「補助消去」ボタンを押したときの処理
 	//------------------------------------------------------------------------------
 	answercheck : function(){
@@ -342,7 +349,7 @@ ui.menuarea = {
 	},
 	ACconfirm : function(){
 		this.stopHovering();
-		ui.notify.confirm("回答を消去しますか？","Do you want to erase the Answer?", function(){ ui.puzzle.ansclear();});
+		ui.notify.confirm("解答を消去しますか？","Do you want to erase the Answer?", function(){ ui.puzzle.ansclear();});
 	},
 	ASconfirm : function(){
 		this.stopHovering();
