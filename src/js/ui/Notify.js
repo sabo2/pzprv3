@@ -65,22 +65,26 @@ ui.notify =
 	//---------------------------------------------------------------------------
 	// notify.closealert()  alertを非表示に戻す
 	//---------------------------------------------------------------------------
-	closealert : function(){
+	closealert : function(e){
 		getEL('assertbox').style.display = 'none';
 		getEL("notifybg").style.display = "none";
+		e.preventDefault();
+		e.stopPropagation();
 	},
 
 	//---------------------------------------------------------------------------
 	// notify.confirmtrue()  confirmでOKが押された時の処理を記入する
 	// notify.confirmfalse() confirmでCancelが押されたときの処理を記入する
 	//---------------------------------------------------------------------------
-	confirmtrue : function(){
+	confirmtrue : function(e){
 		if(!!this.onconfirm){ this.onconfirm();}
 		this.onconfirm = null;
-		this.confirmfalse();
+		this.confirmfalse(e);
 	},
-	confirmfalse : function(){
+	confirmfalse : function(e){
 		getEL('confirmbox').style.display = 'none';
 		getEL("notifybg").style.display = "none";
+		e.preventDefault();
+		e.stopPropagation();
 	}
 };
