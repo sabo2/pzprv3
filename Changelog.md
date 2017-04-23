@@ -1,6 +1,18 @@
 
 # ReleaseNote
 
+## Version 3.6.8-patch1
+
+Release date: 2017/4/23
+
+pzpr.js version: v0.9.1
+
+### BugFix
+
+* Boot: IE及びおよびEdgeでSVGのtxtLength指定にミスっていたのでcanvasを使用するよう変更
+* notify: ボタン押下時イベント伝播をストップさせるよう修正
+* toolarea: チェックボックス押下時にチェックが切り替わらない不具合を修正
+
 ## Version 3.6.8
 
 Release date: 2017/4/21

@@ -66,6 +66,11 @@ function startPuzzle(){
 	var pzl = onload_pzl, pid = pzl.pid;
 	if(ui.debugmode){ onload_option.mode = 'play';}
 	
+	/* IE SVGのtextLengthがうまく指定できていないので回避策を追加 */
+	if((function(ua){ return ua.match(/MSIE/) || (ua.match(/AppleWebKit/) && ua.match(/Edge/));})(navigator.userAgent)){
+		onload_option.graphic = 'canvas';
+	}
+	
 	/* パズルオブジェクトの作成 */
 	var element = document.getElementById('divques');
 	var puzzle = ui.puzzle = new pzpr.Puzzle(element, onload_option);

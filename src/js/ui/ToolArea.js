@@ -177,8 +177,10 @@ ui.toolarea = {
 		if(!!this.items[idname].checkbox){ value = !!el.checked;}
 		else                             { value = ui.customAttr(el,"value");}
 		ui.menuconfig.set(idname, value);
-		e.preventDefault();
-		e.stopPropagation();
+		if(e.type!=='click'){
+			e.preventDefault();
+			e.stopPropagation();
+		}
 	},
 
 	//---------------------------------------------------------------------------
