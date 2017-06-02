@@ -75,6 +75,8 @@ ui.popupmgr =
 		this.offset.px = pos.px - parseInt(popel.style.left,10);
 		this.offset.py = pos.py - parseInt(popel.style.top,10);
 		ui.event.enableMouse = false;
+		e.preventDefault();
+		e.stopPropagation();
 	},
 	titlebarup : function(e){
 		var popel = this.movingpop;
@@ -142,15 +144,18 @@ ui.popupmgr.addpopup('template',
 	},
 	walkEvent : function(parent){
 		var popup = this;
+		function eventfactory(role){
+			return function(e){ popup[role](e); if(e.type!=='click'){ e.preventDefault(); e.stopPropagation();}};
+		}
 		ui.misc.walker(parent, function(el){
 			if(el.nodeType!==1){ return;}
 			var role = ui.customAttr(el,"buttonExec");
 			if(!!role){
-				pzpr.util.addEvent(el, (!pzpr.env.API.touchevent ? "click" : "mousedown"), popup, popup[role]);
+				pzpr.util.addEvent(el, (!pzpr.env.API.touchevent ? "click" : "mousedown"), popup, eventfactory(role));
 			}
 			role = ui.customAttr(el,"changeExec");
 			if(!!role){
-				pzpr.util.addEvent(el, "change", popup, popup[role]);
+				pzpr.util.addEvent(el, "change", popup, eventfactory(role));
 			}
 		});
 	},
