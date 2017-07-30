@@ -359,7 +359,7 @@ ui.keypopup =
 			_div = createEL('div');
 			_div.className = 'kpcell kpcellvalid';
 			_div.onclick = function(e){ e.preventDefault();};
-			ui.event.addEvent(_div, "mousedown", ui.puzzle, function(){ this.key.keyevent(ca,0);});
+			ui.event.addEvent(_div, "mousedown", ui.puzzle, function(e){ this.key.keyevent(ca,0); e.preventDefault(); e.stopPropagation();});
 			pzpr.util.unselectable(_div);
 		}
 		else{

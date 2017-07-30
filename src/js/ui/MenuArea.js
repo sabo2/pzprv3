@@ -35,9 +35,12 @@ ui.menuarea = {
 	//---------------------------------------------------------------------------
 	walkElement : function(parent){
 		var menuarea = this;
-		function addmdevent(el,func){ pzpr.util.addEvent(el, "mousedown", menuarea, func);}
-		function mdfactory(role){
+		function menufactory(role){
 			return function(e){ menuarea[role](e); if(menuarea.nohover){ e.preventDefault(); e.stopPropagation();}};
+		}
+		function addmenuevent(el,type,role){
+			var func = (typeof role==='function' ? role : menufactory(role));
+			pzpr.util.addEvent(el, type, menuarea, func);
 		}
 		ui.misc.walker(parent, function(el){
 			if(el.nodeType===1 && el.nodeName==="LI"){
@@ -46,7 +49,7 @@ ui.menuarea = {
 				if(!!idname){
 					menuarea.menuitem[idname] = {el:el};
 					if(el.className==="check"){
-						addmdevent(el, menuarea.checkclick);
+						addmenuevent(el, "mousedown", "checkclick");
 						setevent = true;
 					}
 				}
@@ -57,38 +60,38 @@ ui.menuarea = {
 					if(!item.children){ item.children=[];}
 					item.children.push(el);
 					
-					addmdevent(el, menuarea.childclick);
+					addmenuevent(el, "mousedown", "childclick");
 					setevent = true;
 				}
 				
 				var role = ui.customAttr(el,"menuExec");
 				if(!!role){
-					addmdevent(el, mdfactory(role));
+					addmenuevent(el, "mousedown", role);
 					setevent = true;
 				}
 				role = ui.customAttr(el,"pressExec");
 				if(!!role){
 					var roles = role.split(/,/);
-					addmdevent(el, mdfactory(roles[0]));
+					addmenuevent(el, "mousedown", roles[0]);
 					if(!!role[1]){
-						pzpr.util.addEvent(el, "mouseup", menuarea, menuarea[roles[1]]);
-						pzpr.util.addEvent(el, "mouseleave", menuarea, menuarea[roles[1]]);
-						pzpr.util.addEvent(el, "touchcancel", menuarea, menuarea[roles[1]]);
+						addmenuevent(el, "mouseup", roles[1]);
+						addmenuevent(el, "mouseleave", roles[1]);
+						addmenuevent(el, "touchcancel", roles[1]);
 					}
 					setevent = true;
 				}
 				role = ui.customAttr(el,"popup");
 				if(!!role){
-					addmdevent(el, mdfactory("disppopup"));
+					addmenuevent(el, "mousedown", "disppopup");
 					setevent = true;
 				}
 				
 				if(!setevent){
 					if(!menuarea.nohover || !el.querySelector("menu")){
-						addmdevent(el, function(e){ e.preventDefault();});
+						addmenuevent(el, "mousedown", function(e){ e.preventDefault();});
 					}
 					else{
-						addmdevent(el, function(e){ menuarea.showHovering(e,el); e.preventDefault(); e.stopPropagation();});
+						addmenuevent(el, "mousedown", function(e){ menuarea.showHovering(e,el); e.preventDefault(); e.stopPropagation();});
 					}
 				}
 			}
@@ -97,7 +100,7 @@ ui.menuarea = {
 				if(!!label && label.match(/^__(.+)__(.+)__$/)){
 					menuarea.captions.push({menu:el, str_jp:RegExp.$1, str_en:RegExp.$2});
 					if(menuarea.nohover){
-						addmdevent(el, function(e){ e.stopPropagation();});
+						addmenuevent(el, "mousedown", function(e){ e.stopPropagation();});
 					}
 				}
 			}

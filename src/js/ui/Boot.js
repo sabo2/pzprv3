@@ -118,6 +118,7 @@ function importURL(){
 	else if(search.match(/^m\+/)) { startmode = 'EDITOR';}
 	else if(search.match(/_edit/)){ startmode = 'EDITOR';}
 	else if(search.match(/_play/)){ startmode = 'PLAYER';}
+	if(!require_accesslog){ startmode = 'EDITOR';}  /* index.htmlからの読み込み時はEDITORにする */
 
 	search=search.replace(/^m\+/,'');
 	search=search.replace(/(_test|_edit|_play)/,'');

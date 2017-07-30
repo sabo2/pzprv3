@@ -46,10 +46,7 @@
 
 ### Reserver
 * Nagareru-loop
-
-### Reserver (Omopa)
 * Moon or Sun
-* Onsen-meguri
 
 ### Nigun (Legacy)
 * BAG (Correl, Cave)
@@ -68,6 +65,7 @@
 * Icelom2
 * Kouchoku
 * Ring-ring
+* Onsen-meguri
 
 ## Line Puzzles
 ### Regular
@@ -75,14 +73,15 @@
 * Bridges (Hashi)
 * Herugolf
 
-### Reserver
-* Juosan
+### Reserver (Omopa)
+* Army Ants
 
 ### Nigun (Legacy)
 * Hotaru Beam
 * Tatebo-yokobo
 * Return home
 * Yosenabe
+* Juosan
 
 ### Omopa
 * Shirokuro-link
@@ -180,3 +179,4 @@
 
 ### Non-nikoli puzzle
 * Yin-Yang
+* Wall Logic

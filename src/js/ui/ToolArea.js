@@ -28,6 +28,10 @@ ui.toolarea = {
 	//---------------------------------------------------------------------------
 	walkElement : function(parent){
 		var toolarea = this;
+		function btnfactory(role){
+			return function(e){ toolarea[role](e); if(e.type!=='click'){ e.preventDefault(); e.stopPropagation();}};
+		}
+		function addbtnevent(el,type,role){ pzpr.util.addEvent(el, type, toolarea, btnfactory(role));}
 		ui.misc.walker(parent, function(el){
 			if(el.nodeType===1){
 				/* ツールパネル領域 */
@@ -40,29 +44,29 @@ ui.toolarea = {
 					if(!item.children){ item.children=[];}
 					item.children.push(el);
 					
-					pzpr.util.addEvent(el, "mousedown", toolarea, toolarea.toolclick);
+					addbtnevent(el, "mousedown", "toolclick");
 				}
 				else if(el.nodeName==="INPUT" && el.type==="checkbox"){
 					var parent = el.parentNode, idname = ui.customAttr(parent,"config");
 					if(!idname){ return;}
 					toolarea.items[idname].checkbox=el;
 					
-					pzpr.util.addEvent(el, "click", toolarea, toolarea.toolclick);
+					addbtnevent(el, "click", "toolclick");
 				}
 				
 				/* ボタン領域 */
 				var role = ui.customAttr(el,"buttonExec");
 				if(!!role){
-					pzpr.util.addEvent(el, (!pzpr.env.API.touchevent ? "click" : "mousedown"), toolarea, toolarea[role]);
+					addbtnevent(el, (!pzpr.env.API.touchevent ? "click" : "mousedown"), role);
 				}
 				role = ui.customAttr(el,"pressExec");
 				if(!!role){
 					var roles = role.split(/,/);
-					pzpr.util.addEvent(el, "mousedown", toolarea, toolarea[roles[0]]);
+					addbtnevent(el, "mousedown", roles[0]);
 					if(!!role[1]){
-						pzpr.util.addEvent(el, "mouseup", toolarea, toolarea[roles[1]]);
-						pzpr.util.addEvent(el, "mouseleave", toolarea, toolarea[roles[1]]);
-						pzpr.util.addEvent(el, "touchcancel", toolarea, toolarea[roles[1]]);
+						addbtnevent(el, "mouseup", roles[1]);
+						addbtnevent(el, "mouseleave", roles[1]);
+						addbtnevent(el, "touchcancel", roles[1]);
 					}
 				}
 			}
@@ -177,10 +181,6 @@ ui.toolarea = {
 		if(!!this.items[idname].checkbox){ value = !!el.checked;}
 		else                             { value = ui.customAttr(el,"value");}
 		ui.menuconfig.set(idname, value);
-		if(e.type!=='click'){
-			e.preventDefault();
-			e.stopPropagation();
-		}
 	},
 
 	//---------------------------------------------------------------------------
