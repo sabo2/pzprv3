@@ -20,9 +20,8 @@ ui.menuconfig = {
 	init : function(){
 		this.list = {};
 		
-		this.add('autocheck',      ui.puzzle.playeronly);	/* 正解自動判定機能 */
-		this.add('autocheck_once', ui.puzzle.playeronly);	/* 正解自動判定機能 */
-		this.list.autocheck_once.volatile = true;
+		this.add('autocheck',      ui.puzzle.playeronly);					/* 正解自動判定機能 */
+		this.add('autocheck_once', ui.puzzle.playeronly, {volatile:true});	/* 正解自動判定機能 */
 		
 		this.add('keypopup', false);						/* キーポップアップ (数字などのパネル入力) */
 
@@ -32,25 +31,27 @@ ui.menuconfig = {
 		
 		this.add('toolarea', true);							/* ツールエリアの表示 */
 		
-		this.add('inputmode', 'auto');						/* inputMode */
-		this.list.inputmode.volatile = true;
+		this.add('inputmode', 'auto', {volatile:true});		/* inputMode */
 		
-		this.add('lrinvert', false);						/* マウスの左右ボタンを反転する設定 */
-		this.list.lrinvert.volatile = true;
+		this.add('lrinvert', false, {volatile:true});		/* マウスの左右ボタンを反転する設定 */
 		
-		this.add('language', pzpr.lang, ['en','ja']);		/* 言語設定 */
+		this.add('language', pzpr.lang, {option:['en','ja']});	/* 言語設定 */
 
 		/* puzzle.configを一括で扱うため登録 */
 		for(var name in ui.puzzle.config.list){
-			this.add(name, ui.puzzle.config.list[name].defval, ui.puzzle.config.list[name].option);
-			this.list[name].volatile = true;
-			this.list[name].puzzle = true;
+			var item = ui.puzzle.config.list[name], extoption = {puzzle:true};
+			if(!!item.option){ extoption.option = item.option;}
+			this.add(name, item.defval, extoption);
 		}
-		this.add('mode', (!ui.puzzle.playmode?'edit':'play'), ['edit','play']);
-		this.list.mode.volatile = true;
-		this.list.mode.puzzle = true;
+		this.add('mode', (!ui.puzzle.playmode?'edit':'play'), {option:['edit','play'], puzzle:true});
 	},
-	add : Config.add,
+	add : function(name, defvalue, extoption){
+		Config.add.call(this, name, defvalue, extoption);
+		if(!!extoption && extoption.puzzle){
+			var item = this.list[name];
+			item.volatile = item.puzzle = true;
+		}
+	},
 
 	//---------------------------------------------------------------------------
 	// menuconfig.sync()  URL形式などによって変化する可能性がある設定値を同期する
@@ -65,12 +66,14 @@ ui.menuconfig = {
 		if(!!idname){ this.set(idname, ui.puzzle.getConfig(idname));}
 		
 		this.set('lrinvert', ui.puzzle.mouse.inversion);
+		this.set('autocmp',  ui.puzzle.getConfig('autocmp'));
 	},
 
 	//---------------------------------------------------------------------------
-	// menuconfig.getCurrnetName()  指定されたidを現在使用している名前に変換する
+	// menuconfig.getCurrentName()  指定されたidを現在使用している名前に変換する
 	//---------------------------------------------------------------------------
-	getCurrnetName : Config.getCurrnetName,
+	getCurrentName : Config.getCurrentName,
+	getNormalizedName : Config.getNormalizedName,
 
 	//---------------------------------------------------------------------------
 	// menuconfig.get()  各フラグの設定値を返す
@@ -78,13 +81,13 @@ ui.menuconfig = {
 	// menuconfig.reset() 各フラグの設定値を初期化する
 	//---------------------------------------------------------------------------
 	get : Config.get,
-	set : function(idname, newval){
-		idname = this.getCurrnetName(idname);
+	set : function(argname, newval){
+		var names = this.getNormalizedName(argname), idname = names.name;
 		if(!this.list[idname]){ return;}
 		if(idname==='mode'){ ui.puzzle.setMode(newval); newval = (!ui.puzzle.playmode?'edit':'play');}
 		else if(idname==='inputmode'){ ui.puzzle.mouse.setInputMode(newval); newval = ui.puzzle.mouse.inputMode;}
 		
-		newval = this.setproper(idname, newval);
+		newval = this.setproper(names, newval);
 		
 		if(idname==='language'){ pzpr.lang = newval;}
 		else if(this.list[idname].puzzle){ ui.puzzle.setConfig(idname, newval);}
