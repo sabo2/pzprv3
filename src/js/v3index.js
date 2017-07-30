@@ -430,21 +430,21 @@ var pstate = {
 	lunch :['nurikabe','tilepaint','norinori','nurimaze','heyawake','hitori','slither','mashu','yajilin',
 			'slalom','numlin','hashikake','herugolf','shikaku','tentaisho','kakuro','sudoku','fillomino','ripple',
 			'akari','shakashaka'],
-	testa :['nagare','juosan','dosufuwa','usoone'],
-	trial :['moonsun','stostone','onsen'],
+	testa :['nagare','dosufuwa','usoone','moonsun'],
+	trial :['stostone','armyants'],
 	lunch2:['box','lits','kurodoko','goishi'],
 	lunch3:['minarism','factors'],
 	nigun :['creek','mochikoro','tasquare','kurotto','shimaguni','yajikazu','bag','country','reflect','icebarn',
 			'firefly','kaero','yosenabe','bdblock','fivecells','sashigane','tatamibari','sukoro',
-			'gokigen','tateyoko','kinkonkan','hebi','makaro'],
+			'gokigen','tateyoko','kinkonkan','hebi','makaro','juosan'],
 	omopa :['nuribou','tawa','lookair','paintarea','chocona','kurochute','mejilink',
 			'pipelink','loopsp','nagenawa','kouchoku','ringring','pipelinkr','barns','icelom','icelom2',
 			'wblink','kusabi','ichimaga','ichimagam','ichimagax','amibo','bonsan','heyabon','rectslider',
 			'nawabari','triplace','fourcells','kramma','kramman','shwolf','loute','fillmat','usotatami','yajitatami',
 			'kakuru','view','bosanowa','nanro','cojun','renban','sukororoom','hanare','kazunori',
-			'wagiri','shugaku','hakoiri','roma','toichika','cbblock','nondango'],
+			'wagiri','shugaku','hakoiri','roma','toichika','cbblock','nondango','onsen'],
 	orig  :['mochinyoro','ayeheya','aho'],
-	genre :['tapa','arukone','yinyang','building','kropki','starbattle','easyasabc']
+	genre :['tapa','arukone','yinyang','building','kropki','starbattle','easyasabc','walllogic']
 };
 var tabstate = {
 	lunch:'lunch', lunch2:'lunch', lunch3:'nigun',
