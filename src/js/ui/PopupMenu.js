@@ -644,21 +644,21 @@ ui.popupmgr.addpopup('imagesave',
 		catch(e){
 			ui.notify.alert('画像の出力に失敗しました','Fail to Output the Image');
 		}
+		if(!dataurl){ /* No Data URL */ return;}
 		
 		/* 出力された画像を開くルーチン */
-		if(!dataurl){/* dataurlが存在しない */}
-		else if(!IEkei){
-			window.open(dataurl, '', '');
-		}
-		else{
-			// IE系だと？アドレスバーの長さが2KBだったり、
-			// そもそもDataURL入れても何も起こらなかったりする対策
+		function writeContent(blob){
+			var filename = this.form.filename.value;
 			var cdoc = window.open('', '', '').document;
 			cdoc.open();
 			cdoc.writeln("<!DOCTYPE html>\n<HTML LANG=\"ja\">\n<HEAD>");
 			cdoc.writeln("<META CHARSET=\"utf-8\">");
 			cdoc.writeln("<TITLE>ぱずぷれv3<\/TITLE>\n<\/HEAD><BODY>");
-			if(type!=='svg'){
+			if(!!blob){
+				cdoc.writeln("<img src=\"", dataurl, "\"><br>\n");
+				cdoc.writeln("<a href=\"", cdoc.defaultView.URL.createObjectURL(blob), "\" download=\"", filename, "\">Download ", filename, "</a>");
+			}
+			else if(!IEkei || type!=='svg'){
 				cdoc.writeln("<img src=\"", dataurl, "\">");
 			}
 			else{
@@ -666,6 +666,13 @@ ui.popupmgr.addpopup('imagesave',
 			}
 			cdoc.writeln("<\/BODY>\n<\/HTML>");
 			cdoc.close();
+		}
+		if(pzpr.env.API.anchor_download){
+			// ChromeでDataURLが直接開けない対策
+			ui.puzzle.toBlob(writeContent.bind(this), type, 1.0, option);
+		}
+		else{
+			writeContent(null);
 		}
 	}
 });
