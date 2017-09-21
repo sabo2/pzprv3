@@ -67,6 +67,7 @@ ui.menuconfig = {
 		
 		this.set('lrinvert', ui.puzzle.mouse.inversion);
 		this.set('autocmp',  ui.puzzle.getConfig('autocmp'));
+		this.set('autoerr',  ui.puzzle.getConfig('autoerr'));
 	},
 
 	//---------------------------------------------------------------------------
@@ -90,7 +91,7 @@ ui.menuconfig = {
 		newval = this.setproper(names, newval);
 		
 		if(idname==='language'){ pzpr.lang = newval;}
-		else if(this.list[idname].puzzle){ ui.puzzle.setConfig(idname, newval);}
+		else if(this.list[idname].puzzle){ ui.puzzle.setConfig(argname, newval);}
 		
 		this.configevent(idname,newval);
 	},
