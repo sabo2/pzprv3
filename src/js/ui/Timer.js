@@ -39,6 +39,9 @@ ui.timer =
 		var self = this;
 		this.TID = setInterval(function(){ self.update();}, timerInterval);
 	},
+	stop : function(){
+		clearInterval(this.TID);
+	},
 	update : function(){
 		this.current = pzpr.util.currentTime();
 
@@ -76,6 +79,7 @@ ui.timer =
 		var puzzle = ui.puzzle;
 		if(this.current>this.nextACtime && puzzle.playmode && !puzzle.checker.inCheck && puzzle.board.trialstage===0){
 			if(puzzle.check(false).complete){
+				ui.timer.stop();
 				puzzle.mouse.mousereset();
 				ui.menuconfig.set('autocheck_once',false);
 				ui.notify.alert("正解です！","Complete!");
