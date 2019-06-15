@@ -1,5 +1,4 @@
 // MenuConfig.js v3.4.1
-/* global pzpr:false, ui:false, JSON:false */
 
 (function(){
 //---------------------------------------------------------------------------

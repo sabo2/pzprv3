@@ -1,6 +1,4 @@
 // Debug.js v3.4.0
-/* jshint devel:true */
-/* global ui:false */
 
 //---------------------------------------------------------------------------
 // ★Popup_Debugクラス  poptest関連のポップアップメニュー表示用
@@ -129,7 +127,7 @@ ui.debug =
 	getTA : function(){ return document.getElementById('testarea').value;},
 	setTA : function(str){ document.getElementById('testarea').value  = str;},
 	addTA : function(str){
-		if(!!window.console){ console.log(str);}
+		if(!!window.console){ console.log(str);} // eslint-disable-line no-console
 		document.getElementById('testarea').value += (str+"\n");
 	},
 

@@ -1,5 +1,5 @@
 // Menu.js v3.4.0
-/* global ui:false, _doc:false, getEL:false */
+/* global _doc:readonly, getEL:readonly */
 
 //---------------------------------------------------------------------------
 // ★PopupManagerクラス ポップアップメニューを管理します

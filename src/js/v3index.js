@@ -1,4 +1,4 @@
-/* global File:false, JSON:false */
+
 (function(){
 
 /* variables */
@@ -320,13 +320,12 @@ v3index.dbif.extend({
 		}
 	},
 	importlist : function(callback){
-		/* jshint eqnull:true */
 		DBlist = self.list = [];
 		for(var i=1;true;i++){
 			var data = localStorage[pheader+i];
 			if(!data){ break;}
 			var row = JSON.parse(data);
-			if(row.id==null){ break;}
+			if(row.id==null){ break;} // eslint-disable-line eqeqeq
 			var pzl = pzpr.parser(row.pdata);
 			row.pid = pzl.pid;
 			row.col = pzl.cols;
@@ -370,7 +369,6 @@ v3index.dbif.extend({
 		}
 	},
 	getcaption : function(row){
-		/* jshint eqeqeq:false */
 		var datestr = (function(){
 			var ni = function(num){ return (num<10?"0":"")+num;}, str = "", date = new Date();
 			date.setTime(row.time*1000);
@@ -406,11 +404,10 @@ v3index.dbif.extend({
 		}
 	},
 	getvalue : function(){
-		/* jshint eqeqeq:false */
 		var val = _form.datalist.value;
 		if(val!==""){
 			for(var i=0;i<DBlist.length;i++){
-				if(DBlist[i].id==val){ return i;}
+				if(DBlist[i].id==val){ return i;} // eslint-disable-line eqeqeq
 			}
 		}
 		return -1;

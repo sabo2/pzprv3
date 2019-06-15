@@ -1,5 +1,5 @@
 // Notify.js v3.5.0
-/* global ui:false, getEL:false */
+/* global getEL:readonly */
 
 //---------------------------------------------------------------------------
 // ★Notifyクラス alert, confirm関連を管理します

@@ -1,5 +1,5 @@
 // DataBase.js v3.4.0
-/* global ui:false, createEL:false, getEL:false, JSON:false */
+/* global createEL:readonly, getEL:readonly */
 
 //---------------------------------------------------------------------------
 // ★ProblemDataクラス データベースに保存する1つのデータを保持する
@@ -158,11 +158,10 @@ ui.database = {
 	// dbm.updateDialog() 管理テーブル情報やダイアログの表示を更新する
 	//---------------------------------------------------------------------------
 	getDataID : function(){
-		/* jshint eqeqeq:false */
 		var val = document.database.datalist.value;
 		if(val!=="new" && val!==""){
 			for(var i=0;i<this.DBlist.length;i++){
-				if(this.DBlist[i].id==val){ return i;}
+				if(this.DBlist[i].id==val){ return i;} // eslint-disable-line eqeqeq
 			}
 		}
 		return -1;
@@ -196,11 +195,10 @@ ui.database = {
 		this.appendNewOption(-1, ui.selectStr("&nbsp;&lt;新しく保存する&gt;","&nbsp;&lt;New Save&gt;"));
 	},
 	appendNewOption : function(id, str){
-		/* jshint eqeqeq:false */
 		var opt = createEL('option');
-		opt.setAttribute('value', (id!=-1 ? id : "new"));
+		opt.setAttribute('value', (id!=-1 ? id : "new")); // eslint-disable-line eqeqeq
 		opt.innerHTML = str;
-		if(this.DBsid==id){ opt.setAttribute('selected', "selected");}
+		if(this.DBsid==id){ opt.setAttribute('selected', "selected");} // eslint-disable-line eqeqeq
 
 		document.database.datalist.appendChild(opt);
 	},
@@ -430,12 +428,11 @@ ui.DataBaseHandler_LS.prototype =
 		{ja:'アゼン'  , en:'Expert'}
 	],
 	convertfrom2 : function(){
-		/* jshint eqeqeq:false */
 		for(var i=1;true;i++){
 			var item = new ui.ProblemData(localStorage[this.pheader+i]);
 			if(item.id===null){ break;}
 			var pzl = pzpr.parser(item.pdata);
-			if(item.hard!='0'){ pzl.metadata.hard    = this.hardstr[item.hard][pzpr.lang];}
+			if(item.hard!='0'){ pzl.metadata.hard    = this.hardstr[item.hard][pzpr.lang];} // eslint-disable-line eqeqeq
 			if(!!item.comment){ pzl.metadata.comment = item.comment;}
 			item.pdata = pzl.generate();
 			localStorage[this.pheader+i] = item.toString();
@@ -444,7 +441,7 @@ ui.DataBaseHandler_LS.prototype =
 	convertfrom1 : function(){
 		var keys=['id', 'col', 'row', 'hard', 'pdata', 'time', 'comment'];
 
-		var timemax=0, countall=0;
+		var timemax=0;
 		delete localStorage['pzprv3_manage'];
 		delete localStorage['pzprv3_manage:manage'];
 
@@ -458,7 +455,6 @@ ui.DataBaseHandler_LS.prototype =
 			delete localStorage[mheader+'time'];
 
 			if(ptime > timemax){ ptime = timemax;}
-			countall += count;
 
 			delete localStorage['pzprv3_'+pid];
 			delete localStorage['pzprv3_'+pid+':puzdata'];

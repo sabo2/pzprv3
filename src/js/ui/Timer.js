@@ -1,5 +1,4 @@
 // Timer.js v3.4.0
-/* global ui:false */
 
 (function(){
 
@@ -47,7 +46,7 @@ ui.timer =
 		this.current = pzpr.util.currentTime();
 
 		if(ui.puzzle.playeronly){ this.updatetime();}
-		if(ui.menuconfig.get('autocheck_once') && !ui.debug.alltimer){ this.ACcheck();}
+		if(ui.menuconfig.get('autocheck_once') && !ui.debug.alltimer){ this.autocheck();}
 	},
 
 	//---------------------------------------------------------------------------
@@ -91,9 +90,9 @@ ui.timer =
 	},
 
 	//---------------------------------------------------------------------------
-	// tm.ACcheck()    自動正解判定を呼び出す
+	// tm.autocheck()  自動正解判定を呼び出す
 	//---------------------------------------------------------------------------
-	ACcheck : function(){
+	autocheck : function(){
 		var puzzle = ui.puzzle;
 		if(this.current>this.nextACtime && puzzle.playmode && !puzzle.checker.inCheck && puzzle.board.trialstage===0){
 			if(puzzle.check(false).complete){

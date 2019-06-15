@@ -1,5 +1,5 @@
 // ToolArea.js v3.4.0
-/* global ui:false, getEL:false */
+/* global getEL:readonly */
 
 // メニュー描画/取得/html表示系
 // toolareaオブジェクト
@@ -191,8 +191,8 @@ ui.toolarea = {
 	undostop : function(){ ui.undotimer.stopButtonUndo();},
 	redo     : function(){ ui.undotimer.startButtonRedo();},
 	redostop : function(){ ui.undotimer.stopButtonRedo();},
-	ansclear : function(){ ui.menuarea.ACconfirm();},
-	subclear : function(){ ui.menuarea.ASconfirm();},
+	ansclear : function(){ ui.menuarea.answerclear();},
+	subclear : function(){ ui.menuarea.submarkclear();},
 	irowake  : function(){ ui.puzzle.irowake();},
 	encolorall : function(){ ui.puzzle.board.encolorall();}, /* 天体ショーのボタン */
 	dropblocks : function(){ ui.puzzle.board.operate('drop');},

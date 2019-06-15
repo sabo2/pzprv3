@@ -69,31 +69,10 @@ module.exports = function(grunt){
           { src: 'src/js/v3index.js',           dest: 'dist/js/v3index.js' }
         ]
       }
-    },
-
-    jshint: {
-      options: {
-        jshintrc: true
-      },
-      all: {
-        src: [
-          'Gruntfile.js',
-          'src/js/*.js',
-          'src/js/ui/*.js',
-          'tests/**/*.js'
-        ]
-      },
-      source:{
-        src: [
-          'src/js/*.js',
-          'src/js/ui/*.js'
-        ]
-      }
     }
   });
   
-  grunt.registerTask('lint', ['newer:jshint:all']);
-  grunt.registerTask('default', ['lint:source', 'build']);
-  grunt.registerTask('release', ['lint:source', 'build']);
+  grunt.registerTask('default', ['build']);
+  grunt.registerTask('release', ['build']);
   grunt.registerTask('build',   ['newer:copy:ui', 'newer:copy:pzpr', 'newer:concat:ui', 'newer:uglify:ui']);
 };
