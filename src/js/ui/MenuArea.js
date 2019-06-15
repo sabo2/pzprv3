@@ -345,7 +345,9 @@ ui.menuarea = {
 	// menuarea.ASconfirm()  「補助消去」ボタンを押したときの処理
 	//------------------------------------------------------------------------------
 	answercheck : function(){
-		var str = "", texts = ui.puzzle.check(true).text.split(/\n/);
+		var str = "", checkinfo = ui.puzzle.check(true);
+		if(checkinfo.complete){ ui.timer.notifyComplete();}
+		var texts = checkinfo.text.split(/\n/);
 		for(var i=0;i<texts.length;i++){ str += "<div style=\"margin-bottom:6pt;\">"+texts[i]+"</div>";}
 		this.stopHovering();
 		ui.notify.alert(str);
