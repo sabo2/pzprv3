@@ -15,9 +15,10 @@
   "author": "sabo2",
   "license": "MIT",
   "repository": {
-    "type": "hg",
-    "url": "https://bitbucket.org/sabo2/pzprv3-ui"
+    "type": "git",
+    "url": "https://github.com/sabo2/pzprv3"
   },
+  "homepage": "http://pzv.js",
   "scripts": {
     "build": "grunt default",
     "release": "grunt release",
