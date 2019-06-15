@@ -17,8 +17,6 @@ module.exports = function(grunt){
       version: pzprversion
     },
 
-    clean: ['dist/*', 'pzprv3-*.{zip,tar.gz,tar.bz2}'],
-
     copy: {
       pzpr: {
         files : [
@@ -95,7 +93,7 @@ module.exports = function(grunt){
   });
   
   grunt.registerTask('lint', ['newer:jshint:all']);
-  grunt.registerTask('default', ['lint:source',          'build']);
-  grunt.registerTask('release', ['lint:source', 'clean', 'build']);
+  grunt.registerTask('default', ['lint:source', 'build']);
+  grunt.registerTask('release', ['lint:source', 'build']);
   grunt.registerTask('build',   ['newer:copy:ui', 'newer:copy:pzpr', 'newer:concat:ui', 'newer:uglify:ui']);
 };
