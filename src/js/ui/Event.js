@@ -1,5 +1,5 @@
 // Event.js v3.4.0
-/* global ui:false, _doc:false */
+/* global _doc:readonly */
 
 //---------------------------------------------------------------------------
 // ★UIEventsクラス イベント設定の管理を行う
@@ -45,14 +45,15 @@ ui.event =
 		this.addEvent(_doc, 'blur', this, this.onblur_func);
 
 		// onresizeイベントを割り当てる
-		var evname = (!pzpr.env.OS.iOS ? 'resize' : 'orientationchange');
-		this.addEvent(window, evname, this, this.onresize_func);
+		this.addEvent(window, 'resize', this, this.onresize_func);
+		this.addEvent(window, 'orientationchange', this, this.onresize_func);
 
 		// onbeforeunloadイベントを割り当てる
 		this.addEvent(window, 'beforeunload', this, this.onbeforeunload_func);
 
 		// onunloadイベントを割り当てる
 		this.addEvent(window, 'unload', this, this.onunload_func);
+		this.addEvent(window, 'pagehide', this, this.onunload_func);
 
 		// エラー表示を消去する
 		this.addEvent(document.getElementById('quesboard'), 'mousedown', this, function(e){

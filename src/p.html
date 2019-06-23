@@ -179,6 +179,7 @@
      </menu></li>
      <hr>
      <li class="check" data-config="bgcolor"><span>__背景色入力__Input BGcolor__</span></li>
+     <li class="check" data-config="support_tri"><span>__三角形入力補助__Support Input Triangle__</span></li>
      <li class="check" data-config="autocmp"><span data-autocmp-type="number">__数字をグレーにする__Set Grey Color__</span
                                             ><span data-autocmp-type="room">__背景色をつける__Paint background__</span
                                             ><span data-autocmp-type="akari">__背景色をつける__Paint background__</span
@@ -214,7 +215,7 @@
      <li><span>__リンク__Link__</span> -&gt;<menu id="menu_link" label="__リンク__Link__">
        <li><a target="_blank" href="./">__ぱずぷれv3のページへ__Jump to PUZ-PRE v3 page__</a></li>
        <li><a target="_blank" href="http://indi.s58.xrea.com/">__連続発破保管庫TOPへ__Jump to indi.s58.xrea.com__</a></li>
-       <li><a target="_blank" href="http://d.hatena.ne.jp/sunanekoroom/">__はっぱ日記(blog)へ__Jump to my blog__</a></li>
+       <li><a target="_blank" href="https://sunanekoroom.hatenadiary.org/">__はっぱ日記(blog)へ__Jump to my blog__</a></li>
      </menu></li>
      <li><span>__デバッグ__Debug__</span> -&gt;<menu>
        <li data-menu-exec="dispdebug"><span>__pop_testを表示__Show pop_test window__</span></li>
@@ -330,6 +331,10 @@
       <input type="checkbox">
       <span>__セルの中央をクリックした時に背景色の入力を有効にする__Enable to Input BGColor when the center of the cell is clicked__</span>
     </div>
+    <div class="config" data-config="support_tri">
+      <input type="checkbox">
+      <span>__三角形の入力補助を行う__Enable to support inputting triangles__</span>
+    </div>
     <div class="config" data-config="autocmp">
       <input type="checkbox">
       <span data-autocmp-type="number">__正しい数字をグレーにする__Grey each correct number__</span>
@@ -411,7 +416,7 @@
     </div>
   </div>
   <hr id="separator2">
-  <div id="timerpanel">経過時間：00:00</div>
+  <div id="timerpanel"><span id="current-time-panel">経過時間：00:00</span> <span id="complete-time-panel"></span></div>
 </div>
 
 <div id="quesboard">

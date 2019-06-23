@@ -1,4 +1,4 @@
-/* global File:false, JSON:false */
+
 (function(){
 
 /* variables */
@@ -320,13 +320,12 @@ v3index.dbif.extend({
 		}
 	},
 	importlist : function(callback){
-		/* jshint eqnull:true */
 		DBlist = self.list = [];
 		for(var i=1;true;i++){
 			var data = localStorage[pheader+i];
 			if(!data){ break;}
 			var row = JSON.parse(data);
-			if(row.id==null){ break;}
+			if(row.id==null){ break;} // eslint-disable-line eqeqeq
 			var pzl = pzpr.parser(row.pdata);
 			row.pid = pzl.pid;
 			row.col = pzl.cols;
@@ -370,7 +369,6 @@ v3index.dbif.extend({
 		}
 	},
 	getcaption : function(row){
-		/* jshint eqeqeq:false */
 		var datestr = (function(){
 			var ni = function(num){ return (num<10?"0":"")+num;}, str = "", date = new Date();
 			date.setTime(row.time*1000);
@@ -406,11 +404,10 @@ v3index.dbif.extend({
 		}
 	},
 	getvalue : function(){
-		/* jshint eqeqeq:false */
 		var val = _form.datalist.value;
 		if(val!==""){
 			for(var i=0;i<DBlist.length;i++){
-				if(DBlist[i].id==val){ return i;}
+				if(DBlist[i].id==val){ return i;} // eslint-disable-line eqeqeq
 			}
 		}
 		return -1;
@@ -430,19 +427,19 @@ var pstate = {
 	lunch :['nurikabe','tilepaint','norinori','nurimaze','heyawake','hitori','slither','mashu','yajilin',
 			'slalom','numlin','hashikake','herugolf','shikaku','tentaisho','kakuro','sudoku','fillomino','ripple',
 			'akari','shakashaka'],
-	testa :['nagare','dosufuwa','usoone','moonsun'],
-	trial :['stostone','armyants'],
+	testa :['nurimisaki'],
+	trial :[],
 	lunch2:['box','lits','kurodoko','goishi'],
 	lunch3:['minarism','factors'],
 	nigun :['creek','mochikoro','tasquare','kurotto','shimaguni','yajikazu','bag','country','reflect','icebarn',
 			'firefly','kaero','yosenabe','bdblock','fivecells','sashigane','tatamibari','sukoro',
-			'gokigen','tateyoko','kinkonkan','hebi','makaro','juosan'],
+			'gokigen','tateyoko','kinkonkan','hebi','makaro','juosan','nagare','dosufuwa','usoone','moonsun','stostone'],
 	omopa :['nuribou','tawa','lookair','paintarea','chocona','kurochute','mejilink',
 			'pipelink','loopsp','nagenawa','kouchoku','ringring','pipelinkr','barns','icelom','icelom2',
 			'wblink','kusabi','ichimaga','ichimagam','ichimagax','amibo','bonsan','heyabon','rectslider',
 			'nawabari','triplace','fourcells','kramma','kramman','shwolf','loute','fillmat','usotatami','yajitatami',
 			'kakuru','view','bosanowa','nanro','cojun','renban','sukororoom','hanare','kazunori',
-			'wagiri','shugaku','hakoiri','roma','toichika','cbblock','nondango','onsen'],
+			'wagiri','shugaku','hakoiri','roma','toichika','cbblock','nondango','onsen','armyants','sato'],
 	orig  :['mochinyoro','ayeheya','aho'],
 	genre :['tapa','arukone','yinyang','building','kropki','starbattle','easyasabc','walllogic']
 };

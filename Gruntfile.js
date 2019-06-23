@@ -17,8 +17,6 @@ module.exports = function(grunt){
       version: pzprversion
     },
 
-    clean: ['dist/*', 'pzprv3-*.{zip,tar.gz,tar.bz2}'],
-
     copy: {
       pzpr: {
         files : [
@@ -71,31 +69,10 @@ module.exports = function(grunt){
           { src: 'src/js/v3index.js',           dest: 'dist/js/v3index.js' }
         ]
       }
-    },
-
-    jshint: {
-      options: {
-        jshintrc: true
-      },
-      all: {
-        src: [
-          'Gruntfile.js',
-          'src/js/*.js',
-          'src/js/ui/*.js',
-          'tests/**/*.js'
-        ]
-      },
-      source:{
-        src: [
-          'src/js/*.js',
-          'src/js/ui/*.js'
-        ]
-      }
     }
   });
   
-  grunt.registerTask('lint', ['newer:jshint:all']);
-  grunt.registerTask('default', ['lint:source',          'build']);
-  grunt.registerTask('release', ['lint:source', 'clean', 'build']);
+  grunt.registerTask('default', ['build']);
+  grunt.registerTask('release', ['build']);
   grunt.registerTask('build',   ['newer:copy:ui', 'newer:copy:pzpr', 'newer:concat:ui', 'newer:uglify:ui']);
 };

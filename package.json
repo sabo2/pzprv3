@@ -15,30 +15,30 @@
   "author": "sabo2",
   "license": "MIT",
   "repository": {
-    "type": "hg",
-    "url": "https://bitbucket.org/sabo2/pzprv3-ui"
+    "type": "git",
+    "url": "https://github.com/sabo2/pzprv3"
   },
+  "homepage": "http://pzv.js",
   "scripts": {
-    "build": "grunt default",
-    "release": "grunt release",
-    "release:core": "grunt core",
+    "build": "eslint --cache --quiet src && grunt default",
+    "release": "eslint --cache --quiet src && npm run clean && grunt release",
     "release:gzip": "sh -c 'cd dist; tar czf $0 --exclude *.concat.js --exclude .DS_Store *; mv $0 ..' pzprv3-$npm_package_version.tar.gz",
     "release:bz2": "sh -c 'cd dist; tar cjf $0 --exclude *.concat.js --exclude .DS_Store *; mv $0 ..' pzprv3-$npm_package_version.tar.bz2",
     "release:zip": "sh -c 'cd dist; zip -9qr $0 * -x *.concat.js -x .DS_Store; mv $0 ..' pzprv3-$npm_package_version.zip",
-    "clean": "grunt clean",
-    "lint": "grunt newer:jshint",
-    "test": "grunt newer:jshint"
+    "clean": "del dist/* pzprv3-*.{zip,tar.gz,tar.bz2,tgz}",
+    "lint": "eslint src tests",
+    "test": "eslint --quiet src tests"
   },
   "devDependencies": {
+    "del-cli": "^2.0.0",
+    "eslint": "^5.16.0",
     "grunt": "^1.0.1",
-    "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "^2.1.0",
     "grunt-newer": "^1.2.0"
   },
   "dependencies": {
-    "pzpr": "^0.10.0"
+    "pzpr": "^0.11.0"
   }
 }

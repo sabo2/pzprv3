@@ -1,5 +1,4 @@
-
-/* jshint node: true */
+/* eslint-env node */
 
 exports.files = [
 	"common/intro",

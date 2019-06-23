@@ -103,6 +103,7 @@
 	div#checkpanel{ margin:4pt 0pt 6pt 16pt;}
 	hr#separator2 { margin:0pt;}
 	div#timerpanel{ margin:6pt 6pt 6pt 12pt;}
+	span#complete-time-panel{ color: green;}
 
 	div.child   { display:inline; cursor:pointer;}
 	div.childsel{ color:maroon; font-weight:bold; background-color:#efefef;}

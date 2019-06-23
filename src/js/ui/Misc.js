@@ -1,6 +1,5 @@
 // Misc.js v3.4.1
-/* jshint latedef:false */
-/* global ui:false, _doc:false */
+/* global _doc:readonly */
 
 //---------------------------------------------------------------------------
 // ★Miscクラス html表示系 (Menu, Button以外)の制御を行う

@@ -1,5 +1,5 @@
 // MenuArea.js v3.4.0
-/* global ui:false, getEL:false, _doc:false */
+/* global getEL:readonly, _doc:readonly */
 
 // メニュー描画/取得/html表示系
 ui.menuarea = {
@@ -268,8 +268,8 @@ ui.menuarea = {
 	redo     : function(){ ui.undotimer.startButtonRedo();},
 	redostop : function(){ ui.undotimer.stopButtonRedo();},
 	redoall  : function(){ ui.puzzle.redoall();},
-	ansclear : function(){ this.ACconfirm();},
-	subclear : function(){ this.ASconfirm();},
+	ansclear : function(){ this.answerclear();},
+	subclear : function(){ this.submarkclear();},
 	dropblocks  : function(){ ui.puzzle.board.operate('drop');},
 	raiseblocks : function(){ ui.puzzle.board.operate('raise');},
 	resetblocks : function(){ ui.puzzle.board.operate('resetpos');},
@@ -341,20 +341,22 @@ ui.menuarea = {
 
 	//------------------------------------------------------------------------------
 	// menuarea.answercheck()「正答判定」ボタンを押したときの処理
-	// menuarea.ACconfirm()  「解答消去」ボタンを押したときの処理
-	// menuarea.ASconfirm()  「補助消去」ボタンを押したときの処理
+	// menuarea.answerclear()「解答消去」ボタンを押したときの処理
+	// menuarea.subclear()   「補助消去」ボタンを押したときの処理
 	//------------------------------------------------------------------------------
 	answercheck : function(){
-		var str = "", texts = ui.puzzle.check(true).text.split(/\n/);
+		var str = "", checkinfo = ui.puzzle.check(true);
+		if(checkinfo.complete){ ui.timer.notifyComplete();}
+		var texts = checkinfo.text.split(/\n/);
 		for(var i=0;i<texts.length;i++){ str += "<div style=\"margin-bottom:6pt;\">"+texts[i]+"</div>";}
 		this.stopHovering();
 		ui.notify.alert(str);
 	},
-	ACconfirm : function(){
+	answerclear : function(){
 		this.stopHovering();
 		ui.notify.confirm("解答を消去しますか？","Do you want to erase the Answer?", function(){ ui.puzzle.ansclear();});
 	},
-	ASconfirm : function(){
+	submarkclear : function(){
 		this.stopHovering();
 		ui.notify.confirm("補助記号を消去しますか？","Do you want to erase the auxiliary marks?", function(){ ui.puzzle.subclear();});
 	}

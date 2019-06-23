@@ -19,16 +19,13 @@ This script is developed against HTML5 features and JavaScript.
 ### Browser Support (Recommended)
 * Firefox (latest stable version)
 * Google Chrome (latest stable version)
-* Safari 9.0+
+* Safari 10.1+ (desktop/iOS)
 * Microsft Edge
 
 ### Browser Support (Possible)
 * Internet Explorer 11
-* Safari 5.1+
-* Opera 12.17
-* iOS 9+
-* Android 4.4+
-* WiiU
+* Safari 9+
+* iOS 9.3+
 
 ### Restrictions
 * "Open File" needs online before Firefox 3.5, Chrome 6, Safari 6.0.1, Opera 12.01, Internet Explorer 9
@@ -36,6 +33,7 @@ This script is developed against HTML5 features and JavaScript.
 * "Image Save" SVG file to local file doesn't work correctly with Internet Explorer 11
 
 ## Releases
+* 2019/06/24 v3.6.10
 * 2017/07/31 v3.6.9
 * 2017/04/23 v3.6.8-patch1
 * 2017/04/21 v3.6.8

@@ -1,5 +1,4 @@
 // MenuConfig.js v3.4.1
-/* global pzpr:false, ui:false, JSON:false */
 
 (function(){
 //---------------------------------------------------------------------------
@@ -67,6 +66,7 @@ ui.menuconfig = {
 		
 		this.set('lrinvert', ui.puzzle.mouse.inversion);
 		this.set('autocmp',  ui.puzzle.getConfig('autocmp'));
+		this.set('autoerr',  ui.puzzle.getConfig('autoerr'));
 	},
 
 	//---------------------------------------------------------------------------
@@ -90,7 +90,7 @@ ui.menuconfig = {
 		newval = this.setproper(names, newval);
 		
 		if(idname==='language'){ pzpr.lang = newval;}
-		else if(this.list[idname].puzzle){ ui.puzzle.setConfig(idname, newval);}
+		else if(this.list[idname].puzzle){ ui.puzzle.setConfig(argname, newval);}
 		
 		this.configevent(idname,newval);
 	},
@@ -104,14 +104,20 @@ ui.menuconfig = {
 		/* 設定が保存されている場合は元に戻す */
 		ui.puzzle.config.init();
 		this.init();
-		var json_puzzle = localStorage['pzprv3_config:puzzle'];
-		var json_menu   = localStorage['pzprv3_config:ui'];
-		if(!!json_puzzle){ this.setAll(JSON.parse(json_puzzle));}
-		if(!!json_menu)  { this.setAll(JSON.parse(json_menu));}
+		function restoreConfig(name, setfunc){
+			var config_str = localStorage[name];
+			if(!!config_str){ setfunc.call(ui.menuconfig, JSON.parse(config_str));}
+		}
+		restoreConfig('pzprv3_config:puzzle', function(config){ this.setAll(config);});
+		restoreConfig('pzprv3_config:ui',     function(config){ this.setAll(config);});
 	},
 	save : function(){
-		localStorage['pzprv3_config:puzzle'] = JSON.stringify(ui.puzzle.saveConfig());
-		localStorage['pzprv3_config:ui']     = JSON.stringify(this.getAll());
+		function saveConfig(name,config){
+			var config_str = JSON.stringify(config);
+			if(localStorage[name]!==config_str){ localStorage[name] = config_str;}
+		}
+		saveConfig('pzprv3_config:puzzle', ui.puzzle.saveConfig());
+		saveConfig('pzprv3_config:ui',     this.getAll());
 	},
 
 	//---------------------------------------------------------------------------

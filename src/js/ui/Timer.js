@@ -1,5 +1,4 @@
 // Timer.js v3.4.0
-/* global ui:false */
 
 (function(){
 
@@ -17,6 +16,7 @@ ui.timer =
 	/* 経過時間表示用変数 */
 	bseconds : 0,		/* 前回ラベルに表示した時間(秒数) */
 	timerEL  : null,	/* 経過時間表示用要素 */
+	completed : false,	/* 正解時間表示済み */
 
 	/* 自動正答判定用変数 */
 	worstACtime : 0,	/* 正答判定にかかった時間の最悪値(ミリ秒) */
@@ -29,8 +29,11 @@ ui.timer =
 	//---------------------------------------------------------------------------
 	reset : function(){
 		this.worstACtime = 0;
-		this.timerEL = document.getElementById('timerpanel');
+		this.timerEL = document.getElementById('current-time-panel');
 		this.timerEL.innerHTML = this.label()+"00:00";
+
+		this.completed = false;
+		document.getElementById('complete-time-panel').innerHTML = '';
 
 		clearInterval(this.TID);
 		this.start();
@@ -43,17 +46,26 @@ ui.timer =
 		this.current = pzpr.util.currentTime();
 
 		if(ui.puzzle.playeronly){ this.updatetime();}
-		if(ui.menuconfig.get('autocheck_once') && !ui.debug.alltimer){ this.ACcheck();}
+		if(ui.menuconfig.get('autocheck_once') && !ui.debug.alltimer){ this.autocheck();}
 	},
 
 	//---------------------------------------------------------------------------
 	// tm.updatetime() 秒数の表示を行う
 	// tm.label()      経過時間に表示する文字列を返す
+	// tm.getTimeStr() 経過時間に表示する時間を返す
 	//---------------------------------------------------------------------------
 	updatetime : function(){
 		var seconds = (ui.puzzle.getTime()/1000)|0;
 		if(this.bseconds === seconds){ return;}
 
+		this.timerEL.innerHTML = this.label()+this.getTimeStr(seconds);
+
+		this.bseconds = seconds;
+	},
+	label : function(){
+		return ui.selectStr("経過時間：","Time: ");
+	},
+	getTimeStr : function(seconds){
 		var hours   = (seconds/3600)|0;
 		var minutes = ((seconds/60)|0) - hours*60;
 		seconds = seconds - minutes*60 - hours*3600;
@@ -61,22 +73,31 @@ ui.timer =
 		if(minutes < 10){ minutes = "0" + minutes;}
 		if(seconds < 10){ seconds = "0" + seconds;}
 
-		this.timerEL.innerHTML = [this.label(), (!!hours?hours+":":""), minutes, ":", seconds].join('');
-
-		this.bseconds = seconds;
-	},
-	label : function(){
-		return ui.selectStr("経過時間：","Time: ");
+		return [(!!hours?hours+":":""), minutes, ":", seconds].join('');
 	},
 
 	//---------------------------------------------------------------------------
-	// tm.ACcheck()    自動正解判定を呼び出す
+	// tm.notifyComplete() 回答時間に文字列を表示する
 	//---------------------------------------------------------------------------
-	ACcheck : function(){
+	notifyComplete : function(){
+		if(!ui.puzzle.playeronly || this.completed){ return;}
+		this.completed = true;
+
+		var label = ui.selectStr("正答時間：","Complete: ");
+		var timestr = this.getTimeStr((ui.puzzle.getTime()/1000)|0);
+
+		document.getElementById('complete-time-panel').innerHTML = label+timestr;
+	},
+
+	//---------------------------------------------------------------------------
+	// tm.autocheck()  自動正解判定を呼び出す
+	//---------------------------------------------------------------------------
+	autocheck : function(){
 		var puzzle = ui.puzzle;
 		if(this.current>this.nextACtime && puzzle.playmode && !puzzle.checker.inCheck && puzzle.board.trialstage===0){
 			if(puzzle.check(false).complete){
 				puzzle.mouse.mousereset();
+				this.notifyComplete();
 				ui.menuconfig.set('autocheck_once',false);
 				ui.notify.alert("正解です！","Complete!");
 				return;
