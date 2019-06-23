@@ -33,6 +33,7 @@ This script is developed against HTML5 features and JavaScript.
 * "Image Save" SVG file to local file doesn't work correctly with Internet Explorer 11
 
 ## Releases
+* 2019/06/24 v3.6.10
 * 2017/07/31 v3.6.9
 * 2017/04/23 v3.6.8-patch1
 * 2017/04/21 v3.6.8
