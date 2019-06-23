@@ -15,16 +15,13 @@ JavaScriptおよびHTML5の機能を使用して開発しています。
 ### 推奨ブラウザ
 * Firefox (最新安定版)
 * Google Chrome (最新安定版)
-* Safari 9.0+
+* Safari 10.1+ (desktop/iOS)
 * Microsft Edge
 
 ### 動作ブラウザ
 * Internet Explorer 11
-* Safari 5.1+
-* Opera 12.17
-* iOS 9+
-* Android 4.4+
-* WiiU
+* Safari 9+
+* iOS 9.3+
 
 ### 制限事項
 * "ファイルを開く" をオフラインで実行するには Firefox 3.6, Chrome 7, Safari 7, Opera 12.10, Internet Explorer 10以降が必要です

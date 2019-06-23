@@ -11,10 +11,7 @@
 * LITS
 
 ### Reserver
-* Uso-one
-
-### Reserver (Omopa)
-* Stostone
+* Nuri-Misaki
 
 ### Nigun (Legacy)
 * Yajisan-Kazusan
@@ -23,6 +20,8 @@
 * Shimaguni
 * Tasquare
 * Kurotto
+* Stostone
+* Uso-one
 
 ### Omopa
 * Nuribou
@@ -44,15 +43,13 @@
 * Yajilin
 * Slalom (Suraromu)
 
-### Reserver
-* Nagareru-loop
-* Moon or Sun
-
 ### Nigun (Legacy)
 * BAG (Correl, Cave)
 * Country-road
 * Reflect-link
 * Icebarn
+* Nagareru-loop
+* Moon or Sun
 
 ### Omopa
 * Pipelink
@@ -73,9 +70,6 @@
 * Bridges (Hashi)
 * Herugolf
 
-### Reserver (Omopa)
-* Army Ants
-
 ### Nigun (Legacy)
 * Hotaru Beam
 * Tatebo-yokobo
@@ -93,6 +87,8 @@
 * Heyabon
 * Amibo
 * Rectangle Slider
+* Army Ants
+* Satogaeri
 
 ### Non-nikoli puzzle
 * Arukone
@@ -162,12 +158,10 @@
 * Akari
 * Shakashaka
 
-### Reserver
-* Dosun-Fuwari
-
 ### Nigun (Legacy)
 * Kinkonkan
 * Gokigen-naname
+* Dosun-Fuwari
 
 ### Omopa
 * Hokoiri-masashi
