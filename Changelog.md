@@ -1,6 +1,17 @@
 
 # ReleaseNote
 
+## Version 3.6.10.1
+
+Release date: 2019/6/29
+
+pzpr.js version: [v0.11.1](https://github.com/sabo2/pzprjs/releases)
+
+#### BugFix
+
+* Tapa: 盤面に？がある時の正答判定が失敗する不具合を修正
+* ナンロー: 回答チェックで○がある時は正答としないように修正
+
 ## Version 3.6.10
 
 Release date: 2019/6/24

@@ -1,6 +1,6 @@
 {
   "name": "pzprv3",
-  "version": "3.6.10",
+  "version": "3.6.10.1",
   "description": "Playing and editing puzzles by Javascript",
   "main": "index.html",
   "directories": {
@@ -39,6 +39,6 @@
     "grunt-newer": "^1.2.0"
   },
   "dependencies": {
-    "pzpr": "^0.11.0"
+    "pzpr": "^0.11.1"
   }
 }
